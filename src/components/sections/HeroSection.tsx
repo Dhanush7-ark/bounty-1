@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { Container } from "@/components/ui/Container";
-import { Button } from "@/components/ui/Button";
 import { animateHeroEntrance } from "@/animations/gsap/hero";
 import { useLoadingState } from "@/hooks/useLoadingState";
+import { Phone } from "lucide-react";
 
 export function HeroSection() {
   const { isRevealed } = useLoadingState();
@@ -14,7 +13,6 @@ export function HeroSection() {
   const ctaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only run hero entrance after the cinematic loader finishes
     if (!isRevealed) return;
 
     const tl = animateHeroEntrance(
@@ -28,64 +26,65 @@ export function HeroSection() {
   }, [isRevealed]);
 
   return (
-    <section id="hero" className="relative flex min-h-screen items-center pt-20 bg-black">
-      <Container className="relative z-10 py-16 text-center">
-        <div className="mx-auto max-w-4xl flex flex-col items-center">
-          {/* Logo Showcase */}
-          <div className="mb-8 relative flex items-center justify-center p-4 rounded-2xl border border-lime-500/20 bg-black/60 backdrop-blur-md shadow-2xl shadow-lime-500/10">
-            <Image
-              src="/images/image.png"
-              alt="Bounty Bytes AI Studios"
-              width={260}
-              height={75}
-              className="h-16 w-auto object-contain filter drop-shadow-[0_0_15px_rgba(132,204,22,0.4)]"
-              priority
-            />
-          </div>
-
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-lime-500/30 bg-lime-500/10 px-4 py-1.5 text-xs font-semibold text-lime-400 backdrop-blur-md">
-            <span className="h-2 w-2 rounded-full bg-lime-400 animate-pulse" />
-            Bounty Bytes AI Studios • 3D Architecture Stack
-          </div>
-
+    <section id="hero" className="relative flex min-h-screen items-center pt-24 pb-16 bg-black text-white overflow-hidden">
+      <Container className="relative z-10 max-w-5xl mx-auto text-center">
+        <div className="w-full flex flex-col items-center justify-center text-center">
           <h1
             ref={titleRef}
-            className="mb-6 text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl uppercase"
-            style={{ opacity: 0 }}
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] mb-6 text-center max-w-4xl"
           >
-            Next-Gen{" "}
-            <span className="bg-gradient-to-r from-lime-400 via-emerald-300 to-green-500 bg-clip-text text-transparent">
-              3D AI Interactive
-            </span>{" "}
-            Experiences
+            “Revolutionize{" "}
+            <span className="inline-flex items-center justify-center align-middle mx-1 text-[#b5f200] transform hover:rotate-45 transition-transform duration-300">
+              <svg className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 fill-current" viewBox="0 0 24 24">
+                <path d="M12 0L14.59 8.41L23 9.59L16.29 15.29L18.41 24L12 19.59L5.59 24L7.71 15.29L1 9.59L9.41 8.41L12 0Z" />
+              </svg>
+            </span>
+            <br />
+            Business with AI
+            <br />
+            Automation”
           </h1>
 
           <p
             ref={subtitleRef}
-            className="mb-10 max-w-2xl text-base text-neutral-300 sm:text-lg lg:text-xl leading-relaxed"
-            style={{ opacity: 0 }}
+            className="text-neutral-300 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-2xl mb-8 text-center mx-auto"
           >
-            High-performance 3D web platform built with Next.js App Router, TypeScript,
-            React Three Fiber, GSAP, Lenis, and Tailwind CSS.
+            Transform how you work with cutting-edge AI and automation solutions designed to streamline processes, enhance productivity, and accelerate growth.
           </p>
 
-          <div
-            ref={ctaRef}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            style={{ opacity: 0 }}
-          >
-            <Button size="lg" onClick={() => {
-              const el = document.getElementById("features");
-              el?.scrollIntoView({ behavior: "smooth" });
-            }}>
-              Explore Tech Stack
-            </Button>
-            <Button variant="outline" size="lg" onClick={() => {
-              const el = document.getElementById("test-scroll");
-              el?.scrollIntoView({ behavior: "smooth" });
-            }}>
-              Verify Smooth Scroll
-            </Button>
+          <div ref={ctaRef} className="relative flex flex-col items-center justify-center gap-4 text-center">
+            <button
+              onClick={() => {
+                const el = document.getElementById("terminal");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-[#b5f200] hover:bg-[#c7ff1a] text-black font-bold text-base sm:text-lg transition-all duration-300 shadow-[0_0_30px_rgba(181,242,0,0.35)] hover:scale-105 active:scale-95 cursor-pointer group"
+            >
+              <span>Book a free consultation</span>
+              <span className="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white transition-transform group-hover:scale-110">
+                <Phone className="w-4 h-4 text-white" />
+              </span>
+            </button>
+
+            <div className="mt-2 text-[#b5f200] opacity-90">
+              <svg className="w-32 h-16" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M20 10 C 50 65, 110 65, 138 35"
+                  stroke="#b5f200"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+                <path
+                  d="M122 34 L 140 35 L 135 52"
+                  stroke="#b5f200"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </Container>

@@ -21,47 +21,60 @@ export function SpaceHUD({ scrollProgress, onJumpToWaypoint }: SpaceHUDProps) {
   return (
     <div className="fixed inset-0 pointer-events-none z-50 flex flex-col justify-between p-4 sm:p-8">
       {/* ─── TOP HUD HEADER ─────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between pointer-events-auto">
+      <header className="flex items-center justify-between pointer-events-auto w-full max-w-7xl mx-auto">
         {/* Spacecraft Logo Badge */}
         <a href="#hero" className="flex items-center space-x-3 group">
-          <div className="relative h-10 px-4 flex items-center rounded-xl border border-[#00FF66]/30 bg-black/70 backdrop-blur-md transition-all duration-300 group-hover:border-[#00FF66] group-hover:shadow-[0_0_15px_rgba(0,255,102,0.3)]">
+          <div className="relative h-11 px-4 flex items-center rounded-xl border border-[#b5f200]/30 bg-black/80 backdrop-blur-md transition-all duration-300 group-hover:border-[#b5f200] group-hover:shadow-[0_0_20px_rgba(181,242,0,0.3)]">
             <Image
               src="/images/image.png"
               alt="Bounty Bytes AI Studios"
-              width={140}
-              height={40}
-              className="h-7 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(0,255,102,0.4)]"
+              width={150}
+              height={42}
+              className="h-8 w-auto object-contain filter drop-shadow-[0_0_8px_rgba(181,242,0,0.4)]"
               priority
             />
           </div>
         </a>
 
-        {/* Spatial Waypoints Quick Jump Bar */}
-        <nav className="hidden md:flex items-center space-x-2 p-1.5 rounded-full border border-[#00FF66]/20 bg-black/70 backdrop-blur-md text-xs font-mono">
-          {WAYPOINTS.map((wp) => {
-            const isActive = Math.abs(scrollProgress - wp.progress) < 0.15;
-            return (
-              <button
-                key={wp.id}
-                onClick={() => onJumpToWaypoint?.(wp.progress)}
-                className={`px-3 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  isActive
-                    ? "bg-[#00FF66] text-black font-bold shadow-[0_0_10px_rgba(0,255,102,0.4)]"
-                    : "text-neutral-400 hover:text-[#00FF66] hover:bg-[#00FF66]/10"
-                }`}
-              >
-                {wp.label}
-              </button>
-            );
-          })}
+        {/* Center Navigation Links matching Screenshot */}
+        <nav className="hidden md:flex items-center space-x-8 px-6 py-2.5 rounded-full border border-white/10 bg-black/80 backdrop-blur-md text-sm font-medium text-white shadow-xl">
+          <a
+            href="#hero"
+            onClick={(e) => { e.preventDefault(); onJumpToWaypoint?.(0.0); }}
+            className="hover:text-[#b5f200] transition-colors cursor-pointer"
+          >
+            Home
+          </a>
+          <a
+            href="#about"
+            onClick={(e) => { e.preventDefault(); onJumpToWaypoint?.(0.35); }}
+            className="hover:text-[#b5f200] transition-colors cursor-pointer"
+          >
+            About Us
+          </a>
+          <a
+            href="#service"
+            onClick={(e) => { e.preventDefault(); onJumpToWaypoint?.(0.70); }}
+            className="hover:text-[#b5f200] transition-colors cursor-pointer"
+          >
+            Service
+          </a>
+          <div className="relative group cursor-pointer flex items-center gap-1.5 hover:text-[#b5f200] transition-colors">
+            <span>Resources</span>
+            <svg className="w-3.5 h-3.5 opacity-70 group-hover:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
         </nav>
 
-        {/* Spacecraft System Status Badge */}
+        {/* Header Right Action: Contact Us Pill Button & Telemetry */}
         <div className="flex items-center space-x-3">
-          <div className="flex items-center space-x-2 px-3 py-1.5 rounded-xl border border-[#00FF66]/30 bg-black/70 backdrop-blur-md font-mono text-[11px] text-[#00FF66]">
-            <span className="h-2 w-2 rounded-full bg-[#00FF66] animate-pulse" />
-            <span className="hidden sm:inline">SPACECRAFT NAV:</span> ACTIVE
-          </div>
+          <button
+            onClick={() => onJumpToWaypoint?.(0.96)}
+            className="px-6 py-2.5 rounded-full font-bold text-sm text-black bg-[#b5f200] hover:bg-[#c6ff1a] transition-all duration-300 shadow-[0_0_20px_rgba(181,242,0,0.4)] hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            Contact Us
+          </button>
         </div>
       </header>
 

@@ -14,26 +14,23 @@ interface CameraRigProps {
 export function CameraRig({ progress }: CameraRigProps) {
   const cameraRef = useRef<ThreePerspectiveCamera>(null);
 
-  // Mouse offset target for subtle organic pointer parallax
-  const mouseTarget = useRef({ x: 0, y: 0 });
-
   // Define continuous 3D camera journey spline path
   const { pathCurve, lookAtCurve } = useMemo(() => {
-    // Camera position waypoints through the universe
+    // Camera position waypoints: curves left/sideways from Page 1 to Saturn Planet on Page 2
     const cameraWaypoints = [
-      new Vector3(0, 0, 8),        // 0.00: Hero start
-      new Vector3(2.5, 1.2, -35),   // 0.20: Approach Tech cluster
-      new Vector3(-3.0, 0.8, -100), // 0.45: Deep space planet horizon
-      new Vector3(2.0, -1.2, -180), // 0.70: Approach Core Engine
-      new Vector3(0, 0, -265),      // 1.00: Final Destination Space Terminal
+      new Vector3(0, 0, 8),        // 0.00: Hero start (Page 1)
+      new Vector3(-16, 4, -45),    // 0.18: Sideways flight sweep through deep space
+      new Vector3(0, 1, -85),      // 0.38: Arrival in front of Saturn planet & orbital cards (Page 2)
+      new Vector3(4, -2, -170),    // 0.65: Approach Core Engine (Page 3)
+      new Vector3(0, 0, -265),     // 1.00: Final Destination Space Terminal (Page 4)
     ];
 
     // Look-at direction waypoints for organic camera orientation
     const lookWaypoints = [
       new Vector3(0, 0, -15),      // 0.00: Looking at Hero Node
-      new Vector3(0, 0, -60),      // 0.20: Looking toward Tech Cards
-      new Vector3(-5, 0, -135),    // 0.45: Looking toward Dark Planet
-      new Vector3(0, 0, -210),     // 0.70: Looking at Interactive Core
+      new Vector3(-8, 1, -85),     // 0.18: Orienting towards Saturn planet
+      new Vector3(0, 0, -125),     // 0.38: Looking directly at Saturn planet & revolving cards
+      new Vector3(0, 0, -210),     // 0.65: Looking at Interactive Core Engine
       new Vector3(0, 0, -320),     // 1.00: Looking down Terminal Horizon
     ];
 
@@ -53,19 +50,12 @@ export function CameraRig({ progress }: CameraRigProps) {
     const rawPos = pathCurve.getPoint(p);
     const rawLook = lookAtCurve.getPoint(p);
 
-    // Smooth pointer parallax offset calculation
-    const pointerX = state.pointer.x;
-    const pointerY = state.pointer.y;
-
-    mouseTarget.current.x = lerp(mouseTarget.current.x, pointerX * 1.5, delta * 3);
-    mouseTarget.current.y = lerp(mouseTarget.current.y, pointerY * 1.0, delta * 3);
-
-    // Apply combined position (Spline + Lerped Mouse Parallax)
-    const targetX = rawPos.x + mouseTarget.current.x;
-    const targetY = rawPos.y - mouseTarget.current.y;
+    // Set position strictly according to 3D spline curve (no cursor parallax)
+    const targetX = rawPos.x;
+    const targetY = rawPos.y;
     const targetZ = rawPos.z;
 
-    // Smooth lerp camera position for expensive, inertia-rich feel
+    // Smooth lerp camera position for smooth trajectory
     const lerpSpeed = Math.min(1, delta * 4.5);
     cameraRef.current.position.x = lerp(cameraRef.current.position.x, targetX, lerpSpeed);
     cameraRef.current.position.y = lerp(cameraRef.current.position.y, targetY, lerpSpeed);
@@ -76,17 +66,11 @@ export function CameraRig({ progress }: CameraRigProps) {
     cameraRef.current.fov = lerp(cameraRef.current.fov, targetFov, lerpSpeed);
     cameraRef.current.updateProjectionMatrix();
 
-    // Orient camera to look-at target with subtle roll tilt
-    const currentLook = new Vector3(
-      rawLook.x + mouseTarget.current.x * 0.5,
-      rawLook.y - mouseTarget.current.y * 0.5,
-      rawLook.z
-    );
+    // Orient camera strictly to look-at trajectory curve
+    cameraRef.current.lookAt(rawLook);
 
-    cameraRef.current.lookAt(currentLook);
-
-    // Add controlled roll tilt based on lateral movement
-    cameraRef.current.rotation.z = mouseTarget.current.x * -0.02;
+    // Keep camera roll steady
+    cameraRef.current.rotation.z = 0;
   });
 
   return (

@@ -3,6 +3,7 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { InstancedMesh, Object3D } from "three";
+import { createAsteroidTexture } from "@/lib/spaceTextures";
 
 function pseudoRandom(seed: number): number {
   const x = Math.sin(seed) * 10000;
@@ -13,22 +14,22 @@ interface AsteroidFieldProps {
   count?: number;
 }
 
-export function AsteroidField({ count = 45 }: AsteroidFieldProps) {
+export function AsteroidField({ count = 50 }: AsteroidFieldProps) {
   const meshRef = useRef<InstancedMesh>(null);
   const tempObject = useMemo(() => new Object3D(), []);
+  const asteroidBumpMap = useMemo(() => createAsteroidTexture(), []);
 
   // Compute positions, rotations, and scales for asteroids along the journey tunnel
   const asteroidData = useMemo(() => {
     return Array.from({ length: count }, (_, i) => {
-      // Keep asteroids away from the center camera path (X: -15..15 is open tunnel)
       const side = pseudoRandom(i * 4 + 1) > 0.5 ? 1 : -1;
-      const x = (18 + pseudoRandom(i * 4 + 2) * 35) * side;
-      const y = (pseudoRandom(i * 4 + 3) - 0.5) * 40;
-      const z = 20 - pseudoRandom(i * 4 + 4) * 340;
+      const x = (18 + pseudoRandom(i * 4 + 2) * 38) * side;
+      const y = (pseudoRandom(i * 4 + 3) - 0.5) * 45;
+      const z = 20 - pseudoRandom(i * 4 + 4) * 360;
 
-      const scale = pseudoRandom(i * 4 + 5) * 1.8 + 0.5;
-      const rotSpeedX = (pseudoRandom(i * 4 + 6) - 0.5) * 0.4;
-      const rotSpeedY = (pseudoRandom(i * 4 + 7) - 0.5) * 0.4;
+      const scale = pseudoRandom(i * 4 + 5) * 2.2 + 0.6;
+      const rotSpeedX = (pseudoRandom(i * 4 + 6) - 0.5) * 0.35;
+      const rotSpeedY = (pseudoRandom(i * 4 + 7) - 0.5) * 0.35;
 
       return { x, y, z, scale, rotSpeedX, rotSpeedY };
     });
@@ -57,12 +58,13 @@ export function AsteroidField({ count = 45 }: AsteroidFieldProps) {
       castShadow={false}
       receiveShadow={false}
     >
-      <dodecahedronGeometry args={[1, 1]} />
+      <dodecahedronGeometry args={[1, 2]} />
       <meshStandardMaterial
-        color="#121815"
-        roughness={0.9}
-        metalness={0.2}
-        wireframe={false}
+        color="#2a3330"
+        bumpMap={asteroidBumpMap}
+        bumpScale={0.15}
+        roughness={0.88}
+        metalness={0.25}
       />
     </instancedMesh>
   );

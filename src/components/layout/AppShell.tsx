@@ -4,12 +4,16 @@ import { ReactNode } from "react";
 import { LoadingProvider, useLoadingState } from "@/hooks/useLoadingState";
 import { SmoothScrollProvider } from "@/hooks/useLenis";
 import { CinematicLoader } from "@/components/loader/CinematicLoader";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 
 function AppShellInner({ children }: { children: ReactNode }) {
   const { isLoading } = useLoadingState();
 
   return (
     <>
+      {/* Custom Glowing Green Arrow Cursor */}
+      <CustomCursor />
+
       {/* Cinematic loading overlay — renders on top of everything */}
       {isLoading && <CinematicLoader />}
 

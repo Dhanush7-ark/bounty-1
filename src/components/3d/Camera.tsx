@@ -18,9 +18,7 @@ export function Camera({ fov = 50, position = [0, 0, 6], makeDefault = true }: C
   useFrame((state, delta) => {
     if (!cameraRef.current) return;
 
-    // Smooth pointer parallax effect
-    const { x, y } = state.pointer;
-    targetVector.current.set(x * 0.5, y * 0.3, position[2]);
+    targetVector.current.set(position[0], position[1], position[2]);
 
     cameraRef.current.position.lerp(targetVector.current, Math.min(1, delta * 3));
     cameraRef.current.lookAt(0, 0, 0);

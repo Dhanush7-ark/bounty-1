@@ -5,47 +5,59 @@ import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { Mesh } from "three";
 import Image from "next/image";
+import { Phone, ArrowRight } from "lucide-react";
+import { SERVICES_DATA } from "@/components/ui/ServicesGrid";
+import { SaturnPlanet } from "./SaturnPlanet";
 
 interface SpatialContentNodesProps {
   scrollProgress: number; // 0.0 to 1.0
 }
 
-const TECH_FEATURES = [
+const SPATIAL_SERVICES = [
   {
-    title: "React Three Fiber & Drei",
-    description: "Isolated 3D canvas pipeline, responsive DPR scaling, instanced particles, and custom lighting.",
-    tag: "3D Engine",
-    pos: [-11, 5, -115] as [number, number, number],
+    ...SERVICES_DATA[0], // Digital Marketing
+    tag: "01 // MARKETING",
+    pos: [-16, 5.0, -100] as [number, number, number],
   },
   {
-    title: "GSAP & ScrollTrigger",
-    description: "Cinematic timeline animations, scroll-driven camera transforms, and coordinated scene updates.",
-    tag: "Animations",
-    pos: [11, 5, -115] as [number, number, number],
+    ...SERVICES_DATA[1], // Web & Mobile Development
+    tag: "02 // DEV",
+    pos: [0, 4.5, -110] as [number, number, number],
   },
   {
-    title: "Lenis Smooth Scroll",
-    description: "Hardware-accelerated inertia scroll synchronized with GSAP ticker loop and zero scroll-jacking.",
-    tag: "Scroll Engine",
-    pos: [-12, -0.5, -132] as [number, number, number],
+    ...SERVICES_DATA[2], // AI/ML Services
+    tag: "03 // AI & ML",
+    pos: [16, 5.0, -100] as [number, number, number],
   },
   {
-    title: "Strict TypeScript",
-    description: "Fully typed 3D scene props, camera spline paths, performance tiers, and zero implicit any.",
-    tag: "Quality",
-    pos: [12, -0.5, -132] as [number, number, number],
+    ...SERVICES_DATA[3], // Desktop Development
+    tag: "04 // SOFTWARE",
+    pos: [-18, 0, -125] as [number, number, number],
   },
   {
-    title: "Performance & Resilience",
-    description: "Automatic mobile DPR capping, resource disposal patterns, and WebGL error boundary fallbacks.",
-    tag: "Performance",
-    pos: [-11, -6, -148] as [number, number, number],
+    ...SERVICES_DATA[4], // Graphic Designing
+    tag: "05 // DESIGN",
+    pos: [0, -0.5, -130] as [number, number, number],
   },
   {
-    title: "Tailwind CSS & Spatial UI",
-    description: "Decoupled HTML UI components kept completely separate from Three.js render cycles.",
-    tag: "Styling",
-    pos: [11, -6, -148] as [number, number, number],
+    ...SERVICES_DATA[5], // AI Agents Development
+    tag: "06 // AGENTS",
+    pos: [18, 0, -125] as [number, number, number],
+  },
+  {
+    ...SERVICES_DATA[6], // Cyber Security
+    tag: "07 // SECURITY",
+    pos: [-16, -5.5, -140] as [number, number, number],
+  },
+  {
+    ...SERVICES_DATA[7], // IT Infrastructures
+    tag: "08 // INFRA",
+    pos: [0, -5.5, -145] as [number, number, number],
+  },
+  {
+    ...SERVICES_DATA[8], // Cloud Applications
+    tag: "09 // CLOUD",
+    pos: [16, -5.5, -140] as [number, number, number],
   },
 ];
 
@@ -71,6 +83,73 @@ function calcNodeOpacity(
   return 0;
 }
 
+// Helper component for 3D spatial service cards with explicit React hover state tracking
+function SpatialServiceCard({ feat }: { feat: (typeof SPATIAL_SERVICES)[0] }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onPointerEnter={() => setIsHovered(true)}
+      onPointerLeave={() => setIsHovered(false)}
+      className="group relative rounded-2xl overflow-hidden border border-neutral-800/90 bg-gradient-to-b from-neutral-900/95 to-black/95 transition-all duration-300 hover:scale-105 hover:border-[#b5f200]/70 hover:shadow-[0_0_25px_rgba(181,242,0,0.35)] aspect-[4/3] flex flex-col items-center justify-center p-2 cursor-pointer backdrop-blur-sm"
+    >
+      {/* Visual Illustration */}
+      <div className="absolute inset-0 z-0">
+        {feat.renderVisual()}
+      </div>
+
+      {/* Spatial Tag Pill (Default State) */}
+      <span
+        className={`absolute top-2 left-3 z-10 text-[9px] font-mono uppercase tracking-widest text-[#b5f200] bg-black/85 backdrop-blur-md px-2 py-0.5 rounded-md border border-[#b5f200]/30 shadow-md transition-opacity duration-300 ${
+          isHovered ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        {feat.tag}
+      </span>
+
+      {/* Dark glass center title pill badge matching 1st image */}
+      <div
+        className={`relative z-10 px-4 py-2 rounded-xl bg-black/85 backdrop-blur-md border border-white/15 shadow-xl max-w-[90%] text-center transition-opacity duration-300 ${
+          isHovered ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        <h3 className="text-xs sm:text-sm font-bold text-white tracking-tight leading-tight">
+          {feat.title}
+        </h3>
+      </div>
+
+      {/* Hover State: Exact detailed description overlay matching user reference images */}
+      <div
+        className={`absolute inset-0 z-20 transition-all duration-300 bg-black/92 backdrop-blur-md p-3 flex flex-col items-center justify-between border-2 border-white/25 rounded-2xl shadow-2xl ${
+          isHovered ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
+        }`}
+      >
+        {/* Top Row: Ps Icon & Yellow Title */}
+        <div className="w-full flex flex-col items-center relative">
+          <span className="absolute top-0 left-0 w-5 h-5 rounded bg-[#0081d6] flex items-center justify-center font-bold text-[10px] text-white shadow-md border border-white/30">
+            Ps
+          </span>
+          <h3 className="text-yellow-400 font-bold text-sm text-center leading-tight tracking-tight px-5 pt-0.5">
+            {feat.title}
+          </h3>
+        </div>
+
+        {/* Description Body */}
+        <p className="text-white text-[11px] font-normal leading-snug text-center px-1 py-1 flex-1 flex items-center justify-center">
+          {feat.description}
+        </p>
+
+        {/* Bottom White Arrow */}
+        <div className="w-full flex items-center justify-center pt-0.5 text-white">
+          <ArrowRight className="w-5 h-5 stroke-[2.5]" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function SpatialContentNodes({ scrollProgress }: SpatialContentNodesProps) {
   const coreMeshRef = useRef<Mesh>(null);
   const [coreHovered, setCoreHovered] = useState(false);
@@ -90,6 +169,32 @@ export function SpatialContentNodes({ scrollProgress }: SpatialContentNodesProps
   const coreOpacity = calcNodeOpacity(scrollProgress, 0.52, 0.65, 0.78, 0.86);
   const terminalOpacity = calcNodeOpacity(scrollProgress, 0.82, 0.92, 1.0, 1.0);
 
+  // Dynamic 3D Orbital Calculation around Saturn Planet at Z = -125
+  const normScroll = Math.max(0, Math.min(1, (scrollProgress - 0.16) / (0.58 - 0.16)));
+  const orbitAngleOffset = normScroll * Math.PI * 2.2;
+
+  const SATURN_CENTER_Z = -125;
+  const RADIUS_X = 17.5;
+  const RADIUS_Y = 8.5;
+  const RADIUS_Z = 12.5;
+  const TILT_ANGLE = Math.PI / 6;
+
+  const dynamicSpatialServices = SERVICES_DATA.map((service, idx) => {
+    const baseAngle = (idx / SERVICES_DATA.length) * Math.PI * 2;
+    const angle = baseAngle + orbitAngleOffset;
+
+    // 3D Orbital math around Saturn
+    const x = Math.cos(angle) * RADIUS_X;
+    const y = Math.sin(angle) * RADIUS_Y * Math.cos(TILT_ANGLE);
+    const z = SATURN_CENTER_Z + Math.sin(angle) * RADIUS_Z;
+
+    return {
+      ...service,
+      tag: `0${idx + 1} // SERVICE`,
+      pos: [x, y, z] as [number, number, number],
+    };
+  });
+
   return (
     <group>
       {/* ─── NODE 1: HERO SPATIAL COMPOSITION (Z = -15) ────────────────── */}
@@ -97,97 +202,111 @@ export function SpatialContentNodes({ scrollProgress }: SpatialContentNodesProps
         <group position={[0, 0, -15]}>
           <Html
             transform
-            distanceFactor={12}
+            distanceFactor={11}
             position={[0, 0, 0]}
-            className="pointer-events-auto select-none w-[850px] text-center transition-opacity duration-300"
+            className="pointer-events-auto select-none w-[900px] max-w-[90vw] text-center transition-opacity duration-300"
             style={{ opacity: heroOpacity }}
           >
-            <div className="flex flex-col items-center">
-              {/* Logo Showcase */}
-              <div className="mb-6 relative flex items-center justify-center px-6 py-3 rounded-2xl border border-[#00FF66]/30 bg-black/80 backdrop-blur-xl shadow-2xl shadow-[#00FF66]/20">
-                <Image
-                  src="/images/image.png"
-                  alt="Bounty Bytes AI Studios"
-                  width={260}
-                  height={75}
-                  className="h-14 w-auto object-contain filter drop-shadow-[0_0_15px_rgba(0,255,102,0.4)]"
-                  priority
-                />
-              </div>
-
-              {/* Badge */}
-              <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-[#00FF66]/40 bg-[#00FF66]/10 px-5 py-1.5 text-xs font-semibold text-[#00FF66] backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-[#00FF66] animate-pulse" />
-                Bounty Bytes AI Studios • 3D Space Journey
-              </div>
-
-              {/* Main Hero Title */}
-              <h1 className="mb-6 text-5xl font-black tracking-tight text-white sm:text-7xl uppercase leading-none">
-                NEXT-GEN{" "}
-                <span className="bg-gradient-to-r from-[#00FF66] via-emerald-300 to-green-400 bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(0,255,102,0.3)]">
-                  3D AI Interactive
-                </span>{" "}
-                EXPERIENCES
+            <div className="w-full flex flex-col items-center justify-center text-center p-4 mx-auto">
+              {/* Main Hero Title with Quotes & Green Star */}
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.08] mb-6 text-center max-w-4xl">
+                “Revolutionize{" "}
+                <span className="inline-flex items-center justify-center align-middle mx-1 text-[#b5f200] transform hover:rotate-45 transition-transform duration-300">
+                  <svg className="w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 0L14.59 8.41L23 9.59L16.29 15.29L18.41 24L12 19.59L5.59 24L7.71 15.29L1 9.59L9.41 8.41L12 0Z" />
+                  </svg>
+                </span>
+                <br />
+                Business with AI
+                <br />
+                Automation”
               </h1>
 
-              {/* Subtitle */}
-              <p className="max-w-2xl text-base text-neutral-300 sm:text-xl font-light leading-relaxed">
-                High-performance 3D spatial platform built with Next.js App Router, TypeScript,
-                React Three Fiber, GSAP ScrollTrigger, and Lenis.
+              {/* Paragraph Subtitle */}
+              <p className="text-neutral-300 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-2xl mb-8 text-center mx-auto">
+                Transform how you work with cutting-edge AI and automation solutions designed to streamline processes, enhance productivity, and accelerate growth.
               </p>
 
-              {/* Scroll Indicator Arrow */}
-              <div className="mt-10 flex flex-col items-center gap-2 text-xs font-mono text-[#00FF66]/70 uppercase tracking-widest animate-bounce">
-                <span>Scroll down to fly into space</span>
-                <svg className="w-5 h-5 text-[#00FF66]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                </svg>
+              {/* CTA Button with dark circular call icon badge */}
+              <div className="relative flex flex-col items-center justify-center gap-4 text-center">
+                <button
+                  onClick={() => {
+                    const el = document.getElementById("terminal");
+                    el?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className="inline-flex items-center gap-4 px-8 py-4 rounded-full bg-[#b5f200] hover:bg-[#c7ff1a] text-black font-bold text-base sm:text-lg transition-all duration-300 shadow-[0_0_30px_rgba(181,242,0,0.35)] hover:scale-105 active:scale-95 cursor-pointer group"
+                >
+                  <span>Book a free consultation</span>
+                  <span className="w-9 h-9 rounded-full bg-black flex items-center justify-center text-white transition-transform group-hover:scale-110">
+                    <Phone className="w-4 h-4 text-white" />
+                  </span>
+                </button>
+
+                {/* Curvy Lime Green Arrow pointing down */}
+                <div className="mt-2 text-[#b5f200] opacity-90">
+                  <svg className="w-32 h-16" viewBox="0 0 160 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M20 10 C 50 65, 110 65, 138 35"
+                      stroke="#b5f200"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      fill="none"
+                    />
+                    <path
+                      d="M122 34 L 140 35 L 135 52"
+                      stroke="#b5f200"
+                      strokeWidth="3.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      fill="none"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </Html>
         </group>
       )}
 
-      {/* ─── NODE 2: TECH STACK UNIVERSE FLOATING TEXT (Z = -105 to -155) ── */}
+      {/* ─── NODE 2: SATURN PLANET & REVOLVING SERVICES UNIVERSE (Z = -125) ─── */}
       {techOpacity > 0.01 && (
         <group>
-          {/* Node Heading floating pure in space at Z = -95 */}
+          {/* 3D Saturn Planet with Multi-Band Glowing Rings */}
+          <SaturnPlanet position={[0, 0, SATURN_CENTER_Z]} scale={7.5} opacity={techOpacity} />
+
+          {/* Floating Header at Z = -85 */}
           <Html
             transform
             distanceFactor={14}
-            position={[0, 8, -95]}
+            position={[0, 9.5, -85]}
             style={{ opacity: techOpacity }}
-            className="transition-opacity duration-300"
+            className="transition-opacity duration-300 pointer-events-auto select-none"
           >
-            <div className="text-center select-none w-[600px]">
-              <span className="text-xs font-mono uppercase tracking-[0.35em] text-[#00FF66] font-semibold">
-                02 // ARCHITECTURE UNIVERSE
+            <div className="text-center w-[750px] max-w-[90vw] mx-auto">
+              <span className="text-xs font-mono uppercase tracking-[0.35em] text-[#b5f200] font-semibold">
+                02 // OUR CORE SERVICES
               </span>
-              <h2 className="mt-2 text-4xl font-black text-white uppercase tracking-tight drop-shadow-[0_0_20px_rgba(0,255,102,0.4)]">
-                CONFIGURED SYSTEM MODULES
+              <h2 className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight flex items-center justify-center gap-3 drop-shadow-[0_0_25px_rgba(181,242,0,0.4)]">
+                <span>We provide effective design solutions</span>
+                <span className="inline-flex items-center text-[#b5f200]">
+                  <svg className="w-8 h-8 sm:w-10 sm:h-10 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 0L14.59 8.41L23 9.59L16.29 15.29L18.41 24L12 19.59L5.59 24L7.71 15.29L1 9.59L9.41 8.41L12 0Z" />
+                  </svg>
+                </span>
               </h2>
             </div>
           </Html>
 
-          {TECH_FEATURES.map((feat, idx) => (
-            <group key={idx} position={feat.pos}>
+          {/* 9 Service Cards Orbiting around Saturn as User Scrolls */}
+          {dynamicSpatialServices.map((feat) => (
+            <group key={feat.id} position={feat.pos}>
               <Html
                 transform
-                distanceFactor={11}
-                className="pointer-events-auto select-none w-[300px] transition-opacity duration-300"
+                distanceFactor={13.5}
+                className="pointer-events-auto select-none w-[320px] transition-opacity duration-300"
                 style={{ opacity: techOpacity }}
               >
-                <div className="transition-all duration-300 hover:scale-105">
-                  <span className="inline-block px-3 py-1 text-[10px] font-mono uppercase tracking-widest text-[#00FF66] bg-[#00FF66]/10 rounded-full border border-[#00FF66]/30 mb-2">
-                    {feat.tag}
-                  </span>
-                  <h3 className="text-xl font-bold text-white drop-shadow-[0_0_12px_rgba(0,255,102,0.4)] mb-1.5">
-                    {feat.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-light">
-                    {feat.description}
-                  </p>
-                </div>
+                <SpatialServiceCard feat={feat} />
               </Html>
             </group>
           ))}
