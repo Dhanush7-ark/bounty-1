@@ -168,7 +168,10 @@ export function BackgroundAnimationSystem() {
               style={{
                 height: col.height,
                 opacity: col.opacity,
-                animation: `verticalBeamFlow ${col.duration} ease-in-out infinite`,
+                animationName: "verticalBeamFlow",
+                animationDuration: col.duration,
+                animationTimingFunction: "ease-in-out",
+                animationIterationCount: "infinite",
                 animationDelay: col.delay,
               }}
             />
@@ -182,7 +185,10 @@ export function BackgroundAnimationSystem() {
         <div
           className="absolute top-0 bottom-0 w-48 bg-gradient-to-r from-transparent via-[#C6FF36]/10 to-transparent pointer-events-none"
           style={{
-            animation: "horizontalScanSweep 16s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+            animationName: "horizontalScanSweep",
+            animationDuration: "16s",
+            animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+            animationIterationCount: "infinite",
             filter: "blur(12px)",
           }}
         />
@@ -190,7 +196,10 @@ export function BackgroundAnimationSystem() {
         <div
           className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#C6FF36]/30 to-transparent pointer-events-none shadow-[0_0_12px_#C6FF36]"
           style={{
-            animation: "horizontalScanSweep 16s cubic-bezier(0.4, 0, 0.2, 1) infinite",
+            animationName: "horizontalScanSweep",
+            animationDuration: "16s",
+            animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+            animationIterationCount: "infinite",
             animationDelay: "0.2s",
           }}
         />
@@ -239,7 +248,10 @@ export function BackgroundAnimationSystem() {
             filter="url(#svgLightGlow)"
             strokeDasharray="350 1100"
             style={{
-              animation: "lightTrailFlow 18s linear infinite",
+              animationName: "lightTrailFlow",
+              animationDuration: "18s",
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
             }}
           />
 
@@ -252,7 +264,11 @@ export function BackgroundAnimationSystem() {
             filter="url(#svgLightGlow)"
             strokeDasharray="300 1000"
             style={{
-              animation: "lightTrailFlow 24s linear infinite reverse",
+              animationName: "lightTrailFlow",
+              animationDuration: "24s",
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
+              animationDirection: "reverse",
             }}
           />
 
@@ -265,7 +281,10 @@ export function BackgroundAnimationSystem() {
             filter="url(#svgLightGlow)"
             strokeDasharray="400 1300"
             style={{
-              animation: "lightTrailFlow 21s linear infinite",
+              animationName: "lightTrailFlow",
+              animationDuration: "21s",
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
             }}
           />
         </svg>
@@ -287,7 +306,10 @@ export function BackgroundAnimationSystem() {
               height: `${p.size}px`,
               opacity: p.opacity,
               boxShadow: `0 0 ${p.size * 3}px #C6FF36`,
-              animation: `${p.anim} ${p.duration}s ease-in-out infinite`,
+              animationName: p.anim,
+              animationDuration: `${p.duration}s`,
+              animationTimingFunction: "ease-in-out",
+              animationIterationCount: "infinite",
               animationDelay: `${p.delay}s`,
             }}
           />
