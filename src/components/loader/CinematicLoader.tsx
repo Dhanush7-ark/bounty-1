@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useEffect, useState, useCallback } from "react";
-import { gsap } from "@/lib/gsap";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useLoadingState } from "@/hooks/useLoadingState";
 import { LoaderParticles } from "./LoaderParticles";
 
@@ -25,16 +24,11 @@ function getStageLabel(progress: number): string {
 export function CinematicLoader() {
   const { onLoadingComplete, onRevealComplete } = useLoadingState();
 
-  // DOM refs
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const counterRef = useRef<HTMLDivElement>(null);
-  const labelRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
-
-  // Animation state
-  const progressObj = useRef({ value: 1 });
   const [displayProgress, setDisplayProgress] = useState(1);
+  const [isExiting, setIsExiting] = useState(false);
+  const [flashGlow, setFlashGlow] = useState(false);
+  const [overlayHidden, setOverlayHidden] = useState(false);
+
   const hasCompleted = useRef(false);
 
   const [isMobile] = useState(() => {
@@ -42,131 +36,70 @@ export function CinematicLoader() {
     return window.innerWidth < 768;
   });
 
-  // ─── Cinematic reveal at 100% ───────────────────────────────
-  const runRevealSequence = useCallback(() => {
+  const handleComplete = useCallback(() => {
     if (hasCompleted.current) return;
     hasCompleted.current = true;
 
-    const tl = gsap.timeline({
-      onComplete: () => {
+    // Step 1: Hold 100 for a cinematic beat
+    setTimeout(() => {
+      setFlashGlow(true);
+      setIsExiting(true);
+
+      // Step 2: Fade out overlay
+      setTimeout(() => {
         onLoadingComplete();
-        requestAnimationFrame(() => {
-          onRevealComplete();
-        });
-      },
-    });
-
-    // Step 1: Hold 100 for a brief cinematic beat
-    tl.to({}, { duration: 0.35 });
-
-    // Step 2: Atmospheric green glow flash behind Bodoni numerals
-    if (glowRef.current) {
-      tl.to(
-        glowRef.current,
-        {
-          opacity: 0.85,
-          scale: 2.2,
-          duration: 0.45,
-          ease: "power2.in",
-        },
-        "<"
-      );
-    }
-
-    // Step 3: Counter scales and dissolves smoothly
-    if (counterRef.current) {
-      tl.to(counterRef.current, {
-        scale: 1.1,
-        opacity: 0,
-        filter: "blur(16px)",
-        duration: 0.45,
-        ease: "power3.in",
-      });
-    }
-
-    // Step 4: Supporting text fades
-    if (labelRef.current) {
-      tl.to(
-        labelRef.current,
-        { opacity: 0, y: 12, duration: 0.3, ease: "power2.in" },
-        "-=0.35"
-      );
-    }
-
-    // Step 5: Pure black overlay lifts away to reveal main site
-    if (overlayRef.current) {
-      tl.to(
-        overlayRef.current,
-        {
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.inOut",
-        },
-        "-=0.15"
-      );
-    }
+        onRevealComplete();
+        setOverlayHidden(true);
+      }, 650);
+    }, 350);
   }, [onLoadingComplete, onRevealComplete]);
 
-  // ─── Main loading timeline ──────────────────────────────────
   useEffect(() => {
     // Lock scrollbar during loading
     document.body.style.overflow = "hidden";
 
-    const duration = 2.4;
+    const duration = 2400; // 2.4 seconds total count duration
+    const startTime = performance.now();
 
-    // Animate progress 1 → 100
-    const counterTween = gsap.to(progressObj.current, {
-      value: 100,
-      duration,
-      ease: "power2.inOut",
-      onUpdate: () => {
-        const val = Math.round(progressObj.current.value);
-        setDisplayProgress(val);
+    let animationFrameId: number;
 
-        if (stageRef.current) {
-          stageRef.current.textContent = getStageLabel(val);
-        }
+    const tick = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const linearProgress = Math.min(1, elapsed / duration);
 
-        // Drive atmospheric background glow via progress
-        if (glowRef.current) {
-          const norm = val / 100;
-          glowRef.current.style.opacity = String(Math.min(0.4, norm * 0.4));
-          glowRef.current.style.transform = `translate(-50%, -50%) scale(${0.7 + norm * 0.6})`;
-        }
-      },
-      onComplete: () => {
-        runRevealSequence();
-      },
-    });
+      // Ease out cubic for a dramatic slow down toward 100
+      const easedProgress = 1 - Math.pow(1 - linearProgress, 2.8);
+      const val = Math.min(100, Math.max(1, Math.round(easedProgress * 99 + 1)));
 
-    // Fade-in supporting text labels cleanly
-    if (labelRef.current) {
-      gsap.fromTo(
-        labelRef.current,
-        { opacity: 0, y: 12 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          delay: 0.2,
-          ease: "power2.out",
-        }
-      );
-    }
+      setDisplayProgress(val);
+
+      if (linearProgress < 1) {
+        animationFrameId = requestAnimationFrame(tick);
+      } else {
+        setDisplayProgress(100);
+        handleComplete();
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(tick);
 
     return () => {
-      counterTween.kill();
+      cancelAnimationFrame(animationFrameId);
       document.body.style.overflow = "";
     };
-  }, [runRevealSequence]);
+  }, [handleComplete]);
+
+  if (overlayHidden) return null;
 
   const formattedCounter = String(displayProgress).padStart(2, "0");
+  const norm = displayProgress / 100;
+  const currentStage = getStageLabel(displayProgress);
 
   return (
     <div
-      ref={overlayRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505]"
-      style={{ willChange: "opacity" }}
+      className={`fixed inset-0 z-[9999] flex items-center justify-center bg-[#050505] transition-opacity duration-700 ease-in-out ${
+        isExiting ? "opacity-0 pointer-events-none" : "opacity-100"
+      }`}
       aria-live="polite"
       role="progressbar"
       aria-valuenow={displayProgress}
@@ -183,26 +116,30 @@ export function CinematicLoader() {
 
       {/* Atmospheric green radial glow behind ITC Bodoni 72 typography */}
       <div
-        ref={glowRef}
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-all duration-500 ease-out"
         style={{
-          width: "min(90vw, 700px)",
-          height: "min(90vw, 700px)",
+          width: "min(90vw, 750px)",
+          height: "min(90vw, 750px)",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(198,255,54,0.18) 0%, rgba(198,255,54,0.03) 50%, transparent 75%)",
-          opacity: 0,
-          willChange: "opacity, transform",
+            "radial-gradient(circle, rgba(198,255,54,0.22) 0%, rgba(198,255,54,0.04) 50%, transparent 75%)",
+          opacity: flashGlow ? 0.85 : Math.min(0.4, norm * 0.4),
+          transform: `translate(-50%, -50%) scale(${flashGlow ? 2.2 : 0.7 + norm * 0.6})`,
         }}
         aria-hidden="true"
       />
 
       {/* Central counter + supporting text */}
-      <div className="relative z-10 flex flex-col items-center select-none text-center px-4">
+      <div
+        className={`relative z-10 flex flex-col items-center select-none text-center px-4 transition-all duration-500 ease-in ${
+          isExiting
+            ? "scale-110 opacity-0 blur-lg"
+            : "scale-100 opacity-100 blur-0"
+        }`}
+      >
         {/* Large ITC Bodoni 72 Italic Counter */}
         <div
-          ref={counterRef}
-          className="relative leading-none select-none"
+          className="relative leading-none select-none font-serif-italic"
           style={{
             fontFamily:
               'var(--font-bodoni-72), "ITC Bodoni 72", "Bodoni 72 Oldstyle", "Bodoni 72", Georgia, serif',
@@ -212,20 +149,14 @@ export function CinematicLoader() {
             fontSize: "clamp(180px, 28vw, 480px)",
             color: "#C6FF36",
             letterSpacing: "-0.02em",
-            opacity: 1,
-            textShadow: "0 0 50px rgba(198, 255, 54, 0.35)",
-            willChange: "transform, opacity, filter",
+            textShadow: "0 0 50px rgba(198, 255, 54, 0.4), 0 0 100px rgba(198, 255, 54, 0.15)",
           }}
         >
           {formattedCounter}
         </div>
 
         {/* Supporting label & stage indicator */}
-        <div
-          ref={labelRef}
-          className="mt-2 sm:mt-4 flex flex-col items-center"
-          style={{ opacity: 0, willChange: "opacity, transform" }}
-        >
+        <div className="mt-2 sm:mt-4 flex flex-col items-center">
           <div
             className="tracking-[0.4em] uppercase font-mono font-medium"
             style={{
@@ -238,14 +169,13 @@ export function CinematicLoader() {
           </div>
 
           <div
-            ref={stageRef}
-            className="mt-2 tracking-[0.3em] uppercase font-mono text-xs"
+            className="mt-2 tracking-[0.3em] uppercase font-mono text-xs transition-all duration-200"
             style={{
               color: "rgba(255, 255, 255, 0.45)",
               letterSpacing: "0.25em",
             }}
           >
-            INITIALIZING ORCHESTRATION
+            {currentStage}
           </div>
         </div>
       </div>
@@ -254,7 +184,7 @@ export function CinematicLoader() {
       <div
         className="absolute bottom-0 left-0 right-0 h-px"
         style={{
-          background: "linear-gradient(90deg, transparent, rgba(198,255,54,0.3), transparent)",
+          background: "linear-gradient(90deg, transparent, rgba(198,255,54,0.35), transparent)",
         }}
         aria-hidden="true"
       />
