@@ -131,6 +131,32 @@ export function BackgroundAnimationSystem() {
     { id: 58, left: "98.5%", width: 0.75, height: "320px", duration: "28s", delay: "-11s", opacity: 0.1, glow: false, gradientType: "faint" },
   ];
 
+  // ─── THIN HORIZONTAL SCANNING LINES (LEFT TO RIGHT, OCCASIONAL BRIGHT BEAMS) ───
+  const horizontalLines = [
+    { id: 1, top: "3.5%", width: "320px", height: 1, duration: "18s", delay: "-4s", opacity: 0.35, isBrightBeam: false },
+    { id: 2, top: "7.0%", width: "520px", height: 1.5, duration: "13s", delay: "-9s", opacity: 0.75, isBrightBeam: true },
+    { id: 3, top: "11.5%", width: "260px", height: 1, duration: "22s", delay: "-14s", opacity: 0.22, isBrightBeam: false },
+    { id: 4, top: "15.0%", width: "420px", height: 1, duration: "16s", delay: "-2s", opacity: 0.45, isBrightBeam: false },
+    { id: 5, top: "19.5%", width: "680px", height: 2, duration: "11s", delay: "-7.5s", opacity: 0.95, isBrightBeam: true },
+    { id: 6, top: "24.0%", width: "310px", height: 1, duration: "25s", delay: "-18s", opacity: 0.18, isBrightBeam: false },
+    { id: 7, top: "28.5%", width: "480px", height: 1, duration: "15s", delay: "-5s", opacity: 0.5, isBrightBeam: false },
+    { id: 8, top: "33.0%", width: "360px", height: 1, duration: "20s", delay: "-12s", opacity: 0.28, isBrightBeam: false },
+    { id: 9, top: "37.5%", width: "620px", height: 1.5, duration: "12.5s", delay: "-3s", opacity: 0.85, isBrightBeam: true },
+    { id: 10, top: "42.0%", width: "290px", height: 1, duration: "23s", delay: "-15s", opacity: 0.2, isBrightBeam: false },
+    { id: 11, top: "46.5%", width: "450px", height: 1, duration: "17s", delay: "-8s", opacity: 0.4, isBrightBeam: false },
+    { id: 12, top: "51.0%", width: "740px", height: 2, duration: "10.5s", delay: "-6s", opacity: 0.95, isBrightBeam: true },
+    { id: 13, top: "55.5%", width: "340px", height: 1, duration: "21s", delay: "-13.5s", opacity: 0.25, isBrightBeam: false },
+    { id: 14, top: "60.0%", width: "490px", height: 1, duration: "14.5s", delay: "-1s", opacity: 0.55, isBrightBeam: false },
+    { id: 15, top: "64.5%", width: "270px", height: 1, duration: "26s", delay: "-19s", opacity: 0.16, isBrightBeam: false },
+    { id: 16, top: "69.0%", width: "580px", height: 1.5, duration: "13.5s", delay: "-7s", opacity: 0.8, isBrightBeam: true },
+    { id: 17, top: "73.5%", width: "380px", height: 1, duration: "19s", delay: "-11s", opacity: 0.3, isBrightBeam: false },
+    { id: 18, top: "78.0%", width: "460px", height: 1, duration: "16.5s", delay: "-4.5s", opacity: 0.48, isBrightBeam: false },
+    { id: 19, top: "82.5%", width: "710px", height: 2, duration: "11.5s", delay: "-8.5s", opacity: 0.9, isBrightBeam: true },
+    { id: 20, top: "87.0%", width: "330px", height: 1, duration: "24s", delay: "-16s", opacity: 0.22, isBrightBeam: false },
+    { id: 21, top: "91.5%", width: "510px", height: 1.5, duration: "14s", delay: "-3.5s", opacity: 0.65, isBrightBeam: false },
+    { id: 22, top: "95.5%", width: "400px", height: 1, duration: "20s", delay: "-10s", opacity: 0.25, isBrightBeam: false },
+  ];
+
   useEffect(() => {
     // Check if device supports fine hover (desktop)
     const hoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -295,30 +321,76 @@ export function BackgroundAnimationSystem() {
         })}
       </motion.div>
 
-      {/* ─── LAYER 4: HORIZONTAL SCANNING LINES MOVING FROM LEFT TO RIGHT ─── */}
+      {/* ─── LAYER 4: THIN HORIZONTAL SCANNING LINES (LEFT TO RIGHT WITH OCCASIONAL BRIGHT BEAMS) ─── */}
       <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
-        {/* Primary Horizontal Scanning Beam */}
+        {/* Subtle Horizontal CRT Scanline Raster Texture across full screen */}
         <div
-          className="absolute top-0 bottom-0 w-48 bg-gradient-to-r from-transparent via-[#C6FF36]/10 to-transparent pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-40"
           style={{
-            animationName: "horizontalScanSweep",
-            animationDuration: "16s",
-            animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-            animationIterationCount: "infinite",
-            filter: "blur(12px)",
+            backgroundImage:
+              "repeating-linear-gradient(to bottom, transparent, transparent 23px, rgba(198, 255, 54, 0.025) 23px, rgba(198, 255, 54, 0.06) 24px)",
           }}
         />
-        {/* Secondary subtle high-tech scanning line */}
-        <div
-          className="absolute top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#C6FF36]/30 to-transparent pointer-events-none shadow-[0_0_12px_#C6FF36]"
-          style={{
-            animationName: "horizontalScanSweep",
-            animationDuration: "16s",
-            animationTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-            animationIterationCount: "infinite",
-            animationDelay: "0.2s",
-          }}
-        />
+
+        {/* Horizontal Line Tracks & Traveling Laser Beams */}
+        {horizontalLines.map((line) => {
+          const beamGradient = line.isBrightBeam
+            ? "linear-gradient(to right, transparent 0%, rgba(198, 255, 54, 0.25) 20%, #FFFFFF 65%, #C6FF36 85%, transparent 100%)"
+            : "linear-gradient(to right, transparent 0%, rgba(198, 255, 54, 0.15) 30%, #C6FF36 75%, transparent 100%)";
+
+          const beamShadow = line.isBrightBeam
+            ? "0 0 10px #C6FF36, 0 0 20px rgba(198, 255, 54, 0.45)"
+            : "0 0 5px rgba(198, 255, 54, 0.3)";
+
+          return (
+            <div
+              key={`hline-${line.id}`}
+              className="absolute left-0 right-0 pointer-events-none"
+              style={{ top: line.top }}
+            >
+              {/* Very faint baseline guide line spanning across */}
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-[#C6FF36]/8 to-transparent" />
+
+              {/* Traveling Horizontal Laser Pulse / Scanning Beam (Left to Right) */}
+              <div
+                className="absolute top-0 pointer-events-none"
+                style={{
+                  width: line.width,
+                  height: `${line.height}px`,
+                  opacity: line.opacity,
+                  background: beamGradient,
+                  boxShadow: beamShadow,
+                  animationName: "horizontalLineTravel",
+                  animationDuration: line.duration,
+                  animationTimingFunction: "linear",
+                  animationIterationCount: "infinite",
+                  animationDelay: line.delay,
+                  willChange: "transform",
+                }}
+              />
+
+              {/* Occasional Brighter Scanning Beam Soft Green Glow Halo */}
+              {line.isBrightBeam && (
+                <div
+                  className="absolute -top-1.5 pointer-events-none blur-sm"
+                  style={{
+                    width: line.width,
+                    height: "12px",
+                    opacity: line.opacity * 0.4,
+                    background:
+                      "linear-gradient(to right, transparent 0%, rgba(198, 255, 54, 0.35) 50%, transparent 100%)",
+                    animationName: "horizontalLineTravel",
+                    animationDuration: line.duration,
+                    animationTimingFunction: "linear",
+                    animationIterationCount: "infinite",
+                    animationDelay: line.delay,
+                    willChange: "transform",
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* ─── LAYER 5: CINEMATIC CURVED NEON-GREEN SVG LIGHT TRAILS ─── */}

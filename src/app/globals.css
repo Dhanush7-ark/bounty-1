@@ -178,10 +178,27 @@
   }
 }
 
-/* ─── Horizontal Laser Scanning Beam ─── */
+/* ─── Horizontal Laser Scanning Beam & Line Travel Keyframes ─── */
+@keyframes horizontalLineTravel {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 120%));
+    opacity: 0;
+  }
+}
+
 @keyframes horizontalScanSweep {
   0% {
-    transform: translateX(-100%);
+    transform: translateX(-120%);
     opacity: 0;
   }
   15% {
@@ -191,7 +208,7 @@
     opacity: 0.7;
   }
   100% {
-    transform: translateX(100%);
+    transform: translateX(calc(100vw + 120%));
     opacity: 0;
   }
 }

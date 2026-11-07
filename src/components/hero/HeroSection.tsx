@@ -227,9 +227,21 @@ export function HeroSection({ onWatchBuild, onStartFree }: HeroSectionProps) {
                     strokeDasharray="4 4"
                     filter="url(#wireGlowHero)"
                   />
-                  {/* Moving pulse dot along wire 1 */}
-                  <circle cx="240" cy="132" r="3.5" fill="#C6FF36" className="animate-ping" />
-                  <circle cx="240" cy="132" r="2" fill="#FFFFFF" />
+                  {/* Glowing moving particle traveling along wire 1 */}
+                  <circle r="3.5" fill="#C6FF36" filter="url(#wireGlowHero)">
+                    <animateMotion
+                      path="M 190 85 C 240 85, 240 180, 290 180"
+                      dur="2.8s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle r="1.5" fill="#FFFFFF">
+                    <animateMotion
+                      path="M 190 85 C 240 85, 240 180, 290 180"
+                      dur="2.8s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
 
                   {/* Wire 2: Branch Node 2 to Branch A (Enterprise Slack Approval) */}
                   <motion.path
@@ -242,8 +254,21 @@ export function HeroSection({ onWatchBuild, onStartFree }: HeroSectionProps) {
                     strokeWidth="2"
                     filter="url(#wireGlowHero)"
                   />
-                  {/* Moving pulse dot along wire 2 */}
-                  <circle cx="495" cy="132" r="3" fill="#C6FF36" className="animate-pulse" />
+                  {/* Glowing moving particle traveling along wire 2 */}
+                  <circle r="3.5" fill="#C6FF36" filter="url(#wireGlowHero)">
+                    <animateMotion
+                      path="M 450 165 C 500 165, 480 100, 540 100"
+                      dur="2.2s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle r="1.5" fill="#FFFFFF">
+                    <animateMotion
+                      path="M 450 165 C 500 165, 480 100, 540 100"
+                      dur="2.2s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
 
                   {/* Wire 3: Branch Node 2 to Branch B (Automated Dunning) */}
                   <motion.path
@@ -267,6 +292,14 @@ export function HeroSection({ onWatchBuild, onStartFree }: HeroSectionProps) {
                     stroke="#C6FF36"
                     strokeWidth="1.5"
                   />
+                  {/* Glowing moving particle traveling along wire 4 */}
+                  <circle r="3" fill="#C6FF36" filter="url(#wireGlowHero)">
+                    <animateMotion
+                      path="M 540 100 L 590 100"
+                      dur="1.4s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
                 </svg>
 
                 {/* ─── WORKFLOW NODES CONTAINER WITH SEQUENTIAL APPEARANCE ─── */}
