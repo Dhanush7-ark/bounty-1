@@ -53,7 +53,10 @@ export function HeroSection({ onWatchBuild, onStartFree }: HeroSectionProps) {
             filter="url(#glowEffect)"
             strokeDasharray="400 1200"
             style={{
-              animation: "lightTrailFlow 16s linear infinite",
+              animationName: "lightTrailFlow",
+              animationDuration: "16s",
+              animationTimingFunction: "linear",
+              animationIterationCount: "infinite",
             }}
           />
           {/* Secondary faint echo trail */}
