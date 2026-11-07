@@ -36,7 +36,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="relative bg-[#050505] pt-20 pb-12 px-4 sm:px-6 lg:px-8 text-neutral-400 overflow-hidden">
+    <footer className="relative bg-transparent pt-20 pb-12 px-4 sm:px-6 lg:px-8 text-neutral-400 overflow-hidden">
       
       {/* ─── GLOWING GREEN DIVIDER LINE WITH ENTRANCE ─── */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#C6FF36]/50 to-transparent shadow-[0_0_20px_#C6FF36]" />

@@ -11,10 +11,10 @@ interface HeroSectionProps {
 
 export function HeroSection({ onWatchBuild, onStartFree }: HeroSectionProps) {
   const [activeStep, setActiveStep] = useState<number>(2);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = false;
 
   return (
-    <section className="relative min-h-screen pt-28 sm:pt-36 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-[#050505]">
+    <section className="relative min-h-screen pt-28 sm:pt-36 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden bg-transparent">
       {/* ─── AMBIENT CINEMATIC LIGHTING & DIAGONAL LIGHT TRAILS ─── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Soft Olive Green Gradient Halo in Top Center */}

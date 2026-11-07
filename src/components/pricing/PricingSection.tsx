@@ -73,7 +73,7 @@ export function PricingSection({ onSelectPlan }: PricingSectionProps) {
   ];
 
   return (
-    <section id="pricing" className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-[#050505] overflow-hidden border-t border-white/5">
+    <section id="pricing" className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden border-t border-white/5">
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-[radial-gradient(ellipse,rgba(198,255,54,0.06),transparent_70%)] blur-[120px] animate-pulse-glow" />

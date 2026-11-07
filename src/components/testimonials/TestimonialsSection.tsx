@@ -31,7 +31,7 @@ export function TestimonialsSection() {
   ];
 
   return (
-    <section id="customers" className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-[#050505] overflow-hidden border-t border-white/5">
+    <section id="customers" className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden border-t border-white/5">
       {/* Ambient background soft glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[300px] bg-[radial-gradient(ellipse,rgba(198,255,54,0.04),transparent_70%)] blur-[100px]" />

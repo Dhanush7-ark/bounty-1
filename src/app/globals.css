@@ -353,18 +353,6 @@
   animation: floatSlow 5s ease-in-out infinite;
 }
 
-/* Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-  .animate-marquee-track {
-    animation: none !important;
-  }
-}
-
 /* Subtle Grid Background Pattern */
 .bg-grid-pattern {
   background-size: 40px 40px;

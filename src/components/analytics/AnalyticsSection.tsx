@@ -84,7 +84,7 @@ export function AnalyticsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-[#050505] overflow-hidden border-t border-white/5"
+      className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden border-t border-white/5"
     >
       {/* ─── SUBTLE GREEN LIGHT BEAM ACROSS BACKGROUND ─── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

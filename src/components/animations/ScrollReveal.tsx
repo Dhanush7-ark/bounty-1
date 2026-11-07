@@ -24,7 +24,7 @@ export function ScrollReveal({
   scale = 1,
   staggerChildren = 0,
 }: ScrollRevealProps) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = false;
 
   if (shouldReduceMotion) {
     return <div className={className}>{children}</div>;
@@ -88,7 +88,7 @@ export function StaggerContainer({
   staggerDelay?: number;
   delay?: number;
 }) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = false;
 
   if (shouldReduceMotion) {
     return <div className={className}>{children}</div>;
@@ -123,7 +123,7 @@ export function StaggerItem({
   children: ReactNode;
   className?: string;
 }) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = false;
 
   if (shouldReduceMotion) {
     return <div className={className}>{children}</div>;

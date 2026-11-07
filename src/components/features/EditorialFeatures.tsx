@@ -76,7 +76,7 @@ export function EditorialFeatures() {
   const activeBar = barChartData[selectedColumnIndex] || barChartData[8];
 
   return (
-    <div className="relative bg-[#050505] text-white overflow-hidden">
+    <div className="relative bg-transparent text-white overflow-hidden">
       
       {/* ──────────────────────────────────────────────────────────────────────────
           SECTION A: "One canvas, many branches."
@@ -181,7 +181,7 @@ export function EditorialFeatures() {
           SECTION B: "A Tuesday, seen from Relay."
           Editorial Timeline Execution Dashboard
       ────────────────────────────────────────────────────────────────────────── */}
-      <section className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-[#070806]">
+      <section className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-transparent">
         {/* Ambient subtle green glow */}
         <div className="absolute top-1/2 right-1/4 w-[700px] h-[400px] bg-[radial-gradient(circle,rgba(198,255,54,0.05),transparent_70%)] blur-[140px] pointer-events-none" />
 
@@ -268,7 +268,7 @@ export function EditorialFeatures() {
           SECTION C: "Every run is on the record."
           3D-Style Bar Chart with Floating Rectangular Columns
       ────────────────────────────────────────────────────────────────────────── */}
-      <section className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-[#050505]">
+      <section className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 border-t border-white/5 bg-transparent">
         {/* Green light beam behind chart */}
         <div className="absolute top-1/2 left-1/3 -translate-x-1/2 w-[850px] h-[350px] bg-[radial-gradient(ellipse,rgba(198,255,54,0.07),transparent_70%)] blur-[100px] pointer-events-none" />
 

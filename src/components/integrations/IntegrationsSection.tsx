@@ -91,7 +91,7 @@ export function IntegrationsSection() {
   const marqueeList = [...integrations, ...integrations];
 
   return (
-    <section id="product" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-[#050505] overflow-hidden border-t border-white/5">
+    <section id="product" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden border-t border-white/5">
       {/* ─── ANIMATED VERTICAL GREEN LIGHT TRAILS BACKGROUND ─── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {/* Vertical laser light lines streaming down */}

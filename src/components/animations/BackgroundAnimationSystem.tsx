@@ -5,7 +5,6 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from "fram
 
 export function BackgroundAnimationSystem() {
   const [isDesktopHover, setIsDesktopHover] = useState(false);
-  const [isReducedMotion, setIsReducedMotion] = useState(false);
   const [isPageVisible, setIsPageVisible] = useState(true);
 
   // Mouse coords for smooth radial spotlight
@@ -167,15 +166,6 @@ export function BackgroundAnimationSystem() {
     };
     hoverQuery.addEventListener("change", handleHoverChange);
 
-    // Check reduced motion preference
-    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setIsReducedMotion(motionQuery.matches);
-
-    const handleMotionChange = (e: MediaQueryListEvent) => {
-      setIsReducedMotion(e.matches);
-    };
-    motionQuery.addEventListener("change", handleMotionChange);
-
     // Track mouse position
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -194,26 +184,13 @@ export function BackgroundAnimationSystem() {
 
     return () => {
       hoverQuery.removeEventListener("change", handleHoverChange);
-      motionQuery.removeEventListener("change", handleMotionChange);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [mouseX, mouseY]);
 
-  if (isReducedMotion) {
-    return (
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050505]">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-[radial-gradient(ellipse,rgba(198,255,54,0.06),transparent_70%)] blur-[100px]" />
-      </div>
-    );
-  }
-
   return (
-    <div
-      className={`fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050505] transition-opacity duration-700 ${
-        isPageVisible ? "opacity-100" : "opacity-30"
-      }`}
-    >
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050505]">
       {/* ─── LAYER 1: SOFT RADIAL GREEN AMBIENT LIGHTING ─── */}
       <div className="absolute inset-0">
         {/* Top Header Soft Glow */}
