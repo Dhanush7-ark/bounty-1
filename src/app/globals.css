@@ -228,6 +228,16 @@
   }
 }
 
+/* Continuous Light Ribbon Energy Flow */
+@keyframes ribbonFlow {
+  0% {
+    stroke-dashoffset: 2400;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
 @keyframes pulseGlow {
   0%, 100% {
     opacity: 0.3;
