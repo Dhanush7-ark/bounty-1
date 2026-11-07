@@ -166,7 +166,22 @@ export function WorkflowSection() {
                 filter={activeStepIndex >= 1 ? "url(#wirePulseFilter)" : undefined}
               />
               {activeStepIndex >= 1 && (
-                <circle cx="300" cy="120" r="3.5" fill="#C6FF36" className="animate-ping" />
+                <>
+                  <circle r="3.5" fill="#C6FF36" filter="url(#wirePulseFilter)">
+                    <animateMotion
+                      path="M 220 120 L 380 120"
+                      dur="1.8s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle r="1.5" fill="#FFFFFF">
+                    <animateMotion
+                      path="M 220 120 L 380 120"
+                      dur="1.8s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </>
               )}
 
               {/* Line 2: Decision to Branch True (Upper) */}
@@ -178,7 +193,22 @@ export function WorkflowSection() {
                 filter={activeStepIndex >= 2 ? "url(#wirePulseFilter)" : undefined}
               />
               {activeStepIndex >= 2 && (
-                <circle cx="650" cy="85" r="3" fill="#C6FF36" className="animate-pulse" />
+                <>
+                  <circle r="3.5" fill="#C6FF36" filter="url(#wirePulseFilter)">
+                    <animateMotion
+                      path="M 580 120 C 640 120, 640 60, 710 60"
+                      dur="2.0s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle r="1.5" fill="#FFFFFF">
+                    <animateMotion
+                      path="M 580 120 C 640 120, 640 60, 710 60"
+                      dur="2.0s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </>
               )}
 
               {/* Line 3: Decision to Branch False (Lower) */}
@@ -201,7 +231,22 @@ export function WorkflowSection() {
                 filter={activeStepIndex >= 3 ? "url(#wirePulseFilter)" : undefined}
               />
               {activeStepIndex >= 3 && (
-                <circle cx="940" cy="60" r="3.5" fill="#C6FF36" className="animate-pulse" />
+                <>
+                  <circle r="3.5" fill="#C6FF36" filter="url(#wirePulseFilter)">
+                    <animateMotion
+                      path="M 910 60 L 970 60"
+                      dur="1.4s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                  <circle r="1.5" fill="#FFFFFF">
+                    <animateMotion
+                      path="M 910 60 L 970 60"
+                      dur="1.4s"
+                      repeatCount="indefinite"
+                    />
+                  </circle>
+                </>
               )}
             </svg>
 
