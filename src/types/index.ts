@@ -1,5 +1,3 @@
-export type { PerformanceTier, PerformanceConfig } from "./three";
-
 export interface SiteConfig {
   name: string;
   description: string;
@@ -9,12 +7,6 @@ export interface SiteConfig {
     github: string;
     twitter: string;
   };
-}
-
-export interface ScrollAnimationState {
-  progress: number;
-  direction: number;
-  velocity: number;
 }
 
 export interface NavItem {

@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import { AppShell } from "@/components/layout/AppShell";
 import { siteConfig } from "@/config/site";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 const bodoni72 = localFont({
   src: [
@@ -21,21 +17,13 @@ const bodoni72 = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
-  title: siteConfig.name,
+  title: `${siteConfig.name} — The handoffs run themselves`,
   description: siteConfig.description,
   openGraph: {
-    title: siteConfig.name,
+    title: `${siteConfig.name} — The handoffs run themselves`,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: siteConfig.ogImage,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
     type: "website",
   },
 };
@@ -46,9 +34,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${bodoni72.variable} dark`}>
-      <body className="min-h-screen bg-black font-sans text-neutral-100 antialiased selection:bg-lime-400 selection:text-black">
-        <AppShell>{children}</AppShell>
+    <html lang="en" className={`${bodoni72.variable} dark scroll-smooth`}>
+      <body className="min-h-screen bg-[#050505] font-sans text-neutral-100 antialiased selection:bg-[#C6FF36] selection:text-black">
+        {children}
       </body>
     </html>
   );
