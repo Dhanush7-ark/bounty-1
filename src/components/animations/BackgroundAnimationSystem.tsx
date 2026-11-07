@@ -43,15 +43,92 @@ export function BackgroundAnimationSystem() {
     { id: 16, top: "78%", left: "18%", size: 2, opacity: 0.5, duration: 9.2, delay: 1.6, anim: "particleDriftUpRight" },
   ];
 
-  // Thin vertical neon-green lines moving top to bottom
+  // ─── SUBTLE VERTICAL GREEN LIGHT GRADIENT PILLARS AROUND SELECTED CLUSTERS ───
+  const glowPillars = [
+    { left: "7.0%", width: "45px", height: "75%", top: "0%", duration: "8s", delay: "-1s", opacity: 0.55 },
+    { left: "21.5%", width: "60px", height: "85%", top: "4%", duration: "10s", delay: "-3s", opacity: 0.65 },
+    { left: "34.0%", width: "42px", height: "70%", top: "8%", duration: "9s", delay: "-5s", opacity: 0.45 },
+    { left: "46.5%", width: "68px", height: "90%", top: "0%", duration: "11s", delay: "-2s", opacity: 0.75 },
+    { left: "63.0%", width: "50px", height: "80%", top: "6%", duration: "9.5s", delay: "-4s", opacity: 0.55 },
+    { left: "78.5%", width: "62px", height: "85%", top: "0%", duration: "10.5s", delay: "-1.5s", opacity: 0.65 },
+    { left: "92.0%", width: "46px", height: "72%", top: "10%", duration: "8.5s", delay: "-6s", opacity: 0.5 },
+  ];
+
+  // ─── THIN VERTICAL NEON-GREEN LINES (LAYERED, DIVERSE SPEEDS, HEIGHTS & OPACITY) ───
   const verticalLines = [
-    { left: "8%", duration: "9s", delay: "0s", height: "180px", opacity: 0.45 },
-    { left: "22%", duration: "13s", delay: "3.5s", height: "140px", opacity: 0.35 },
-    { left: "36%", duration: "11s", delay: "1.5s", height: "220px", opacity: 0.4 },
-    { left: "50%", duration: "14s", delay: "4.5s", height: "160px", opacity: 0.3 },
-    { left: "64%", duration: "10s", delay: "2s", height: "200px", opacity: 0.45 },
-    { left: "78%", duration: "12s", delay: "5s", height: "150px", opacity: 0.35 },
-    { left: "92%", duration: "10.5s", delay: "1s", height: "190px", opacity: 0.4 },
+    // Cluster 1 (Left: 3% - 11%)
+    { id: 1, left: "3.2%", width: 0.75, height: "340px", duration: "19s", delay: "-4s", opacity: 0.15, glow: false, gradientType: "faint" },
+    { id: 2, left: "4.5%", width: 1.0, height: "540px", duration: "13s", delay: "-9s", opacity: 0.55, glow: true, gradientType: "bright" },
+    { id: 3, left: "5.8%", width: 1.5, height: "780px", duration: "10s", delay: "-2s", opacity: 0.85, glow: true, gradientType: "bright" },
+    { id: 4, left: "6.6%", width: 1.0, height: "420px", duration: "15s", delay: "-11s", opacity: 0.4, glow: false, gradientType: "emerald" },
+    { id: 5, left: "7.5%", width: 2.0, height: "890px", duration: "8.5s", delay: "-5.5s", opacity: 0.95, glow: true, gradientType: "bright" },
+    { id: 6, left: "8.6%", width: 0.75, height: "610px", duration: "21s", delay: "-14s", opacity: 0.22, glow: false, gradientType: "faint" },
+    { id: 7, left: "9.8%", width: 1.5, height: "510px", duration: "12s", delay: "-7s", opacity: 0.75, glow: true, gradientType: "emerald" },
+    { id: 8, left: "11.2%", width: 1.0, height: "370px", duration: "16s", delay: "-1s", opacity: 0.3, glow: false, gradientType: "faint" },
+
+    // Cluster 2 (Mid-Left: 16% - 26%)
+    { id: 9, left: "16.4%", width: 0.75, height: "410px", duration: "22s", delay: "-8s", opacity: 0.18, glow: false, gradientType: "faint" },
+    { id: 10, left: "18.0%", width: 1.5, height: "740px", duration: "11s", delay: "-3s", opacity: 0.8, glow: true, gradientType: "bright" },
+    { id: 11, left: "19.3%", width: 2.0, height: "960px", duration: "9s", delay: "-6.5s", opacity: 0.95, glow: true, gradientType: "bright" },
+    { id: 12, left: "20.5%", width: 1.0, height: "560px", duration: "14s", delay: "-12s", opacity: 0.45, glow: true, gradientType: "emerald" },
+    { id: 13, left: "21.6%", width: 1.5, height: "840px", duration: "10.5s", delay: "-1.5s", opacity: 0.85, glow: true, gradientType: "bright" },
+    { id: 14, left: "22.8%", width: 0.75, height: "450px", duration: "19s", delay: "-15s", opacity: 0.25, glow: false, gradientType: "faint" },
+    { id: 15, left: "24.2%", width: 1.0, height: "670px", duration: "12.5s", delay: "-9s", opacity: 0.65, glow: true, gradientType: "emerald" },
+    { id: 16, left: "25.8%", width: 0.75, height: "320px", duration: "24s", delay: "-4s", opacity: 0.12, glow: false, gradientType: "faint" },
+
+    // Cluster 3 (Center-Left: 30% - 38%)
+    { id: 17, left: "30.4%", width: 0.75, height: "360px", duration: "20s", delay: "-7s", opacity: 0.2, glow: false, gradientType: "faint" },
+    { id: 18, left: "32.0%", width: 1.5, height: "700px", duration: "11.5s", delay: "-2.5s", opacity: 0.75, glow: true, gradientType: "bright" },
+    { id: 19, left: "33.5%", width: 2.0, height: "860px", duration: "9.5s", delay: "-8s", opacity: 0.9, glow: true, gradientType: "bright" },
+    { id: 20, left: "34.8%", width: 1.0, height: "490px", duration: "15s", delay: "-13s", opacity: 0.4, glow: false, gradientType: "emerald" },
+    { id: 21, left: "36.2%", width: 1.5, height: "780px", duration: "10s", delay: "-4.5s", opacity: 0.85, glow: true, gradientType: "bright" },
+    { id: 22, left: "37.6%", width: 0.75, height: "430px", duration: "18s", delay: "-10s", opacity: 0.22, glow: false, gradientType: "faint" },
+
+    // Cluster 4 (Center: 42% - 50%)
+    { id: 23, left: "42.4%", width: 0.75, height: "470px", duration: "21s", delay: "-6s", opacity: 0.25, glow: false, gradientType: "faint" },
+    { id: 24, left: "43.9%", width: 1.5, height: "770px", duration: "10.5s", delay: "-1s", opacity: 0.82, glow: true, gradientType: "bright" },
+    { id: 25, left: "45.2%", width: 2.0, height: "990px", duration: "8s", delay: "-5.5s", opacity: 1.0, glow: true, gradientType: "bright" },
+    { id: 26, left: "46.5%", width: 1.0, height: "600px", duration: "13.5s", delay: "-11s", opacity: 0.5, glow: true, gradientType: "emerald" },
+    { id: 27, left: "47.7%", width: 2.0, height: "910px", duration: "9s", delay: "-3s", opacity: 0.92, glow: true, gradientType: "bright" },
+    { id: 28, left: "48.9%", width: 1.0, height: "650px", duration: "12s", delay: "-8.5s", opacity: 0.65, glow: true, gradientType: "emerald" },
+    { id: 29, left: "50.3%", width: 0.75, height: "390px", duration: "23s", delay: "-16s", opacity: 0.16, glow: false, gradientType: "faint" },
+
+    // Cluster 5 (Center-Right: 58% - 68%)
+    { id: 30, left: "58.4%", width: 0.75, height: "400px", duration: "19s", delay: "-9s", opacity: 0.2, glow: false, gradientType: "faint" },
+    { id: 31, left: "60.1%", width: 1.5, height: "730px", duration: "11s", delay: "-3.5s", opacity: 0.78, glow: true, gradientType: "bright" },
+    { id: 32, left: "61.7%", width: 2.0, height: "880px", duration: "9s", delay: "-7s", opacity: 0.92, glow: true, gradientType: "bright" },
+    { id: 33, left: "63.2%", width: 1.0, height: "530px", duration: "14.5s", delay: "-12.5s", opacity: 0.45, glow: true, gradientType: "emerald" },
+    { id: 34, left: "64.6%", width: 1.5, height: "810px", duration: "10s", delay: "-2s", opacity: 0.85, glow: true, gradientType: "bright" },
+    { id: 35, left: "66.0%", width: 0.75, height: "460px", duration: "17s", delay: "-14s", opacity: 0.28, glow: false, gradientType: "faint" },
+    { id: 36, left: "67.8%", width: 1.0, height: "640px", duration: "12.5s", delay: "-5s", opacity: 0.62, glow: true, gradientType: "emerald" },
+
+    // Cluster 6 (Mid-Right: 73% - 82%)
+    { id: 37, left: "73.4%", width: 0.75, height: "370px", duration: "22s", delay: "-11s", opacity: 0.18, glow: false, gradientType: "faint" },
+    { id: 38, left: "75.0%", width: 1.5, height: "750px", duration: "10.5s", delay: "-4s", opacity: 0.8, glow: true, gradientType: "bright" },
+    { id: 39, left: "76.5%", width: 2.0, height: "940px", duration: "8.5s", delay: "-6s", opacity: 0.95, glow: true, gradientType: "bright" },
+    { id: 40, left: "77.8%", width: 1.0, height: "570px", duration: "13s", delay: "-10.5s", opacity: 0.5, glow: true, gradientType: "emerald" },
+    { id: 41, left: "79.2%", width: 1.5, height: "830px", duration: "9.5s", delay: "-1.8s", opacity: 0.88, glow: true, gradientType: "bright" },
+    { id: 42, left: "80.5%", width: 0.75, height: "490px", duration: "18s", delay: "-15s", opacity: 0.24, glow: false, gradientType: "faint" },
+    { id: 43, left: "81.8%", width: 1.0, height: "650px", duration: "12s", delay: "-7.5s", opacity: 0.65, glow: true, gradientType: "emerald" },
+
+    // Cluster 7 (Far-Right: 87% - 97%)
+    { id: 44, left: "87.4%", width: 0.75, height: "340px", duration: "20s", delay: "-8s", opacity: 0.15, glow: false, gradientType: "faint" },
+    { id: 45, left: "88.9%", width: 1.5, height: "720px", duration: "11.5s", delay: "-3s", opacity: 0.76, glow: true, gradientType: "bright" },
+    { id: 46, left: "90.5%", width: 2.0, height: "880px", duration: "9s", delay: "-7.5s", opacity: 0.9, glow: true, gradientType: "bright" },
+    { id: 47, left: "91.8%", width: 1.0, height: "540px", duration: "14s", delay: "-12s", opacity: 0.42, glow: false, gradientType: "emerald" },
+    { id: 48, left: "93.3%", width: 1.5, height: "790px", duration: "10s", delay: "-2.2s", opacity: 0.84, glow: true, gradientType: "bright" },
+    { id: 49, left: "94.6%", width: 0.75, height: "440px", duration: "19s", delay: "-14.5s", opacity: 0.2, glow: false, gradientType: "faint" },
+    { id: 50, left: "96.2%", width: 1.0, height: "610px", duration: "13s", delay: "-6s", opacity: 0.58, glow: true, gradientType: "emerald" },
+
+    // Sporadic Gap Lines (Atmospheric texture)
+    { id: 51, left: "1.5%", width: 0.75, height: "310px", duration: "26s", delay: "-13s", opacity: 0.1, glow: false, gradientType: "faint" },
+    { id: 52, left: "13.8%", width: 0.75, height: "430px", duration: "24s", delay: "-7s", opacity: 0.14, glow: false, gradientType: "faint" },
+    { id: 53, left: "28.2%", width: 0.75, height: "370px", duration: "25s", delay: "-17s", opacity: 0.12, glow: false, gradientType: "faint" },
+    { id: 54, left: "40.5%", width: 0.75, height: "500px", duration: "22s", delay: "-9s", opacity: 0.16, glow: false, gradientType: "faint" },
+    { id: 55, left: "53.8%", width: 0.75, height: "390px", duration: "27s", delay: "-21s", opacity: 0.11, glow: false, gradientType: "faint" },
+    { id: 56, left: "71.0%", width: 0.75, height: "450px", duration: "23s", delay: "-5s", opacity: 0.15, glow: false, gradientType: "faint" },
+    { id: 57, left: "84.5%", width: 0.75, height: "380px", duration: "25s", delay: "-16s", opacity: 0.13, glow: false, gradientType: "faint" },
+    { id: 58, left: "98.5%", width: 0.75, height: "320px", duration: "28s", delay: "-11s", opacity: 0.1, glow: false, gradientType: "faint" },
   ];
 
   useEffect(() => {
@@ -156,27 +233,66 @@ export function BackgroundAnimationSystem() {
           <div className="w-px h-full bg-white/[0.03]" />
         </div>
 
-        {/* Moving thin vertical neon-green laser pulses */}
-        {verticalLines.map((col, index) => (
+        {/* ─── 3A: SUBTLE VERTICAL GREEN LIGHT GRADIENTS AROUND SELECTED LINES ─── */}
+        {glowPillars.map((pillar, idx) => (
           <div
-            key={index}
-            className="absolute top-0 w-px h-full pointer-events-none overflow-hidden"
-            style={{ left: col.left }}
-          >
+            key={`pillar-${idx}`}
+            className="absolute pointer-events-none"
+            style={{
+              left: pillar.left,
+              width: pillar.width,
+              height: pillar.height,
+              top: pillar.top,
+              transform: "translateX(-50%)",
+              background:
+                "radial-gradient(ellipse at top, rgba(198, 255, 54, 0.22) 0%, rgba(34, 197, 94, 0.08) 45%, transparent 75%)",
+              filter: "blur(18px)",
+              opacity: pillar.opacity,
+              animationName: "verticalPillarPulse",
+              animationDuration: pillar.duration,
+              animationTimingFunction: "ease-in-out",
+              animationIterationCount: "infinite",
+              animationDelay: pillar.delay,
+            }}
+          />
+        ))}
+
+        {/* ─── 3B: MULTIPLE THIN VERTICAL NEON-GREEN LINES (STREAMING TOP TO BOTTOM) ─── */}
+        {verticalLines.map((line) => {
+          const bgGradient =
+            line.gradientType === "bright"
+              ? "linear-gradient(to bottom, #FFFFFF 0%, #C6FF36 18%, #C6FF36 60%, rgba(198, 255, 54, 0.3) 85%, transparent 100%)"
+              : line.gradientType === "emerald"
+              ? "linear-gradient(to bottom, #C6FF36 0%, #22c55e 40%, rgba(34, 197, 94, 0.25) 80%, transparent 100%)"
+              : "linear-gradient(to bottom, transparent, rgba(198, 255, 54, 0.45) 25%, rgba(198, 255, 54, 0.15) 75%, transparent 100%)";
+
+          const shadow = line.glow
+            ? line.gradientType === "bright"
+              ? "0 0 8px #C6FF36, 0 0 18px rgba(198, 255, 54, 0.5)"
+              : "0 0 6px rgba(34, 197, 94, 0.6)"
+            : undefined;
+
+          return (
             <div
-              className="w-full bg-gradient-to-b from-transparent via-[#C6FF36] to-transparent shadow-[0_0_8px_#C6FF36]"
+              key={`vline-${line.id}`}
+              className="absolute top-0 pointer-events-none"
               style={{
-                height: col.height,
-                opacity: col.opacity,
+                left: line.left,
+                width: `${line.width}px`,
+                height: line.height,
+                opacity: line.opacity,
+                background: bgGradient,
+                boxShadow: shadow,
                 animationName: "verticalBeamFlow",
-                animationDuration: col.duration,
-                animationTimingFunction: "ease-in-out",
+                animationDuration: line.duration,
+                animationTimingFunction: "linear",
                 animationIterationCount: "infinite",
-                animationDelay: col.delay,
+                animationDelay: line.delay,
+                willChange: "transform",
               }}
             />
-          </div>
-        ))}
+          );
+        })}
       </motion.div>
 
       {/* ─── LAYER 4: HORIZONTAL SCANNING LINES MOVING FROM LEFT TO RIGHT ─── */}
