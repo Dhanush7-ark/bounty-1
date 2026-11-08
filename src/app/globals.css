@@ -1,7 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-syne: 'Syne', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+}
 
 @layer base {
   :root {
+    --font-syne: 'Syne', sans-serif;
+    --font-heading: 'Syne', sans-serif;
     --bg-primary: #050505;
     --surface-dark: #10110E;
     --surface-elevated: #161814;
@@ -25,10 +33,20 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
+  /* All Headings using Syne Font */
+  h1, h2, h3, h4, h5, h6, .font-heading, .font-syne {
+    font-family: var(--font-syne), 'Syne', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    letter-spacing: -0.025em;
+  }
+
   ::selection {
     background-color: #C6FF36;
     color: #050505;
   }
+}
+
+.font-syne {
+  font-family: var(--font-syne), 'Syne', sans-serif;
 }
 
 .font-serif-italic {

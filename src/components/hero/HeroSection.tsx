@@ -58,7 +58,7 @@ export function HeroSection({ onWatchBuild, onStartFree }: HeroSectionProps) {
               initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="text-4xl sm:text-6xl lg:text-[68px] font-bold tracking-tight text-white leading-[1.08] mb-6"
+              className="font-syne text-4xl sm:text-6xl lg:text-[68px] font-extrabold tracking-tight text-white leading-[1.08] mb-6"
             >
               The handoffs run{" "}
               <span className="font-serif-italic font-normal text-[#C6FF36] block sm:inline">
