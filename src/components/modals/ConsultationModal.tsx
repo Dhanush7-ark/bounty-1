@@ -208,3 +208,4 @@ export function ConsultationModal({ isOpen, onClose }: ConsultationModalProps) {
     </AnimatePresence>
   );
 }
+
