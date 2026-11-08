@@ -256,6 +256,19 @@
   }
 }
 
+@keyframes spinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 18s linear infinite;
+}
+
 @keyframes pulseGlow {
   0%, 100% {
     opacity: 0.3;

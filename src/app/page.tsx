@@ -6,6 +6,7 @@ import { CinematicLoader } from "@/components/loader/CinematicLoader";
 import { BackgroundAnimationSystem } from "@/components/animations/BackgroundAnimationSystem";
 import { Navbar } from "@/components/navbar/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
+import { RevolutionizeSection } from "@/components/statement/RevolutionizeSection";
 import { IntegrationsSection } from "@/components/integrations/IntegrationsSection";
 import { WorkflowSection } from "@/components/workflow/WorkflowSection";
 import { EditorialFeatures } from "@/components/features/EditorialFeatures";
@@ -15,11 +16,13 @@ import { PricingSection } from "@/components/pricing/PricingSection";
 import { Footer } from "@/components/layout/Footer";
 import { WatchBuildModal } from "@/components/modals/WatchBuildModal";
 import { StartFreeModal } from "@/components/modals/StartFreeModal";
+import { ConsultationModal } from "@/components/modals/ConsultationModal";
 
 function HomeContent() {
   const { isLoading } = useLoadingState();
   const [watchBuildOpen, setWatchBuildOpen] = useState(false);
   const [startFreeOpen, setStartFreeOpen] = useState(false);
+  const [consultationOpen, setConsultationOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("Professional");
 
   const handleOpenStartFree = (planName?: string) => {
@@ -47,7 +50,12 @@ function HomeContent() {
             onStartFree={() => handleOpenStartFree()}
           />
 
-          {/* 2. Integrations Section ("One canvas, many branches") */}
+          {/* 2. Revolutionize Statement Screen (Image 1 Style + Image 2 Content) */}
+          <RevolutionizeSection
+            onBookConsultation={() => setConsultationOpen(true)}
+          />
+
+          {/* 3. Integrations Section ("One canvas, many branches") */}
           <IntegrationsSection />
 
           {/* 3. Deep Interactive Workflow Demonstration */}
@@ -85,6 +93,11 @@ function HomeContent() {
           isOpen={startFreeOpen}
           onClose={() => setStartFreeOpen(false)}
           selectedPlan={selectedPlan}
+        />
+
+        <ConsultationModal
+          isOpen={consultationOpen}
+          onClose={() => setConsultationOpen(false)}
         />
       </div>
     </>
