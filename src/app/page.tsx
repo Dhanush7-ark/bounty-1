@@ -3,10 +3,11 @@
 import { useState } from "react";
 import { LoadingProvider, useLoadingState } from "@/hooks/useLoadingState";
 import { CinematicLoader } from "@/components/loader/CinematicLoader";
-import { CinematicGreenBackground } from "@/components/animations/CinematicGreenBackground";
+import { BackgroundAnimationSystem } from "@/components/animations/BackgroundAnimationSystem";
 import { Navbar } from "@/components/navbar/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { RevolutionizeSection } from "@/components/statement/RevolutionizeSection";
+import { CinematicGreenSection } from "@/components/statement/CinematicGreenSection";
 import { IntegrationsSection } from "@/components/integrations/IntegrationsSection";
 import { WorkflowSection } from "@/components/workflow/WorkflowSection";
 import { EditorialFeatures } from "@/components/features/EditorialFeatures";
@@ -35,9 +36,9 @@ function HomeContent() {
       {/* ─── CINEMATIC 1 TO 100 PRELOADER ─── */}
       {isLoading && <CinematicLoader />}
 
-      <div className="relative min-h-screen bg-[#030704] text-[#e5e5e5] selection:bg-[#00FF85] selection:text-black overflow-x-hidden">
-        {/* ─── REFERENCE-BASED CINEMATIC GREEN ORGANIC BACKGROUND ANIMATION ─── */}
-        <CinematicGreenBackground />
+      <div className="relative min-h-screen bg-[#050505] text-[#e5e5e5] selection:bg-[#C6FF36] selection:text-black overflow-x-hidden">
+        {/* ─── CONTINUOUS FUTURISTIC BACKGROUND ANIMATION SYSTEM (LAYERED & SCROLL-REACTIVE) ─── */}
+        <BackgroundAnimationSystem />
 
         {/* ─── NAVIGATION BAR ─── */}
         <Navbar onStartFree={() => handleOpenStartFree()} />
@@ -55,7 +56,10 @@ function HomeContent() {
             onBookConsultation={() => setConsultationOpen(true)}
           />
 
-          {/* 3. Integrations Section ("One canvas, many branches") */}
+          {/* 3. Reference-Based Cinematic Green Flame & Tribal Emblem Showcase */}
+          <CinematicGreenSection />
+
+          {/* 4. Integrations Section ("One canvas, many branches") */}
           <IntegrationsSection />
 
           {/* 3. Deep Interactive Workflow Demonstration */}

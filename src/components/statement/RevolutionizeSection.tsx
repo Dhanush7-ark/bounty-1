@@ -28,8 +28,14 @@ export function RevolutionizeSection({ onBookConsultation }: RevolutionizeSectio
   ];
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-between py-12 sm:py-16 px-4 sm:px-8 lg:px-12 overflow-hidden bg-transparent z-10 border-t border-b border-white/5 select-none">
+    <section className="relative min-h-screen flex flex-col justify-between py-12 sm:py-16 px-4 sm:px-8 lg:px-12 overflow-hidden bg-[#050505] z-20 border-t border-b border-white/10 select-none">
       
+      {/* ─── PURE SOLID BLACK BACKGROUND WITH SUBTLE VOLUMETRIC GLOW ─── */}
+      <div className="absolute inset-0 bg-[#050505] pointer-events-none overflow-hidden">
+        {/* Soft Center Radial Glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] sm:w-[1000px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(198,255,54,0.06),transparent_70%)] blur-[100px]" />
+      </div>
+
       {/* ─── 1. TOP BAR: CYBER-TRIBAL SIGIL & SECTION INDEX (IMAGE 1 STYLE) ─── */}
       <div className="relative z-10 flex items-center justify-between w-full max-w-6xl mx-auto mb-6 sm:mb-8">
         {/* Cyber-tribal AI Butterfly / Sigil Emblem (from Image 1 top-left) */}
