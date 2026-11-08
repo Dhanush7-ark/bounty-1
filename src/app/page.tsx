@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { LoadingProvider, useLoadingState } from "@/hooks/useLoadingState";
 import { CinematicLoader } from "@/components/loader/CinematicLoader";
-import { BackgroundAnimationSystem } from "@/components/animations/BackgroundAnimationSystem";
+import { CinematicGreenBackground } from "@/components/animations/CinematicGreenBackground";
 import { Navbar } from "@/components/navbar/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { RevolutionizeSection } from "@/components/statement/RevolutionizeSection";
@@ -35,9 +35,9 @@ function HomeContent() {
       {/* ─── CINEMATIC 1 TO 100 PRELOADER ─── */}
       {isLoading && <CinematicLoader />}
 
-      <div className="relative min-h-screen bg-[#050505] text-[#e5e5e5] selection:bg-[#C6FF36] selection:text-black overflow-x-hidden">
-        {/* ─── CONTINUOUS FUTURISTIC BACKGROUND ANIMATION SYSTEM (LAYERED & SCROLL-REACTIVE) ─── */}
-        <BackgroundAnimationSystem />
+      <div className="relative min-h-screen bg-[#030704] text-[#e5e5e5] selection:bg-[#00FF85] selection:text-black overflow-x-hidden">
+        {/* ─── REFERENCE-BASED CINEMATIC GREEN ORGANIC BACKGROUND ANIMATION ─── */}
+        <CinematicGreenBackground />
 
         {/* ─── NAVIGATION BAR ─── */}
         <Navbar onStartFree={() => handleOpenStartFree()} />
