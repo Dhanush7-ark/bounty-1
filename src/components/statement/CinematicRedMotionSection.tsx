@@ -15,13 +15,13 @@ import { BottomNavigation } from "@/components/horror/BottomNavigation";
  */
 export function CinematicRedMotionSection() {
   return (
-    <section className="relative w-full h-[320px] sm:h-[370px] md:h-[420px] lg:h-[460px] bg-[#000000] overflow-hidden select-none z-20 flex flex-col justify-between border-t border-b border-red-950/30">
+    <section className="relative w-full h-[360px] sm:h-[420px] md:h-[480px] lg:h-[540px] bg-[#000000] overflow-hidden select-none z-20 flex flex-col justify-between border-t border-b border-red-950/30">
       {/* ─── 1. TOP BLEND GRADIENT ─── */}
-      <div className="absolute top-0 inset-x-0 h-20 sm:h-28 bg-gradient-to-b from-[#000000] via-[#000000]/60 to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-16 sm:h-24 bg-gradient-to-b from-[#000000] via-[#000000]/70 to-transparent z-10 pointer-events-none" />
 
-      {/* ─── 2. PROCEDURAL HORROR FLAME BACKGROUND (CANVAS + DUAL-LAYER TILES 60 FPS) ─── */}
+      {/* ─── 2. PROCEDURAL 60 FPS FLUID RED FLAME & CLAW DYNAMICS CANVAS ─── */}
       <div className="absolute inset-0 w-full h-full">
-        <HorrorFlameBackground className="w-full h-full" />
+        <HorrorFlameBackground className="w-full h-full" interactive={true} />
       </div>
 
       {/* ─── 3. MINIMAL TOP METRICS / TELEMETRY ─── */}
