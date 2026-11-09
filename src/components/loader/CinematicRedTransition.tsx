@@ -1,10 +1,24 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { simplex2D } from "@/lib/simplexNoise";
 
 interface CinematicRedTransitionProps {
   onComplete: () => void;
   className?: string;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PROCEDURAL VOLUMETRIC SMOKE PUFF DEFINITION (MULTI-OCTAVE CURL TURBULENCE)
+// ─────────────────────────────────────────────────────────────────────────────
+interface SmokePuff {
+  xNorm: number;
+  yBaseNorm: number;
+  speed: number;
+  radius: number;
+  seed: number;
+  layer: number; // 0: black/charred, 1: deep emerald, 2: neon green
+  swirlRate: number;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -59,6 +73,17 @@ export function CinematicRedTransition({
 
     resize();
     window.addEventListener("resize", resize);
+
+    // ── Generate 52 Volumetric Smoke Plumes ──
+    const smokePuffs: SmokePuff[] = Array.from({ length: 52 }, (_, i) => ({
+      xNorm: (i / 52) * 1.1 - 0.05 + (Math.random() - 0.5) * 0.06,
+      yBaseNorm: 0.98 + (i % 4) * 0.03,
+      speed: 0.65 + Math.random() * 0.7,
+      radius: 90 + Math.random() * 110,
+      seed: Math.random() * 100,
+      layer: i % 3,
+      swirlRate: (Math.random() - 0.5) * 1.5,
+    }));
 
     // ── Generate Green Embers ──
     const embers: Ember[] = Array.from({ length: 45 }, (_, i) => ({
@@ -135,32 +160,91 @@ export function CinematicRedTransition({
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 4: CINEMATIC BLACKOUT (0.5s – 1.2s)
-      // Screen fades to complete pure black. Leaves a few tiny dim green
-      // particles floating in the darkness.
+      // STAGE 2: VOLUMETRIC GREEN & BLACK SMOKE ENTRANCE (0.5s – 2.0s)
+      // Volumetric dark emerald & charred black smoke rising from bottom edge.
       // ───────────────────────────────────────────────────────────────────────
-      if (elapsed >= 0.5 && elapsed < 1.2) {
-        const tBlack = Math.min(1, (elapsed - 0.5) / 0.7);
-        // Overlay gets progressively more opaque to black
+      if (elapsed >= 0.45 && elapsed < 2.4) {
+        const tSmoke = Math.min(1, Math.max(0, (elapsed - 0.45) / 0.75));
+        const tBlackout = elapsed > 1.6 ? Math.min(1, (elapsed - 1.6) / 0.7) : 0;
+        const smokeOpacity = (1 - tBlackout) * Math.min(1, (elapsed - 0.45) / 0.2);
+
+        if (smokeOpacity > 0.001) {
+          ctx.save();
+          ctx.globalAlpha = smokeOpacity;
+
+          // Deep emerald background gradient that fades out during blackout
+          const bgIllumGrad = ctx.createLinearGradient(0, 0, 0, height);
+          bgIllumGrad.addColorStop(0, "rgba(0, 5, 2, 0.95)");
+          bgIllumGrad.addColorStop(0.4, "rgba(0, 18, 9, 0.9)");
+          bgIllumGrad.addColorStop(0.7, "rgba(0, 45, 22, 0.95)");
+          bgIllumGrad.addColorStop(1, "rgba(0, 75, 36, 1.0)");
+          ctx.fillStyle = bgIllumGrad;
+          ctx.fillRect(0, 0, width, height);
+
+          // Volumetric overlapping smoke plumes
+          const smokeRiseDistance = height * 0.65;
+          const currentRise = tSmoke * smokeRiseDistance;
+
+          for (const puff of smokePuffs) {
+            const rise = currentRise * puff.speed;
+            const px = puff.xNorm * width + simplex2D(puff.xNorm * 3, elapsed * 0.6) * 45;
+            const py = height * puff.yBaseNorm - rise;
+            const pRadius = puff.radius * (1 + tSmoke * 0.7);
+
+            const plumeGrad = ctx.createRadialGradient(px, py, 10, px, py, pRadius);
+
+            if (puff.layer === 0) {
+              // Deepest / darkest layer: near-black charred smoke
+              plumeGrad.addColorStop(0, "rgba(2, 8, 4, 0.92)");
+              plumeGrad.addColorStop(0.5, "rgba(1, 15, 7, 0.7)");
+              plumeGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+            } else if (puff.layer === 1) {
+              // Mid layer: deep emerald smoke
+              plumeGrad.addColorStop(0, "rgba(0, 45, 20, 0.85)");
+              plumeGrad.addColorStop(0.55, "rgba(0, 30, 14, 0.6)");
+              plumeGrad.addColorStop(1, "rgba(0, 5, 2, 0)");
+            } else {
+              // Front layer: vivid neon-green smoke highlights
+              plumeGrad.addColorStop(0, "rgba(0, 160, 65, 0.75)");
+              plumeGrad.addColorStop(0.45, "rgba(0, 95, 42, 0.55)");
+              plumeGrad.addColorStop(1, "rgba(0, 20, 8, 0)");
+            }
+
+            ctx.fillStyle = plumeGrad;
+            ctx.beginPath();
+            ctx.arc(px, py, pRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+
+          ctx.restore();
+        }
+      }
+
+      // ───────────────────────────────────────────────────────────────────────
+      // STAGE 4: CINEMATIC BLACKOUT (1.6s – 2.4s)
+      // Transitioning into a deep black canvas with dim green floating particles.
+      // ───────────────────────────────────────────────────────────────────────
+      if (elapsed >= 1.6 && elapsed < 2.5) {
+        const tBlack = Math.min(1, (elapsed - 1.6) / 0.8);
         ctx.save();
-        ctx.globalAlpha = tBlack * 0.95;
+        ctx.globalAlpha = tBlack * 0.9;
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, width, height);
         ctx.restore();
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 5: DARK SUSPENSE (1.2s – 3.5s)
+      // STAGE 5: DARK SUSPENSE (2.2s – 3.5s)
       // Pure black canvas. Center completely dark. Faint green edge energy traces.
       // ───────────────────────────────────────────────────────────────────────
-      if (elapsed >= 1.1 && elapsed < 3.5) {
+      if (elapsed >= 2.2 && elapsed < 3.55) {
         ctx.save();
 
         // 1. Ensure center is completely pitch black (#000000)
         ctx.fillStyle = "#000000";
         ctx.fillRect(width * 0.15, 0, width * 0.7, height);
 
-        // 2. Extremely subtle green edge energy traces near left (x < 0.12) & right (x > 0.88)
+        // 2. Extremely subtle green edge energy traces near left & right
         const edgePulse = Math.sin(elapsed * 12);
         if (edgePulse > 0.3) {
           const traceAlpha = (edgePulse - 0.3) * 0.45;
@@ -194,8 +278,8 @@ export function CinematicRedTransition({
         ctx.restore();
       }
 
-      // ── Green Embers across Stages 4 & 5 ──
-      if (elapsed >= 0.8) {
+      // ── Green Floating Embers across Dark Stages ──
+      if (elapsed >= 1.2) {
         ctx.save();
         for (const ember of embers) {
           ember.x += ember.vx + Math.sin(elapsed * 1.5 + ember.seed) * 0.4;
