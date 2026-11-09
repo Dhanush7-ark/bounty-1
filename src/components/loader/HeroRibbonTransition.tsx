@@ -86,30 +86,6 @@ export function HeroRibbonTransition({
         }}
       />
 
-      {/* ─── 5. FLOATING CINEMATIC KINETIC EMBERS & TELEMETRY GLYPH ─── */}
-      <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-        style={{
-          animation: "telemetryFade 1.4s ease-out forwards",
-        }}
-      >
-        {/* Subtle Cyber Reticle Aperture Ring */}
-        <div className="relative w-[340px] sm:w-[460px] h-[340px] sm:h-[460px] rounded-full border border-[#C6FF36]/20 flex items-center justify-center animate-spin-slow">
-          <div className="absolute inset-2 rounded-full border border-dashed border-[#C6FF36]/15" />
-          <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#C6FF36] shadow-[0_0_10px_#C6FF36]" />
-          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#C6FF36] shadow-[0_0_10px_#C6FF36]" />
-          <div className="absolute top-1/2 -left-1 -translate-y-1/2 w-2 h-2 rounded-full bg-[#C6FF36] shadow-[0_0_10px_#C6FF36]" />
-          <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 rounded-full bg-[#C6FF36] shadow-[0_0_10px_#C6FF36]" />
-        </div>
-
-        {/* Minimalist Central Status Badge */}
-        <div className="absolute flex flex-col items-center">
-          <span className="font-mono text-[10px] tracking-[0.4em] uppercase text-[#C6FF36]/90 px-3 py-1 rounded-full bg-[#050505]/80 border border-[#C6FF36]/30 shadow-[0_0_20px_rgba(198,255,54,0.2)]">
-            RELAY // ENTERING WORKSPACE
-          </span>
-        </div>
-      </div>
-
       {/* ─── GPU ACCELERATED KEYFRAMES ─── */}
       <style jsx>{`
         @keyframes cinemaIris {
@@ -179,25 +155,6 @@ export function HeroRibbonTransition({
           100% {
             opacity: 0;
             transform: rotate(-25deg) translateY(-50%) translateX(-60%);
-          }
-        }
-
-        @keyframes telemetryFade {
-          0% {
-            opacity: 0;
-            transform: scale(0.88);
-          }
-          35% {
-            opacity: 1;
-            transform: scale(1);
-          }
-          70% {
-            opacity: 0.8;
-            transform: scale(1.05);
-          }
-          100% {
-            opacity: 0;
-            transform: scale(1.12);
           }
         }
       `}</style>
