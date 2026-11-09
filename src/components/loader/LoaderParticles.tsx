@@ -46,8 +46,8 @@ export function LoaderParticles({
 
       // Draw radial glow behind center (progress-driven)
       if (progressNorm > 0.05) {
-        const glowAlpha = Math.min(0.18, progressNorm * 0.18);
-        const glowRadius = Math.min(w, h) * 0.35 * (0.5 + progressNorm * 0.5);
+        const glowAlpha = Math.min(0.25, progressNorm * 0.25);
+        const glowRadius = Math.min(w, h) * 0.45 * (0.5 + progressNorm * 0.5);
         const radialGlow = ctx.createRadialGradient(
           centerX,
           centerY,
@@ -56,9 +56,9 @@ export function LoaderParticles({
           centerY,
           glowRadius
         );
-        radialGlow.addColorStop(0, `rgba(198, 255, 54, ${glowAlpha})`);
-        radialGlow.addColorStop(0.4, `rgba(198, 255, 54, ${glowAlpha * 0.4})`);
-        radialGlow.addColorStop(1, "rgba(198, 255, 54, 0)");
+        radialGlow.addColorStop(0, `rgba(255, 30, 56, ${glowAlpha})`);
+        radialGlow.addColorStop(0.4, `rgba(180, 0, 20, ${glowAlpha * 0.5})`);
+        radialGlow.addColorStop(1, "rgba(20, 0, 2, 0)");
         ctx.fillStyle = radialGlow;
         ctx.fillRect(0, 0, w, h);
       }
@@ -102,8 +102,8 @@ export function LoaderParticles({
             p.y,
             p.size * 4
           );
-          glowGrad.addColorStop(0, `rgba(198, 255, 54, ${alpha * 0.4})`);
-          glowGrad.addColorStop(1, "rgba(198, 255, 54, 0)");
+          glowGrad.addColorStop(0, `rgba(255, 60, 80, ${alpha * 0.5})`);
+          glowGrad.addColorStop(1, "rgba(255, 30, 56, 0)");
           ctx.fillStyle = glowGrad;
           ctx.fillRect(
             p.x - p.size * 4,
@@ -115,7 +115,8 @@ export function LoaderParticles({
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(198, 255, 54, ${alpha})`;
+        // Alternate between glowing crimson embers and dark soot flecks
+        ctx.fillStyle = i % 3 === 0 ? `rgba(15, 0, 2, ${alpha * 0.9})` : `rgba(255, 45, 65, ${alpha})`;
         ctx.fill();
       }
     },
