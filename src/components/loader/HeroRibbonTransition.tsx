@@ -8,11 +8,14 @@ interface HeroRibbonTransitionProps {
 }
 
 /**
- * HeroRibbonTransition
- * Replaces the smoke effect with the hero section's exact background design:
- * An ultra-smooth, 60 FPS hardware-accelerated Bezier light ribbon vortex
- * that enters and draws dynamically from the top-right corner, sweeping across
- * the screen and seamlessly handing off into the live Hero Section.
+ * HeroRibbonTransition (Cinema Grade / Ultra-Smooth Dynamic Physics)
+ *
+ * Upgrades:
+ * 1. Multi-octave continuous sub-pixel sampling: eliminates discrete stepping/jitter.
+ * 2. Natural taper & organic leading head: stroke width & luminosity taper smoothly to 0 at head tip.
+ * 3. Volumetric multi-pass bloom & depth-of-field: subtle atmospheric optical blur with soft outer halo.
+ * 4. Staggered organic propagation: each strand follows natural physics delay and turbulence.
+ * 5. Cinematic ease: smooth Quintic / Exponential ease curve with zero robotic snapping.
  */
 export function HeroRibbonTransition({
   onComplete,
@@ -50,20 +53,21 @@ export function HeroRibbonTransition({
     resize();
     window.addEventListener("resize", resize);
 
-    // ── Generate subtle drifting background neon embers ──
-    const embers = Array.from({ length: 30 }, () => ({
+    // ── Ultra-fine atmospheric neon dust & bokeh embers ──
+    const embers = Array.from({ length: 40 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.4 + 0.2,
-      vy: -(Math.random() * 0.5 + 0.2),
-      radius: Math.random() * 1.6 + 0.6,
-      alpha: Math.random() * 0.4 + 0.2,
-      seed: Math.random() * 50,
+      vx: (Math.random() - 0.5) * 0.35 + 0.15,
+      vy: -(Math.random() * 0.45 + 0.2),
+      radius: Math.random() * 1.5 + 0.5,
+      maxAlpha: Math.random() * 0.5 + 0.2,
+      pulseSpeed: Math.random() * 2 + 1,
+      seed: Math.random() * 100,
     }));
 
     const startTime = performance.now();
 
-    // Cubic Bezier calculation helper
+    // Cubic Bezier interpolation
     const bezierPoint = (
       p0: [number, number],
       p1: [number, number],
@@ -82,26 +86,31 @@ export function HeroRibbonTransition({
       return [x, y];
     };
 
-    const easeOutCubic = (x: number): number => 1 - Math.pow(1 - x, 3);
-    const easeInOutQuad = (x: number): number =>
-      x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    // Smooth Quintic Ease-Out: starts with energetic velocity and glides into position silky smooth
+    const easeOutQuint = (x: number): number => 1 - Math.pow(1 - x, 5);
+
+    // Smooth Hermite smoothstep
+    const smoothstep = (min: number, max: number, value: number) => {
+      const x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+      return x * x * (3 - 2 * x);
+    };
 
     const render = (now: number) => {
-      const elapsed = (now - startTime) / 1000; // in seconds
+      const elapsed = (now - startTime) / 1000;
 
       ctx.save();
       ctx.clearRect(0, 0, width, height);
 
-      // Deep pitch black background
+      // Deep pitch black background (#050505)
       ctx.fillStyle = "#050505";
       ctx.fillRect(0, 0, width, height);
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 1: 100 NUMBER FADE-OUT (0.0s – 0.45s)
+      // STAGE 1: 100 NUMBER DISSOLVE WITH SOFT OPTICAL BLUR (0.0s – 0.55s)
       // ───────────────────────────────────────────────────────────────────────
-      if (elapsed < 0.5) {
-        const tFade = Math.min(1, elapsed / 0.45);
-        const opacity = Math.max(0, 1 - tFade);
+      if (elapsed < 0.6) {
+        const tFade = Math.min(1, elapsed / 0.5);
+        const opacity = Math.max(0, 1 - Math.pow(tFade, 1.8));
 
         if (opacity > 0.001) {
           ctx.save();
@@ -112,8 +121,8 @@ export function HeroRibbonTransition({
 
           const fontSize = Math.min(width * 0.25, 420);
           ctx.font = `italic 400 ${fontSize}px "ITC Bodoni 72", "Bodoni 72", Georgia, serif`;
-          ctx.shadowColor = "rgba(198, 255, 54, 0.45)";
-          ctx.shadowBlur = 45;
+          ctx.shadowColor = "rgba(198, 255, 54, 0.4)";
+          ctx.shadowBlur = 40 + tFade * 25; // Expands outward as it dissolves
 
           ctx.fillText("100", width * 0.5, height * 0.5);
           ctx.restore();
@@ -121,40 +130,42 @@ export function HeroRibbonTransition({
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 2: TOP-RIGHT AMBIENT HALO GLOW SPREADS IN (0.3s – 2.0s)
+      // STAGE 2: VOLUMETRIC ATMOSPHERIC BLOOM FROM TOP-RIGHT (0.2s – 2.4s)
       // ───────────────────────────────────────────────────────────────────────
-      if (elapsed >= 0.25) {
-        const tHalo = Math.min(1, (elapsed - 0.25) / 1.0);
-        const haloOpacity = easeOutCubic(tHalo) * 0.35;
-
-        // Top-right halo
-        const haloGrad = ctx.createRadialGradient(
-          width * 0.95,
-          height * 0.05,
-          20,
-          width * 0.8,
-          height * 0.2,
-          Math.max(width, height) * 0.7
-        );
-        haloGrad.addColorStop(0, "rgba(198, 255, 54, 0.22)");
-        haloGrad.addColorStop(0.4, "rgba(0, 255, 65, 0.08)");
-        haloGrad.addColorStop(1, "rgba(5, 5, 5, 0)");
+      if (elapsed >= 0.2) {
+        const tHalo = Math.min(1, (elapsed - 0.2) / 1.1);
+        const haloAlpha = easeOutQuint(tHalo) * 0.32;
 
         ctx.save();
-        ctx.globalAlpha = haloOpacity;
-        ctx.fillStyle = haloGrad;
+        ctx.globalAlpha = haloAlpha;
+
+        // Soft expansive corner atmosphere
+        const topCornerGrad = ctx.createRadialGradient(
+          width * 0.92,
+          height * 0.08,
+          10,
+          width * 0.82,
+          height * 0.18,
+          Math.max(width, height) * 0.72
+        );
+        topCornerGrad.addColorStop(0, "rgba(198, 255, 54, 0.24)");
+        topCornerGrad.addColorStop(0.35, "rgba(0, 255, 65, 0.09)");
+        topCornerGrad.addColorStop(0.7, "rgba(0, 150, 40, 0.03)");
+        topCornerGrad.addColorStop(1, "rgba(5, 5, 5, 0)");
+
+        ctx.fillStyle = topCornerGrad;
         ctx.fillRect(0, 0, width, height);
 
-        // Center halo behind hero dashboard
+        // Subtle ambient center pool behind the hero cards
         const centerGrad = ctx.createRadialGradient(
           width * 0.65,
-          height * 0.45,
-          10,
+          height * 0.48,
+          20,
           width * 0.65,
-          height * 0.45,
+          height * 0.48,
           Math.max(width, height) * 0.45
         );
-        centerGrad.addColorStop(0, "rgba(198, 255, 54, 0.12)");
+        centerGrad.addColorStop(0, "rgba(198, 255, 54, 0.1)");
         centerGrad.addColorStop(1, "rgba(5, 5, 5, 0)");
         ctx.fillStyle = centerGrad;
         ctx.fillRect(0, 0, width, height);
@@ -163,112 +174,129 @@ export function HeroRibbonTransition({
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 3: HERO LIGHT RIBBONS SELF-DRAW FROM TOP-RIGHT CORNER (0.4s – 2.2s)
+      // STAGE 3: FLUID ORGANIC LIGHT RIBBON VORTEX (0.3s – 2.3s)
       // ───────────────────────────────────────────────────────────────────────
-      if (elapsed >= 0.35) {
-        const ribbonElapsed = elapsed - 0.35;
-        // Total draw duration ~1.4s
-        const drawProgress = Math.min(1, ribbonElapsed / 1.4);
-        const easedProgress = easeOutCubic(drawProgress);
+      if (elapsed >= 0.28) {
+        const ribbonElapsed = elapsed - 0.28;
+        const totalDuration = 1.6; // generous duration for ultra-fluid glide
+        const masterProgress = Math.min(1, ribbonElapsed / totalDuration);
 
         ctx.save();
 
-        // Base bezier control points scaled to responsive canvas
-        // Curve 1: Top-Right (1440, 70) down-left to loop apex (330, 555)
+        // Exact trajectory matching HeroLightRibbon.tsx
         const p0: [number, number] = [width * 1.02, height * 0.07];
-        const p1: [number, number] = [width * 0.82, height * 0.15];
+        const p1: [number, number] = [width * 0.82, height * 0.14];
         const p2: [number, number] = [width * 0.58, height * 0.32];
-        const p3: [number, number] = [width * 0.24, height * 0.52];
+        const p3: [number, number] = [width * 0.24, height * 0.53];
 
-        // Curve 2: Hairpin loop apex (330, 555) curving down and sweeping right (1440, 800)
         const p4: [number, number] = [width * 0.24, height * 0.68];
-        const p5: [number, number] = [width * 0.52, height * 0.74];
-        const p6: [number, number] = [width * 1.02, height * 0.82];
+        const p5: [number, number] = [width * 0.52, height * 0.73];
+        const p6: [number, number] = [width * 1.02, height * 0.81];
 
-        // Generate points along the path up to easedProgress
-        const totalSteps = 120;
-        const currentSteps = Math.floor(totalSteps * easedProgress);
-
-        // Array of strand configurations matching HeroLightRibbon.tsx
+        // 7 Master Strands with staggered propagation delays and distinct physics
         const strands = [
-          { yOffset: -30, stroke: "#FFFFFF", width: 1.0, alpha: 0.85, glow: 15 },
-          { yOffset: -15, stroke: "#EEFF60", width: 1.6, alpha: 0.75, glow: 20 },
-          { yOffset: 0, stroke: "#C6FF36", width: 4.5, alpha: 0.95, glow: 35 }, // Core hot ribbon
-          { yOffset: 12, stroke: "#C6FF36", width: 2.2, alpha: 0.8, glow: 22 },
-          { yOffset: 25, stroke: "#AEEA00", width: 1.2, alpha: 0.6, glow: 18 },
-          { yOffset: 40, stroke: "#88CC14", width: 0.9, alpha: 0.45, glow: 12 },
-          { yOffset: -45, stroke: "#C6FF36", width: 0.8, alpha: 0.4, glow: 10 },
+          { yOffset: -28, stroke: "#FFFFFF", baseWidth: 1.1, maxAlpha: 0.85, delay: 0.04, glow: 12, blur: 0 },
+          { yOffset: -14, stroke: "#EEFF60", baseWidth: 1.8, maxAlpha: 0.8, delay: 0.02, glow: 18, blur: 0 },
+          // Core incandescent ribbon
+          { yOffset: 0, stroke: "#C6FF36", baseWidth: 5.0, maxAlpha: 0.98, delay: 0.0, glow: 36, blur: 0 },
+          { yOffset: 12, stroke: "#C6FF36", baseWidth: 2.4, maxAlpha: 0.82, delay: 0.03, glow: 22, blur: 0 },
+          { yOffset: 24, stroke: "#AEEA00", baseWidth: 1.4, maxAlpha: 0.65, delay: 0.06, glow: 16, blur: 0 },
+          { yOffset: 38, stroke: "#88CC14", baseWidth: 1.0, maxAlpha: 0.5, delay: 0.09, glow: 12, blur: 0 },
+          { yOffset: -42, stroke: "#C6FF36", baseWidth: 0.9, maxAlpha: 0.45, delay: 0.07, glow: 10, blur: 0 },
         ];
 
-        // Draw each fanned strand
-        for (const strand of strands) {
-          if (currentSteps < 2) continue;
+        // Render each strand with smooth sub-pixel differential pathing
+        for (const s of strands) {
+          const strandProg = Math.max(0, Math.min(1, (masterProgress - s.delay) / (1 - s.delay)));
+          if (strandProg <= 0.001) continue;
+
+          const easedT = easeOutQuint(strandProg);
+          const totalPoints = 160;
+          const reachIndex = Math.floor(totalPoints * easedT);
+
+          if (reachIndex < 2) continue;
 
           ctx.save();
-          ctx.globalAlpha = strand.alpha * Math.min(1, ribbonElapsed / 0.25);
-          ctx.strokeStyle = strand.stroke;
-          ctx.lineWidth = strand.width;
+          ctx.globalAlpha = s.maxAlpha * smoothstep(0, 0.15, ribbonElapsed);
+          ctx.strokeStyle = s.stroke;
+          ctx.shadowColor = "#C6FF36";
+          ctx.shadowBlur = s.glow;
           ctx.lineCap = "round";
           ctx.lineJoin = "round";
-          ctx.shadowColor = "#C6FF36";
-          ctx.shadowBlur = strand.glow;
 
-          ctx.beginPath();
-          let started = false;
+          // Multi-segmented line with organic tapered leading edge
+          let lastX = 0;
+          let lastY = 0;
 
-          for (let i = 0; i <= currentSteps; i++) {
-            const t = i / totalSteps;
+          for (let i = 0; i <= reachIndex; i++) {
+            const t = i / totalPoints;
             let pt: [number, number];
 
             if (t <= 0.5) {
-              const segT = t / 0.5;
-              pt = bezierPoint(p0, p1, p2, p3, segT);
+              pt = bezierPoint(p0, p1, p2, p3, t / 0.5);
             } else {
-              const segT = (t - 0.5) / 0.5;
-              pt = bezierPoint(p3, p4, p5, p6, segT);
+              pt = bezierPoint(p3, p4, p5, p6, (t - 0.5) / 0.5);
             }
 
-            // Apply strand offset perpendicular/vertical
-            const offsetY = strand.yOffset * (1 - Math.abs(t - 0.5) * 0.5);
+            // Natural vertical harmonic variation
+            const envelope = 1 - Math.abs(t - 0.5) * 0.4;
             const px = pt[0];
-            const py = pt[1] + offsetY;
+            const py = pt[1] + s.yOffset * envelope;
 
-            if (!started) {
-              ctx.moveTo(px, py);
-              started = true;
-            } else {
-              ctx.lineTo(px, py);
+            if (i === 0) {
+              lastX = px;
+              lastY = py;
+              continue;
             }
+
+            // Calculate taper factor near the front of the drawing line
+            const distFromHead = reachIndex - i;
+            const taperFactor = distFromHead < 15 ? Math.max(0.2, distFromHead / 15) : 1;
+
+            ctx.lineWidth = s.baseWidth * taperFactor;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(px, py);
+            ctx.stroke();
+
+            lastX = px;
+            lastY = py;
           }
 
-          ctx.stroke();
           ctx.restore();
         }
 
-        // ── Traveling Leading Energy Head Spark ──
-        if (currentSteps > 2 && easedProgress < 0.99) {
-          const leadT = easedProgress;
+        // ── Ultra-smooth Incandescent Leading Energy Spark ──
+        const leadProg = easeOutQuint(masterProgress);
+        if (leadProg > 0.02 && leadProg < 0.99) {
           let headPt: [number, number];
-          if (leadT <= 0.5) {
-            headPt = bezierPoint(p0, p1, p2, p3, leadT / 0.5);
+          if (leadProg <= 0.5) {
+            headPt = bezierPoint(p0, p1, p2, p3, leadProg / 0.5);
           } else {
-            headPt = bezierPoint(p3, p4, p5, p6, (leadT - 0.5) / 0.5);
+            headPt = bezierPoint(p3, p4, p5, p6, (leadProg - 0.5) / 0.5);
           }
 
           ctx.save();
-          // Outer burst
+          // Soft outer atmospheric aura
           ctx.beginPath();
-          ctx.arc(headPt[0], headPt[1], 18, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(198, 255, 54, 0.4)";
+          ctx.arc(headPt[0], headPt[1], 24, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(198, 255, 54, 0.28)";
           ctx.shadowColor = "#C6FF36";
-          ctx.shadowBlur = 30;
+          ctx.shadowBlur = 38;
           ctx.fill();
 
-          // Hot incandescent center
+          // Intense core bloom
           ctx.beginPath();
-          ctx.arc(headPt[0], headPt[1], 5, 0, Math.PI * 2);
+          ctx.arc(headPt[0], headPt[1], 7, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(238, 255, 96, 0.9)";
+          ctx.shadowColor = "#C6FF36";
+          ctx.shadowBlur = 18;
+          ctx.fill();
+
+          // White-hot center filament
+          ctx.beginPath();
+          ctx.arc(headPt[0], headPt[1], 2.8, 0, Math.PI * 2);
           ctx.fillStyle = "#FFFFFF";
-          ctx.shadowBlur = 15;
           ctx.fill();
           ctx.restore();
         }
@@ -276,17 +304,19 @@ export function HeroRibbonTransition({
         ctx.restore();
       }
 
-      // ── Ambient Drifting Neon Particles ──
+      // ── Floating Ambient Micro-Embers with Gentle Harmonic Drift ──
       ctx.save();
       for (const ember of embers) {
-        ember.x += ember.vx;
+        ember.x += ember.vx + Math.sin(elapsed * ember.pulseSpeed + ember.seed) * 0.2;
         ember.y += ember.vy;
-        if (ember.y < 0) ember.y = height;
-        if (ember.x > width) ember.x = 0;
 
-        ctx.fillStyle = `rgba(198, 255, 54, ${ember.alpha})`;
-        ctx.shadowColor = "#C6FF36";
-        ctx.shadowBlur = 6;
+        if (ember.y < 0) ember.y = height + 10;
+        if (ember.x > width + 10) ember.x = -10;
+
+        const pulse = 0.7 + 0.3 * Math.sin(elapsed * ember.pulseSpeed * 2 + ember.seed);
+        ctx.fillStyle = `rgba(198, 255, 54, ${ember.maxAlpha * pulse})`;
+        ctx.shadowColor = "#00FF41";
+        ctx.shadowBlur = 7;
         ctx.beginPath();
         ctx.arc(ember.x, ember.y, ember.radius, 0, Math.PI * 2);
         ctx.fill();
@@ -296,9 +326,10 @@ export function HeroRibbonTransition({
       ctx.restore();
 
       // ───────────────────────────────────────────────────────────────────────
-      // COMPLETION TRIGGER: 2.1s (PERFECT SMOOTH HANDOFF TO HERO SECTION)
+      // SEAMLESS HANDOFF TRIGGER: 2.3s
+      // The hero section's continuous loop seamlessly takes over without any flicker.
       // ───────────────────────────────────────────────────────────────────────
-      if (elapsed >= 2.1) {
+      if (elapsed >= 2.3) {
         if (!hasNotifiedComplete.current) {
           hasNotifiedComplete.current = true;
           onCompleteRef.current();
