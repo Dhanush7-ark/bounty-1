@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useLoadingState } from "@/hooks/useLoadingState";
 import { LoaderParticles } from "./LoaderParticles";
-import { CinematicRedTransition } from "./CinematicRedTransition";
+import { HeroRibbonTransition } from "./HeroRibbonTransition";
 
 // Stage labels shown beneath the counter
 const STAGE_LABELS: { threshold: number; label: string }[] = [
@@ -197,9 +197,9 @@ export function CinematicLoader() {
         />
       )}
 
-      {/* ─── ULTRA-CINEMATIC 8-STAGE GREEN & BLACK TRANSITION (FRAMES 1 TO 8) ─── */}
+      {/* ─── DYNAMIC HERO LIGHT RIBBON TRANSITION FROM TOP-RIGHT ─── */}
       {isTransitionActive && (
-        <CinematicRedTransition onComplete={handleTransitionFinished} />
+        <HeroRibbonTransition onComplete={handleTransitionFinished} />
       )}
     </div>
   );
