@@ -96,10 +96,8 @@ function HomeContent() {
             </section>
           )}
 
-          {/* 4. "THIS WILL FEEL DIFFERENT" Statement Screen (Matching Reference Video in Green) */}
-          <ThisWillFeelDifferentSection
-            onBookConsultation={() => setConsultationOpen(true)}
-          />
+          {/* 4. "THIS WILL FEEL DIFFERENT" Statement Screen */}
+          <ThisWillFeelDifferentSection onBookConsultation={() => setConsultationOpen(true)} />
 
           {/* 5. Reference-Based Cinematic Flame & Tribal Emblem Showcase */}
           <CinematicGreenSection />
