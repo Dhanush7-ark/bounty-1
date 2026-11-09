@@ -57,7 +57,7 @@ export function WorkflowSection() {
   };
 
   return (
-    <section id="workflow" className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden border-t border-white/5">
+    <section id="simulator" className="relative py-28 sm:py-36 px-4 sm:px-6 lg:px-8 bg-transparent overflow-hidden border-t border-white/5">
       {/* Background ambient lighting */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-[radial-gradient(ellipse_at_center,rgba(198,255,54,0.08),transparent_70%)] blur-[120px] animate-pulse-glow" />

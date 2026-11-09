@@ -1,16 +1,128 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 interface CinematicGreenBackgroundProps {
   className?: string;
   showEmblem?: boolean;
+  interactive?: boolean;
+}
+
+// ─── REUSABLE CLAW HAND PATHS (MATCHING FRAMES 9-16 OF REFERENCE STORYBOARD) ───
+
+// Hand A: Splayed Gnarled Claw Hand (5 Articulated Talon Fingers)
+function ClawHandA({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 160 360"
+      className={className}
+      fill="#030704"
+      stroke="#00FF85"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter id="handGlowGreen" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      {/* Wrist rising from bottom */}
+      <path
+        d="M 58 360 L 68 275 C 68 245, 48 225, 44 195 C 38 165, 18 180, 10 160 C 5 150, 12 140, 24 146 C 34 152, 42 162, 46 176 C 46 146, 34 116, 26 82 C 22 62, 30 52, 36 62 C 42 72, 50 108, 54 142 C 56 112, 58 68, 60 28 C 61 14, 70 14, 72 28 C 74 68, 73 112, 72 148 C 76 118, 86 78, 94 48 C 98 34, 106 38, 104 52 C 100 86, 90 126, 86 162 C 94 142, 114 122, 126 106 C 134 96, 140 104, 134 116 C 122 136, 104 166, 92 192 C 86 226, 96 268, 94 360 Z"
+        filter="url(#handGlowGreen)"
+      />
+      {/* Inner Knuckle & Bone Accents */}
+      <path
+        d="M 64 210 Q 70 190 74 165 M 52 195 Q 46 175 36 155 M 82 205 Q 92 185 106 160"
+        stroke="#39FF9C"
+        strokeWidth="1.2"
+        fill="none"
+        opacity="0.75"
+      />
+    </svg>
+  );
+}
+
+// Hand B: Grasping Claw Arm (Sharp Hooked Talons Curling Inward)
+function ClawHandB({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 160 360"
+      className={className}
+      fill="#030704"
+      stroke="#00FF85"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter id="handGlowGreenB" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      {/* Grasping arm contour */}
+      <path
+        d="M 64 360 L 70 255 C 72 215, 54 185, 34 175 C 17 167, 8 145, 12 130 C 18 120, 26 130, 34 145 C 44 160, 52 170, 56 175 C 54 135, 40 90, 30 46 C 26 26, 36 18, 43 31 C 53 51, 63 105, 66 145 C 70 100, 78 50, 86 12 C 90 -2, 98 0, 98 16 C 96 62, 86 116, 82 156 C 90 120, 108 70, 122 40 C 130 26, 137 34, 132 48 C 122 80, 102 130, 94 165 C 103 145, 126 120, 140 100 C 147 90, 155 98, 147 110 C 132 135, 110 175, 96 200 C 86 235, 90 275, 88 360 Z"
+        filter="url(#handGlowGreenB)"
+      />
+      {/* Palm Shadow & Tendon Detail */}
+      <path
+        d="M 66 225 C 68 195, 76 170, 82 145"
+        stroke="#39FF9C"
+        strokeWidth="1.2"
+        fill="none"
+        opacity="0.8"
+      />
+    </svg>
+  );
+}
+
+// Hand C: Tall Reaching Alien Talon (Long Wrist Reaching High Toward Center)
+function ClawHandC({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 160 380"
+      className={className}
+      fill="#030704"
+      stroke="#00FF85"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+      strokeLinecap="round"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter id="handGlowGreenC" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <path
+        d="M 52 380 L 58 230 C 60 180, 42 150, 28 132 C 16 118, 22 104, 32 112 C 44 122, 50 138, 54 158 C 52 112, 46 62, 42 18 C 40 2, 50 -2, 54 14 C 60 50, 62 105, 62 155 C 68 110, 78 60, 88 16 C 92 2, 100 5, 98 22 C 92 66, 80 120, 76 166 C 86 135, 106 100, 120 75 C 128 64, 134 71, 130 85 C 118 116, 96 160, 84 190 C 76 230, 78 275, 75 380 Z"
+        filter="url(#handGlowGreenC)"
+      />
+    </svg>
+  );
 }
 
 export function CinematicGreenBackground({
   className = "",
   showEmblem = true,
+  interactive = true,
 }: CinematicGreenBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -21,303 +133,325 @@ export function CinematicGreenBackground({
     offset: ["start end", "end start"],
   });
 
-  // Smooth scroll springs
-  const smoothScroll = useSpring(scrollYProgress, { stiffness: 90, damping: 20 });
+  const smoothScroll = useSpring(scrollYProgress, { stiffness: 85, damping: 22 });
 
-  // Emblem scale & rotation transform based on scroll
-  const emblemScale = useTransform(smoothScroll, [0, 0.5, 1], [0.72, 1.12, 0.85]);
-  const emblemRotate = useTransform(smoothScroll, [0, 0.5, 1], [-4, 0, 4]);
-  const emblemY = useTransform(smoothScroll, [0, 0.5, 1], [40, 0, -40]);
-  const emblemGlow = useTransform(smoothScroll, [0, 0.5, 1], [0.5, 1.0, 0.6]);
+  // Emblem transform driven by scroll & breathing
+  const emblemScale = useTransform(smoothScroll, [0, 0.5, 1], [0.85, 1.15, 0.92]);
+  const emblemY = useTransform(smoothScroll, [0, 0.5, 1], [35, 0, -35]);
+  const emblemRotate = useTransform(smoothScroll, [0, 0.5, 1], [-2.5, 0, 2.5]);
 
-  // Reduced motion preference
-  const [reducedMotion, setReducedMotion] = useState(false);
+  // Bottom Hands parallax & stretch on scroll
+  const handsY = useTransform(smoothScroll, [0, 0.5, 1], [25, 0, -35]);
 
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const handler = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+  // Mouse tilt for interactive 3D effect
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!interactive) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    setMousePos({ x, y });
+  }, [interactive]);
+
+  const handleMouseLeave = useCallback(() => {
+    setMousePos({ x: 0, y: 0 });
   }, []);
 
-  // WebGL Shader Engine for Organic Flame & Liquid-Ink Silhouette
+  // ─── 60FPS LIQUID-INK GREEN FIRE CANVAS ENGINE ───
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Check WebGL support
-    const gl =
-      canvas.getContext("webgl2", { powerPreference: "high-performance", alpha: false }) ||
-      canvas.getContext("webgl", { powerPreference: "high-performance", alpha: false });
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) return;
 
-    if (!gl) {
-      console.warn("WebGL not supported, falling back to 2D canvas");
-      return;
-    }
+    let animId: number;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
 
-    let animationFrameId: number;
-    let startTime = performance.now();
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const parent = canvas.parentElement;
+      width = parent?.clientWidth || window.innerWidth || 1200;
+      height = parent?.clientHeight || window.innerHeight || 800;
 
-    // Resize handler
-    const handleResize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // Cap DPR at 1.5 for performance
-      const width = canvas.parentElement?.clientWidth || window.innerWidth;
-      const height = canvas.parentElement?.clientHeight || window.innerHeight;
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      ctx.scale(dpr, dpr);
     };
 
-    handleResize();
-    window.addEventListener("resize", handleResize);
+    resize();
+    window.addEventListener("resize", resize);
 
-    // Vertex Shader
-    const vsSource = `
-      attribute vec2 a_position;
-      void main() {
-        gl_Position = vec4(a_position, 0.0, 1.0);
-      }
-    `;
-
-    // Fragment Shader: Organic flame-like & liquid-ink silhouettes with green palette
-    const fsSource = `
-      precision highp float;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform float u_scroll;
-
-      // Fast Simplex-style hash and noise
-      float hash(vec2 p) {
-        p = fract(p * vec2(123.34, 456.21));
-        p += dot(p, p + 45.32);
-        return fract(p.x * p.y);
-      }
-
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        vec2 u = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hash(i + vec2(0.0, 0.0)), hash(i + vec2(1.0, 0.0)), u.x),
-                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
-      }
-
-      // 4-octave Fractional Brownian Motion with rotation
-      float fbm(vec2 p) {
-        float v = 0.0;
-        float a = 0.52;
-        mat2 rot = mat2(cos(0.55), sin(0.55), -sin(0.55), cos(0.55));
-        for (int i = 0; i < 4; ++i) {
-          v += a * noise(p);
-          p = rot * p * 2.08 + vec2(14.2, -8.7);
-          a *= 0.48;
-        }
-        return v;
-      }
-
-      void main() {
-        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-        vec2 p = uv * 2.0 - 1.0;
-        p.x *= u_resolution.x / u_resolution.y;
-
-        float t = u_time * 0.38;
-
-        // Domain warping for organic liquid flames
-        vec2 q = vec2(
-          fbm(p * 1.4 + vec2(0.0, -t * 0.75)),
-          fbm(p * 1.4 + vec2(4.8, -t * 0.65))
-        );
-
-        vec2 r = vec2(
-          fbm(p * 2.1 + 3.8 * q + vec2(1.7, -t * 1.1)),
-          fbm(p * 2.1 + 3.8 * q + vec2(7.9, -t * 0.95))
-        );
-
-        float f = fbm(p * 1.7 + 3.2 * r + vec2(0.0, -t * 0.45));
-
-        // Rising liquid-ink / flame wall from bottom (matching reference video frames)
-        float baseHeight = 0.58 + 0.18 * sin(t * 0.4) + u_scroll * 0.3;
-        float flameDist = (1.0 - uv.y) - baseHeight + (f - 0.5) * 0.85;
-
-        // Specified Palette
-        vec3 colBg = vec3(0.012, 0.027, 0.016);          // #030704
-        vec3 colDarkGreen = vec3(0.024, 0.239, 0.125);   // #063D20
-        vec3 colDeepEmerald = vec3(0.0, 0.561, 0.298);    // #008F4C
-        vec3 colNeonGreen = vec3(0.0, 1.0, 0.522);        // #00FF85
-        vec3 colHighlight = vec3(0.224, 1.0, 0.612);      // #39FF9C
-
-        // Sharp liquid flame edge thresholds
-        float edge = smoothstep(-0.045, 0.045, flameDist);
-        float glowEdge = smoothstep(-0.22, 0.08, flameDist);
-        float highlightRim = smoothstep(-0.02, 0.02, flameDist) * (1.0 - smoothstep(0.02, 0.065, flameDist));
-
-        // Deep internal shading
-        float internalDepth = clamp((flameDist + 0.35) / 0.7, 0.0, 1.0);
-        vec3 flameCol = mix(colDarkGreen, colDeepEmerald, internalDepth);
-        flameCol = mix(flameCol, colNeonGreen, pow(internalDepth, 2.8) * 0.9);
-
-        // Final color composition with dramatic cinematic contrast
-        vec3 finalCol = mix(colBg, flameCol, glowEdge);
-        finalCol += colHighlight * highlightRim * 2.0;
-        finalCol += colNeonGreen * (1.0 - edge) * pow(f, 3.2) * 0.45;
-
-        // Vignette around edges to focus center emblem
-        float vignette = 1.0 - length(uv - 0.5) * 0.65;
-        finalCol *= clamp(vignette, 0.25, 1.0);
-
-        gl_FragColor = vec4(finalCol, 1.0);
-      }
-    `;
-
-    // Helper: Compile Shader
-    const compileShader = (type: number, source: string) => {
-      const shader = gl.createShader(type);
-      if (!shader) return null;
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error("Shader error:", gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-      }
-      return shader;
-    };
-
-    const vertShader = compileShader(gl.VERTEX_SHADER, vsSource);
-    const fragShader = compileShader(gl.FRAGMENT_SHADER, fsSource);
-    if (!vertShader || !fragShader) return;
-
-    const program = gl.createProgram();
-    if (!program) return;
-    gl.attachShader(program, vertShader);
-    gl.attachShader(program, fragShader);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error("Program link error:", gl.getProgramInfoLog(program));
-      return;
+    // Green Plasma Spores / Embers System
+    interface Ember {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      alpha: number;
+      maxAlpha: number;
+      pulseSpeed: number;
     }
 
-    gl.useProgram(program);
+    const embers: Ember[] = Array.from({ length: 42 }, () => ({
+      x: Math.random() * (width || 1200),
+      y: (height || 800) * 0.35 + Math.random() * (height || 800) * 0.65,
+      vx: (Math.random() - 0.5) * 0.9,
+      vy: -0.7 - Math.random() * 1.5,
+      size: 1.2 + Math.random() * 2.8,
+      alpha: 0.1,
+      maxAlpha: 0.45 + Math.random() * 0.5,
+      pulseSpeed: 0.02 + Math.random() * 0.04,
+    }));
 
-    // Quad geometry covering screen
-    const positionBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
-      gl.STATIC_DRAW
-    );
+    let startTime = performance.now();
 
-    const aPosition = gl.getAttribLocation(program, "a_position");
-    gl.enableVertexAttribArray(aPosition);
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
-
-    // Uniform locations
-    const uResolution = gl.getUniformLocation(program, "u_resolution");
-    const uTime = gl.getUniformLocation(program, "u_time");
-    const uScroll = gl.getUniformLocation(program, "u_scroll");
-
-    // Render loop
     const render = (now: number) => {
-      const elapsed = (now - startTime) * 0.001;
+      const t = (now - startTime) * 0.001;
+      const scrollVal = smoothScroll.get() || 0;
 
-      gl.useProgram(program);
-      gl.uniform2f(uResolution, canvas.width, canvas.height);
-      gl.uniform1f(uTime, reducedMotion ? 0 : elapsed);
-      gl.uniform1f(uScroll, smoothScroll.get());
+      // 1. Base Pitch Black (#030704)
+      ctx.fillStyle = "#030704";
+      ctx.fillRect(0, 0, width, height);
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-      animationFrameId = requestAnimationFrame(render);
+      // 2. Volumetric Ambient Green Bloom Behind Central Claws
+      const centerGlow = ctx.createRadialGradient(
+        width * 0.5,
+        height * 0.62,
+        40,
+        width * 0.5,
+        height * 0.62,
+        width * 0.65
+      );
+      centerGlow.addColorStop(0, "rgba(0, 255, 133, 0.32)");
+      centerGlow.addColorStop(0.35, "rgba(0, 143, 76, 0.22)");
+      centerGlow.addColorStop(0.7, "rgba(6, 61, 32, 0.12)");
+      centerGlow.addColorStop(1, "rgba(3, 7, 4, 0)");
+      ctx.fillStyle = centerGlow;
+      ctx.fillRect(0, 0, width, height);
+
+      // ─── 3. DEEP EMERALD BACKGROUND FLAME MASS (#063D20 -> #008F4C) ───
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+
+      const l1BaseY = height * (0.38 - scrollVal * 0.08);
+      const points = 80;
+      const step = width / points;
+
+      for (let i = 0; i <= points; i++) {
+        const x = i * step;
+        const nx = x / width;
+
+        const w1 = Math.sin(nx * 4.2 + t * 0.75) * 48;
+        const w2 = Math.cos(nx * 7.8 - t * 0.95) * 28;
+        const spike = Math.pow(Math.abs(Math.sin(nx * 9.5 + t * 1.15)), 3.2) * -65;
+
+        const y = l1BaseY + w1 + w2 + spike;
+        ctx.lineTo(x, y);
+      }
+
+      ctx.lineTo(width, height);
+      ctx.closePath();
+
+      const grad1 = ctx.createLinearGradient(0, l1BaseY - 60, 0, height);
+      grad1.addColorStop(0, "rgba(0, 143, 76, 0.55)"); // Deep emerald
+      grad1.addColorStop(0.45, "rgba(6, 61, 32, 0.85)"); // Primary dark green
+      grad1.addColorStop(1, "#030704");
+      ctx.fillStyle = grad1;
+      ctx.fill();
+      ctx.restore();
+
+      // ─── 4. PRIMARY SURGING LIQUID FLAMES WITH NEON RIM (#00FF85) ───
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+
+      const l2BaseY = height * (0.50 - scrollVal * 0.12);
+      const flamePoints: { x: number; y: number }[] = [];
+
+      for (let i = 0; i <= points; i++) {
+        const x = i * step;
+        const nx = x / width;
+
+        const w1 = Math.sin(nx * 5.2 + t * 1.3) * 42;
+        const w2 = Math.cos(nx * 9.6 - t * 1.6) * 26;
+        const sharp1 = Math.pow(Math.abs(Math.sin(nx * 11.0 + t * 1.7)), 2.8) * -75;
+        const sharp2 = Math.pow(Math.abs(Math.cos(nx * 15.5 - t * 2.3)), 3.5) * -45;
+
+        const y = l2BaseY + w1 + w2 + sharp1 + sharp2;
+        flamePoints.push({ x, y });
+        ctx.lineTo(x, y);
+      }
+
+      ctx.lineTo(width, height);
+      ctx.closePath();
+
+      const grad2 = ctx.createLinearGradient(0, l2BaseY - 100, 0, height);
+      grad2.addColorStop(0, "rgba(0, 255, 133, 0.90)"); // Main neon green
+      grad2.addColorStop(0.2, "rgba(0, 143, 76, 0.80)"); // Deep emerald
+      grad2.addColorStop(0.6, "rgba(6, 61, 32, 0.92)"); // Primary dark green
+      grad2.addColorStop(1, "#030704");
+      ctx.fillStyle = grad2;
+      ctx.fill();
+
+      // Glowing Neon Rim
+      ctx.beginPath();
+      for (let i = 0; i < flamePoints.length; i++) {
+        const p = flamePoints[i];
+        if (i === 0) ctx.moveTo(p.x, p.y);
+        else ctx.lineTo(p.x, p.y);
+      }
+      ctx.strokeStyle = "#39FF9C";
+      ctx.lineWidth = 2.8;
+      ctx.shadowColor = "#00FF85";
+      ctx.shadowBlur = 20;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+      ctx.restore();
+
+      // ─── 5. FLOATING SPORES / GREEN EMBERS ───
+      ctx.save();
+      for (let i = 0; i < embers.length; i++) {
+        const e = embers[i];
+        e.y += e.vy;
+        e.x += e.vx + Math.sin(t * 1.5 + i) * 0.45;
+        e.alpha = (Math.sin(t * e.pulseSpeed * 20 + i) * 0.5 + 0.5) * e.maxAlpha;
+
+        if (e.y < height * 0.15 || e.x < 0 || e.x > width) {
+          e.y = height * (0.6 + Math.random() * 0.4);
+          e.x = Math.random() * width;
+        }
+
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(57, 255, 156, ${e.alpha})`;
+        ctx.shadowColor = "#00FF85";
+        ctx.shadowBlur = e.size * 5;
+        ctx.fill();
+      }
+      ctx.restore();
+
+      // ─── 6. TOP & EDGE CINEMATIC VIGNETTE ───
+      const vignette = ctx.createRadialGradient(
+        width * 0.5,
+        height * 0.5,
+        Math.min(width, height) * 0.35,
+        width * 0.5,
+        height * 0.5,
+        Math.max(width, height) * 0.78
+      );
+      vignette.addColorStop(0, "rgba(3, 7, 4, 0)");
+      vignette.addColorStop(0.7, "rgba(3, 7, 4, 0.4)");
+      vignette.addColorStop(1, "rgba(3, 7, 4, 0.96)");
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, width, height);
+
+      animId = requestAnimationFrame(render);
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    animId = requestAnimationFrame(render);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
-      window.removeEventListener("resize", handleResize);
-      gl.deleteProgram(program);
-      gl.deleteShader(vertShader);
-      gl.deleteShader(fragShader);
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
     };
-  }, [smoothScroll, reducedMotion]);
+  }, [smoothScroll]);
+
+  // Configurations for the 8 reaching black hands across bottom
+  const bottomHandsConfig = [
+    { id: 1, type: "A", left: "2%", width: 140, height: 260, delay: 0.0, duration: 4.8, flip: false, zIndex: 12 },
+    { id: 2, type: "B", left: "13%", width: 160, height: 310, delay: 0.8, duration: 5.2, flip: false, zIndex: 14 },
+    { id: 3, type: "C", left: "25%", width: 150, height: 360, delay: 1.6, duration: 5.6, flip: false, zIndex: 15 },
+    { id: 4, type: "A", left: "37%", width: 160, height: 320, delay: 2.2, duration: 5.0, flip: false, zIndex: 13 },
+    { id: 5, type: "A", left: "51%", width: 160, height: 320, delay: 1.1, duration: 5.1, flip: true, zIndex: 13 },
+    { id: 6, type: "C", left: "63%", width: 150, height: 360, delay: 2.8, duration: 5.5, flip: true, zIndex: 15 },
+    { id: 7, type: "B", left: "75%", width: 160, height: 310, delay: 0.5, duration: 5.3, flip: true, zIndex: 14 },
+    { id: 8, type: "A", left: "87%", width: 140, height: 260, delay: 1.9, duration: 4.9, flip: true, zIndex: 12 },
+  ];
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full overflow-hidden bg-[#030704] select-none ${className}`}
-      style={{
-        boxShadow: "inset 0 0 120px rgba(3, 7, 4, 0.95)",
-      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative w-full h-full overflow-hidden bg-[#030704] select-none ${className}`}
     >
-      {/* ─── LAYER 1: GPU WEBGL FLUID FLAME BACKGROUND ─── */}
+      {/* ─── 1. FLUID GREEN FIRE CANVAS ENGINE ─── */}
       <canvas
         ref={canvasRef}
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-        style={{ filter: "contrast(115%) brightness(105%)" }}
+        className="absolute inset-0 w-full h-full pointer-events-none block z-0"
       />
 
-      {/* ─── LAYER 2: FLOATING GREEN EMBER PARTICLES ─── */}
-      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
-        {[...Array(14)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full bg-[#00FF85] opacity-60 filter blur-[1px]"
-            style={{
-              width: `${(i % 3) + 2}px`,
-              height: `${(i % 3) + 2}px`,
-              left: `${(i * 7.5 + 4) % 96}%`,
-              bottom: "-5%",
-              boxShadow: "0 0 8px #00FF85",
-              animation: `particleFlow ${7 + (i % 5) * 2}s linear infinite`,
-              animationDelay: `-${(i * 1.3) % 8}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* ─── LAYER 3: SYMMETRICAL TRIBAL-FLAME EMBLEM (MATCHING REFERENCE) ─── */}
+      {/* ─── 2. CENTRAL SYMMETRICAL CLAWED HANDS EMBLEM WITH TWIN GLOWING EYES (FRAMES 11-16) ─── */}
       {showEmblem && (
         <motion.div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none z-10"
           style={{
             scale: emblemScale,
-            rotate: emblemRotate,
             y: emblemY,
+            rotate: emblemRotate,
           }}
+          animate={{
+            x: mousePos.x * 14,
+            rotateX: -mousePos.y * 7,
+            rotateY: mousePos.x * 7,
+          }}
+          transition={{ type: "spring", stiffness: 120, damping: 25 }}
         >
-          {/* Ambient Emblem Halo Bloom */}
+          {/* Ambient Flame Bloom */}
           <motion.div
-            className="absolute w-[500px] sm:w-[750px] h-[350px] sm:h-[500px] rounded-full blur-[70px] pointer-events-none"
+            className="absolute w-[460px] sm:w-[700px] md:w-[900px] h-[340px] sm:h-[500px] md:h-[620px] rounded-full blur-[85px] pointer-events-none"
+            animate={{
+              opacity: [0.5, 0.9, 0.5],
+              scale: [0.94, 1.08, 0.94],
+            }}
+            transition={{
+              duration: 3.8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
             style={{
-              opacity: emblemGlow,
               background:
-                "radial-gradient(ellipse at center, rgba(0, 255, 133, 0.32) 0%, rgba(0, 143, 76, 0.15) 45%, transparent 75%)",
-              mixBlendMode: "screen",
+                "radial-gradient(ellipse at center, rgba(0, 255, 133, 0.45) 0%, rgba(0, 143, 76, 0.25) 42%, rgba(6, 61, 32, 0.15) 68%, transparent 80%)",
             }}
           />
 
-          {/* Symmetrical Cyber-Tribal Flame Winged Emblem Vector */}
-          <div className="relative w-[340px] sm:w-[560px] md:w-[720px] lg:w-[860px] h-auto">
+          {/* Symmetrical Twin Claw Hands & Demon Eyes Vector */}
+          <motion.div
+            className="relative w-[340px] sm:w-[560px] md:w-[740px] lg:w-[900px] h-auto pointer-events-none"
+            animate={{
+              scale: [0.97, 1.03, 0.97],
+            }}
+            transition={{
+              duration: 3.6,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
             <svg
-              className="w-full h-auto filter drop-shadow-[0_0_22px_rgba(0,255,133,0.65)] drop-shadow-[0_0_55px_rgba(0,255,133,0.3)]"
+              className="w-full h-auto filter drop-shadow-[0_0_26px_rgba(0,255,133,0.75)] drop-shadow-[0_0_70px_rgba(0,255,133,0.4)]"
               viewBox="0 0 1000 600"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <defs>
-                {/* Luminous Neon Gradient */}
-                <linearGradient id="emblemNeonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="clawNeonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#39FF9C" />
-                  <stop offset="35%" stopColor="#00FF85" />
-                  <stop offset="70%" stopColor="#008F4C" />
+                  <stop offset="30%" stopColor="#00FF85" />
+                  <stop offset="65%" stopColor="#008F4C" />
                   <stop offset="100%" stopColor="#063D20" />
                 </linearGradient>
 
-                {/* Symmetrical Rim Filter */}
-                <filter id="emblemGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
-                  <feGaussianBlur stdDeviation="3.5" result="blur1" />
-                  <feGaussianBlur stdDeviation="12" result="blur2" />
+                <filter id="eyeGlowFilter" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="4" result="blur1" />
+                  <feGaussianBlur stdDeviation="14" result="blur2" />
                   <feMerge>
                     <feMergeNode in="blur2" />
                     <feMergeNode in="blur1" />
@@ -326,92 +460,129 @@ export function CinematicGreenBackground({
                 </filter>
               </defs>
 
-              {/* ─── LEFT WING (ORGANIC FLAME BARBS & THORNS) ─── */}
-              <g id="leftWing">
-                {/* Primary Upper Flame Wing */}
+              {/* ─── LEFT CLAW HAND (WRIST, PALM & TALON FINGERS SPREADING OUT) ─── */}
+              <g id="leftClawWing">
+                {/* Outer Talon / Wing Curve */}
                 <path
-                  d="M 500 300 C 470 200, 390 100, 260 50 C 310 110, 360 210, 380 290 C 330 240, 240 180, 130 150 C 190 220, 260 280, 330 330 C 260 320, 170 320, 80 340 C 160 380, 250 395, 330 400 C 240 430, 140 470, 70 540 C 160 510, 260 470, 340 440 C 270 480, 190 530, 120 590 C 220 560, 330 500, 410 440 C 450 400, 480 350, 500 300 Z"
+                  d="M 500 300 C 465 185, 385 85, 240 35 C 305 102, 355 205, 375 285 C 325 230, 225 170, 110 140 C 180 215, 255 275, 325 325 C 245 315, 150 315, 55 335 C 150 380, 245 395, 330 400 C 235 430, 125 475, 50 550 C 150 515, 255 470, 340 435 C 260 480, 170 535, 95 600 C 210 565, 325 500, 410 435 C 450 390, 480 340, 500 300 Z"
                   fill="#063D20"
                   stroke="#00FF85"
-                  strokeWidth="2.5"
+                  strokeWidth="2.8"
                   strokeLinejoin="round"
                 />
 
-                {/* Secondary Sharp Barb Overlays */}
+                {/* Secondary Sharp Claw Overlays */}
                 <path
-                  d="M 440 240 C 390 150, 320 80, 220 40 C 280 110, 330 190, 360 270 Z"
+                  d="M 435 230 C 380 135, 305 65, 200 25 C 265 100, 320 185, 350 265 Z"
                   fill="#008F4C"
                   stroke="#39FF9C"
-                  strokeWidth="1.5"
-                  opacity="0.9"
+                  strokeWidth="1.8"
+                  opacity="0.95"
                 />
 
                 <path
-                  d="M 380 330 C 300 280, 220 230, 130 200 C 190 260, 260 310, 330 350 Z"
-                  fill="#00FF85"
-                  opacity="0.8"
-                />
-
-                {/* Lower Curling Thorn Tendril */}
-                <path
-                  d="M 420 440 C 360 480, 280 520, 180 560 C 270 530, 350 480, 400 440 Z"
+                  d="M 370 325 C 285 270, 200 220, 105 190 C 170 255, 245 305, 320 345 Z"
                   fill="#00FF85"
                   stroke="#39FF9C"
                   strokeWidth="1.2"
+                  opacity="0.85"
                 />
 
-                {/* Left Demonic Cybernetic Eye Cutout */}
+                {/* Lower Curling Thumb Talon */}
                 <path
-                  d="M 460 290 Q 425 290 415 310 Q 440 320 460 305 Z"
-                  fill="#39FF9C"
-                  filter="url(#emblemGlowFilter)"
+                  d="M 415 435 C 350 480, 265 520, 160 565 C 255 530, 340 475, 395 435 Z"
+                  fill="#00FF85"
+                  stroke="#39FF9C"
+                  strokeWidth="1.4"
                 />
+
+                {/* ─── PIERCING GLOWING DEMONIC EYE SLIT ─── */}
+                {/* Sclera & Eye Contour */}
+                <path
+                  d="M 460 288 Q 420 288 406 310 Q 438 322 460 304 Z"
+                  fill="#39FF9C"
+                  filter="url(#eyeGlowFilter)"
+                />
+                {/* Horizontal Slit Pupil */}
+                <ellipse cx="430" cy="302" rx="15" ry="3.5" fill="#030704" />
+                {/* White-Hot Core Pupil Reflection */}
+                <circle cx="430" cy="302" r="2.5" fill="#FFFFFF" filter="url(#eyeGlowFilter)" />
               </g>
 
-              {/* ─── RIGHT WING (PERFECT SYMMETRY VIA MIRROR TRANSFORM) ─── */}
-              <use href="#leftWing" transform="translate(1000, 0) scale(-1, 1)" />
+              {/* ─── RIGHT CLAW HAND (MIRRORED WITH TWIN GLOWING EYE) ─── */}
+              <use href="#leftClawWing" transform="translate(1000, 0) scale(-1, 1)" />
 
-              {/* ─── CENTRAL STILETTO SPINE & SHARP CORE CUTOUTS ─── */}
+              {/* ─── CENTRAL STILETTO SPINE ─── */}
               <g id="centerSpine">
-                {/* Central Stiletto Dagger */}
                 <path
-                  d="M 500 60 L 512 280 L 500 540 L 488 280 Z"
+                  d="M 500 45 L 514 270 L 500 555 L 486 270 Z"
                   fill="#39FF9C"
                   stroke="#00FF85"
-                  strokeWidth="2"
-                  filter="url(#emblemGlowFilter)"
+                  strokeWidth="2.2"
+                  filter="url(#eyeGlowFilter)"
                 />
-
-                {/* Core White-Hot Node */}
-                <circle cx="500" cy="300" r="7" fill="#FFFFFF" filter="url(#emblemGlowFilter)" />
-
-                {/* Intersecting Diamond Core */}
+                <circle cx="500" cy="300" r="8.5" fill="#FFFFFF" filter="url(#eyeGlowFilter)" />
                 <path
-                  d="M 500 260 L 525 300 L 500 340 L 475 300 Z"
+                  d="M 500 250 L 532 300 L 500 350 L 468 300 Z"
                   fill="#063D20"
                   stroke="#39FF9C"
-                  strokeWidth="2"
+                  strokeWidth="2.2"
                 />
               </g>
             </svg>
-          </div>
+          </motion.div>
         </motion.div>
       )}
 
-      {/* ─── LAYER 4: EDITORIAL VIGNETTE & METADATA ─── */}
-      <div className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-6 sm:p-10">
-        {/* Top telemetry tags */}
-        <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.3em] uppercase text-[#00FF85]/60">
-          <span>03 // KINETIC MATRIX</span>
-          <span>EMERALD CORE // 60 FPS</span>
-        </div>
+      {/* ─── 3. LAYER OF ANIMATED BLACK SKELETAL / DEMON CLAW HANDS REACHING FROM BOTTOM (FRAMES 9-16) ─── */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-[380px] pointer-events-none z-20 flex items-end justify-between overflow-hidden"
+        style={{ y: handsY }}
+      >
+        {bottomHandsConfig.map((hand) => {
+          const HandComponent =
+            hand.type === "A" ? ClawHandA : hand.type === "B" ? ClawHandB : ClawHandC;
 
-        {/* Bottom telemetry tags */}
-        <div className="flex items-center justify-between font-mono text-[10px] tracking-[0.3em] uppercase text-[#00FF85]/60">
-          <span>FLUID NOISE // DOMAIN WARPED</span>
-          <span>LATENCY // &lt;16MS</span>
-        </div>
-      </div>
+          return (
+            <motion.div
+              key={hand.id}
+              className="absolute bottom-[-15px] pointer-events-none"
+              style={{
+                left: hand.left,
+                width: `${hand.width}px`,
+                height: `${hand.height}px`,
+                zIndex: hand.zIndex,
+                transform: hand.flip ? "scaleX(-1)" : "none",
+              }}
+              animate={{
+                y: [0, -26, 0],
+                rotate: hand.flip ? [2, -3.5, 2] : [-2, 3.5, -2],
+                scaleY: [0.96, 1.05, 0.96],
+              }}
+              transition={{
+                duration: hand.duration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: hand.delay,
+              }}
+            >
+              <HandComponent className="w-full h-full filter drop-shadow-[0_0_12px_rgba(0,255,133,0.55)]" />
+            </motion.div>
+          );
+        })}
+
+        {/* Solid Black Base Strip to anchor the wrists at the bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-8 bg-[#030704] z-30 pointer-events-none" />
+      </motion.div>
+
+      {/* ─── 4. SUBTLE MATRIX SCANLINE TEXTURE OVERLAY ─── */}
+      <div
+        className="absolute inset-0 pointer-events-none z-30 opacity-20 mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 255, 133, 0.08) 2px, rgba(0, 255, 133, 0.08) 4px)",
+        }}
+      />
     </div>
   );
 }

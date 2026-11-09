@@ -5,8 +5,10 @@ import { LoadingProvider, useLoadingState } from "@/hooks/useLoadingState";
 import { CinematicLoader } from "@/components/loader/CinematicLoader";
 import { BackgroundAnimationSystem } from "@/components/animations/BackgroundAnimationSystem";
 import { Navbar } from "@/components/navbar/Navbar";
+import { CinematicGreenHero } from "@/components/hero/CinematicGreenHero";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { RevolutionizeSection } from "@/components/statement/RevolutionizeSection";
+import { CinematicRedMotionSection } from "@/components/statement/CinematicRedMotionSection";
 import { CinematicGreenSection } from "@/components/statement/CinematicGreenSection";
 import { IntegrationsSection } from "@/components/integrations/IntegrationsSection";
 import { WorkflowSection } from "@/components/workflow/WorkflowSection";
@@ -45,8 +47,8 @@ function HomeContent() {
 
         {/* ─── MAIN CONTENT SECTIONS (ELEVATED ABOVE BACKGROUND) ─── */}
         <main className="relative z-10">
-          {/* 1. Hero Section */}
-          <HeroSection
+          {/* 1. Cinematic Green & Black Animated Hero Section */}
+          <CinematicGreenHero
             onWatchBuild={() => setWatchBuildOpen(true)}
             onStartFree={() => handleOpenStartFree()}
           />
@@ -56,7 +58,10 @@ function HomeContent() {
             onBookConsultation={() => setConsultationOpen(true)}
           />
 
-          {/* 3. Reference-Based Cinematic Green Flame & Tribal Emblem Showcase */}
+          {/* 3. Pure Cinematic Abstract Motion-Graphics Background (Dark Red Liquid Ink & Flame Wings) */}
+          <CinematicRedMotionSection />
+
+          {/* 4. How It Works: Reference-Based Cinematic Green Flame & Matrix */}
           <CinematicGreenSection />
 
           {/* 4. Integrations Section ("One canvas, many branches") */}
