@@ -9,7 +9,7 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { CinematicRedHero } from "@/components/hero/CinematicRedHero";
 import { CinematicGreenHero } from "@/components/hero/CinematicGreenHero";
 import { HeroSection } from "@/components/hero/HeroSection";
-import { RevolutionizeSection } from "@/components/statement/RevolutionizeSection";
+import { ThisWillFeelDifferentSection } from "@/components/statement/ThisWillFeelDifferentSection";
 import { CinematicGreenSection } from "@/components/statement/CinematicGreenSection";
 import { IntegrationsSection } from "@/components/integrations/IntegrationsSection";
 import { WorkflowSection } from "@/components/workflow/WorkflowSection";
@@ -96,8 +96,8 @@ function HomeContent() {
             </section>
           )}
 
-          {/* 4. Revolutionize Statement Screen */}
-          <RevolutionizeSection
+          {/* 4. "THIS WILL FEEL DIFFERENT" Statement Screen (Matching Reference Video in Green) */}
+          <ThisWillFeelDifferentSection
             onBookConsultation={() => setConsultationOpen(true)}
           />
 
