@@ -103,12 +103,9 @@ export function CinematicLoader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center transition-opacity duration-500 ease-out bg-[#050505] ${
         isExiting ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
-      style={{
-        background: "radial-gradient(ellipse at center, #8C000B 0%, #5A0007 38%, #2A0003 72%, #080001 100%)",
-      }}
       aria-live="polite"
       role="progressbar"
       aria-valuenow={displayProgress}
@@ -116,7 +113,7 @@ export function CinematicLoader() {
       aria-valuemax={100}
       aria-label="Loading Relay experience"
     >
-      {/* ─── PROCEDURAL PARTICLES & CONVECTIVE EMBERS ─── */}
+      {/* ─── PROCEDURAL NEON GREEN PARTICLES & CONVECTIVE EMBERS ─── */}
       {!isTransitionActive && (
         <LoaderParticles
           progress={displayProgress}
@@ -125,7 +122,7 @@ export function CinematicLoader() {
         />
       )}
 
-      {/* ─── ATMOSPHERIC DEEP RED RADIAL GLOW BEHIND TYPOGRAPHY ─── */}
+      {/* ─── ATMOSPHERIC NEON GREEN RADIAL GLOW BEHIND TYPOGRAPHY ─── */}
       {!isTransitionActive && (
         <div
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none transition-all duration-500 ease-out"
@@ -134,18 +131,18 @@ export function CinematicLoader() {
             height: "min(90vw, 750px)",
             borderRadius: "50%",
             background:
-              "radial-gradient(circle, rgba(255, 30, 56, 0.32) 0%, rgba(180, 0, 20, 0.1) 50%, transparent 75%)",
-            opacity: Math.min(0.7, 0.25 + norm * 0.45),
-            transform: `translate(-50%, -50%) scale(${0.8 + norm * 0.5})`,
+              "radial-gradient(circle, rgba(198,255,54,0.22) 0%, rgba(198,255,54,0.04) 50%, transparent 75%)",
+            opacity: Math.min(0.65, 0.2 + norm * 0.45),
+            transform: `translate(-50%, -50%) scale(${0.75 + norm * 0.55})`,
           }}
           aria-hidden="true"
         />
       )}
 
-      {/* ─── CENTRAL COUNTER + ELEGANT BLACK BODONI TYPOGRAPHY ─── */}
+      {/* ─── CENTRAL COUNTER + NEON LIME BODONI TYPOGRAPHY ─── */}
       {!isTransitionActive && (
         <div className="relative z-10 flex flex-col items-center select-none text-center px-4">
-          {/* Elegant Black ITC Bodoni 72 Italic Counter */}
+          {/* Neon Lime ITC Bodoni 72 Italic Counter */}
           <div
             className="relative leading-none select-none font-serif-italic"
             style={{
@@ -155,21 +152,21 @@ export function CinematicLoader() {
               fontWeight: 400,
               fontFeatureSettings: '"onum" 1, "pnum" 1',
               fontSize: "clamp(180px, 28vw, 480px)",
-              color: "#000000",
+              color: "#C6FF36",
               letterSpacing: "-0.02em",
-              textShadow: "0 4px 35px rgba(0, 0, 0, 0.45), 0 0 15px rgba(0, 0, 0, 0.25)",
+              textShadow: "0 0 50px rgba(198, 255, 54, 0.45), 0 0 100px rgba(198, 255, 54, 0.2)",
             }}
           >
             {formattedCounter}
           </div>
 
-          {/* Supporting label & stage indicator in elegant black/charcoal */}
+          {/* Supporting label & stage indicator in Neon Lime & Subtle White */}
           <div className="mt-2 sm:mt-4 flex flex-col items-center">
             <div
-              className="tracking-[0.4em] uppercase font-mono font-bold"
+              className="tracking-[0.4em] uppercase font-mono font-medium"
               style={{
                 fontSize: "clamp(0.6rem, 1.1vw, 0.8rem)",
-                color: "#000000",
+                color: "#C6FF36",
                 letterSpacing: "0.35em",
               }}
             >
@@ -177,9 +174,9 @@ export function CinematicLoader() {
             </div>
 
             <div
-              className="mt-2 tracking-[0.3em] uppercase font-mono text-xs font-semibold"
+              className="mt-2 tracking-[0.3em] uppercase font-mono text-xs transition-all duration-200"
               style={{
-                color: "rgba(0, 0, 0, 0.7)",
+                color: "rgba(255, 255, 255, 0.45)",
                 letterSpacing: "0.25em",
               }}
             >
@@ -189,18 +186,18 @@ export function CinematicLoader() {
         </div>
       )}
 
-      {/* ─── SUBTLE CRIMSON HORIZON ACCENT LINE ─── */}
+      {/* ─── SUBTLE NEON GREEN HORIZON ACCENT LINE ─── */}
       {!isTransitionActive && (
         <div
           className="absolute bottom-0 left-0 right-0 h-px"
           style={{
-            background: "linear-gradient(90deg, transparent, rgba(255, 30, 56, 0.5), transparent)",
+            background: "linear-gradient(90deg, transparent, rgba(198,255,54,0.35), transparent)",
           }}
           aria-hidden="true"
         />
       )}
 
-      {/* ─── ULTRA-CINEMATIC 8-STAGE RED & BLACK TRANSITION (FRAMES 1 TO 8) ─── */}
+      {/* ─── ULTRA-CINEMATIC 8-STAGE GREEN & BLACK TRANSITION (FRAMES 1 TO 8) ─── */}
       {isTransitionActive && (
         <CinematicRedTransition onComplete={handleTransitionFinished} />
       )}

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
-import { simplex2D, fbm2D } from "@/lib/simplexNoise";
+import { useEffect, useRef } from "react";
+import { simplex2D } from "@/lib/simplexNoise";
 
 interface CinematicRedTransitionProps {
   onComplete: () => void;
@@ -17,7 +17,7 @@ interface SmokePuff {
   speed: number;
   radius: number;
   seed: number;
-  layer: number; // 0: black/charred, 1: deep maroon, 2: crimson
+  layer: number; // 0: black/charred, 1: deep emerald, 2: neon green
   swirlRate: number;
 }
 
@@ -47,10 +47,6 @@ function easeOutQuart(x: number): number {
 
 function easeInOutCubic(x: number): number {
   return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-}
-
-function easeOutExpo(x: number): number {
-  return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
 }
 
 export function CinematicRedTransition({
@@ -89,7 +85,7 @@ export function CinematicRedTransition({
     resize();
     window.addEventListener("resize", resize);
 
-    // ── Generate 48 Volumetric Smoke Plumes ──
+    // ── Generate 52 Volumetric Smoke Plumes ──
     const smokePuffs: SmokePuff[] = Array.from({ length: 52 }, (_, i) => ({
       xNorm: (i / 52) * 1.1 - 0.05 + (Math.random() - 0.5) * 0.06,
       yBaseNorm: 0.98 + (i % 4) * 0.03,
@@ -100,7 +96,7 @@ export function CinematicRedTransition({
       swirlRate: (Math.random() - 0.5) * 1.5,
     }));
 
-    // ── Generate Embers ──
+    // ── Generate Green Embers ──
     const embers: Ember[] = Array.from({ length: 45 }, (_, i) => ({
       x: (i % 2 === 0 ? Math.random() * 0.15 : 0.85 + Math.random() * 0.15) * width,
       y: Math.random() * height,
@@ -108,7 +104,7 @@ export function CinematicRedTransition({
       vy: -(Math.random() * 0.7 + 0.3),
       radius: Math.random() * 1.8 + 0.6,
       alpha: 0,
-      maxAlpha: Math.random() * 0.6 + 0.2,
+      maxAlpha: Math.random() * 0.6 + 0.25,
       life: Math.random() * 80,
       maxLife: Math.random() * 90 + 70,
       side: i % 2 === 0 ? "left" : "right",
@@ -118,7 +114,7 @@ export function CinematicRedTransition({
     const startTime = performance.now();
 
     // ═════════════════════════════════════════════════════════════════════════
-    // RENDER LOOP (60 FPS)
+    // RENDER LOOP (60 FPS) — GREEN & BLACK PALETTE
     // ═════════════════════════════════════════════════════════════════════════
     const render = (now: number) => {
       const elapsed = (now - startTime) / 1000; // in seconds
@@ -126,19 +122,19 @@ export function CinematicRedTransition({
       ctx.save();
       ctx.clearRect(0, 0, width, height);
 
-      // Default background to pure black
+      // Default background to pure pitch black (#000000)
       ctx.fillStyle = "#000000";
       ctx.fillRect(0, 0, width, height);
 
       // ───────────────────────────────────────────────────────────────────────
       // STAGE 1: 100 FADE OUT (0.0s – 0.5s)
-      // Preserves existing red background texture while elegant black 100 fades.
+      // Neon green Bodoni 100 typography smoothly fades into the black background.
       // ───────────────────────────────────────────────────────────────────────
       if (elapsed < 0.55) {
         const t1 = Math.min(1, elapsed / 0.5);
 
-        // Rich red textured background
-        const redGrad = ctx.createRadialGradient(
+        // Subtle dark emerald radial background atmosphere
+        const bgGrad = ctx.createRadialGradient(
           width * 0.5,
           height * 0.5,
           40,
@@ -146,34 +142,28 @@ export function CinematicRedTransition({
           height * 0.5,
           Math.max(width, height) * 0.75
         );
-        redGrad.addColorStop(0, "#8C000B");
-        redGrad.addColorStop(0.35, "#5A0007");
-        redGrad.addColorStop(0.7, "#2C0003");
-        redGrad.addColorStop(1, "#0A0001");
-        ctx.fillStyle = redGrad;
+        bgGrad.addColorStop(0, "rgba(0, 35, 18, 0.45)");
+        bgGrad.addColorStop(0.4, "rgba(0, 20, 10, 0.3)");
+        bgGrad.addColorStop(1, "#000000");
+        ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, width, height);
 
-        // Subtle heat haze / noise overlay
-        ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
-        ctx.fillRect(0, 0, width, height);
-
-        // Elegant Black 100 Typography fading out
+        // Neon Lime 100 Typography fading out smoothly
         const textOpacity = Math.max(0, 1 - t1);
         if (textOpacity > 0.001) {
           ctx.save();
           ctx.globalAlpha = textOpacity;
-          ctx.fillStyle = "#000000";
+          ctx.fillStyle = "#C6FF36";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
 
-          // ITC Bodoni 72 Italic sizing
+          // ITC Bodoni 72 Italic font
           const fontSize = Math.min(width * 0.26, 420);
           ctx.font = `italic 400 ${fontSize}px "ITC Bodoni 72", "Bodoni 72", Georgia, serif`;
 
-          // Elegant deep black drop shadow for contrast
-          ctx.shadowColor = "rgba(0, 0, 0, 0.75)";
-          ctx.shadowBlur = 30;
-          ctx.shadowOffsetY = 6;
+          // Neon green drop glow
+          ctx.shadowColor = "rgba(0, 255, 65, 0.55)";
+          ctx.shadowBlur = 45;
 
           ctx.fillText("100", width * 0.5, height * 0.5);
           ctx.restore();
@@ -181,8 +171,8 @@ export function CinematicRedTransition({
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 2 & 3: RED & BLACK SMOKE ENTRANCE + BOUNDARY (0.5s – 1.8s)
-      // Realistic volumetric dark red & black smoke rising from bottom edge.
+      // STAGE 2 & 3: GREEN & BLACK SMOKE ENTRANCE + BOUNDARY (0.5s – 1.8s)
+      // Volumetric dark emerald & charred black smoke rising from bottom edge.
       // ───────────────────────────────────────────────────────────────────────
       if (elapsed >= 0.45 && elapsed < 2.4) {
         const tSmoke = Math.min(1, Math.max(0, (elapsed - 0.45) / 0.75));
@@ -193,12 +183,12 @@ export function CinematicRedTransition({
           ctx.save();
           ctx.globalAlpha = smokeOpacity;
 
-          // Crimson background illumination that fades out during blackout
+          // Deep emerald background gradient that fades out during blackout
           const bgIllumGrad = ctx.createLinearGradient(0, 0, 0, height);
-          bgIllumGrad.addColorStop(0, "rgba(5, 0, 1, 0.95)");
-          bgIllumGrad.addColorStop(0.4, "rgba(35, 0, 4, 0.9)");
-          bgIllumGrad.addColorStop(0.7, "rgba(90, 0, 10, 0.95)");
-          bgIllumGrad.addColorStop(1, "rgba(125, 0, 15, 1.0)");
+          bgIllumGrad.addColorStop(0, "rgba(0, 5, 2, 0.95)");
+          bgIllumGrad.addColorStop(0.4, "rgba(0, 18, 9, 0.9)");
+          bgIllumGrad.addColorStop(0.7, "rgba(0, 45, 22, 0.95)");
+          bgIllumGrad.addColorStop(1, "rgba(0, 75, 36, 1.0)");
           ctx.fillStyle = bgIllumGrad;
           ctx.fillRect(0, 0, width, height);
 
@@ -206,7 +196,6 @@ export function CinematicRedTransition({
           const smokeRiseDistance = height * 0.65;
           const currentRise = tSmoke * smokeRiseDistance;
 
-          // Render 3 depth layers of volumetric smoke
           for (const puff of smokePuffs) {
             const rise = currentRise * puff.speed;
             const px = puff.xNorm * width + simplex2D(puff.xNorm * 3, elapsed * 0.6) * 45;
@@ -217,19 +206,19 @@ export function CinematicRedTransition({
 
             if (puff.layer === 0) {
               // Deepest / darkest layer: near-black charred smoke
-              plumeGrad.addColorStop(0, "rgba(10, 0, 2, 0.92)");
-              plumeGrad.addColorStop(0.5, "rgba(25, 0, 3, 0.7)");
+              plumeGrad.addColorStop(0, "rgba(2, 8, 4, 0.92)");
+              plumeGrad.addColorStop(0.5, "rgba(1, 15, 7, 0.7)");
               plumeGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
             } else if (puff.layer === 1) {
-              // Mid layer: deep maroon smoke
-              plumeGrad.addColorStop(0, "rgba(65, 0, 7, 0.85)");
-              plumeGrad.addColorStop(0.55, "rgba(40, 0, 4, 0.6)");
-              plumeGrad.addColorStop(1, "rgba(5, 0, 1, 0)");
+              // Mid layer: deep emerald smoke
+              plumeGrad.addColorStop(0, "rgba(0, 45, 20, 0.85)");
+              plumeGrad.addColorStop(0.55, "rgba(0, 30, 14, 0.6)");
+              plumeGrad.addColorStop(1, "rgba(0, 5, 2, 0)");
             } else {
-              // Front layer: vivid crimson smoke highlights
-              plumeGrad.addColorStop(0, "rgba(145, 0, 16, 0.75)");
-              plumeGrad.addColorStop(0.45, "rgba(95, 0, 10, 0.55)");
-              plumeGrad.addColorStop(1, "rgba(20, 0, 2, 0)");
+              // Front layer: vivid neon-green smoke highlights
+              plumeGrad.addColorStop(0, "rgba(0, 160, 65, 0.75)");
+              plumeGrad.addColorStop(0.45, "rgba(0, 95, 42, 0.55)");
+              plumeGrad.addColorStop(1, "rgba(0, 20, 8, 0)");
             }
 
             ctx.fillStyle = plumeGrad;
@@ -243,33 +232,31 @@ export function CinematicRedTransition({
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGE 3 & 4: ELECTRIC RED ENERGY BOUNDARY (1.2s – 2.4s)
-      // Thin, irregular, glowing red lightning-like line across smoke/black boundary.
-      // Shatters and breaks apart into fading sparks during Frame 4 (1.8s - 2.4s).
+      // STAGE 3 & 4: ELECTRIC NEON-GREEN ENERGY BOUNDARY (1.2s – 2.4s)
+      // Thin, irregular, glowing green lightning line across smoke horizon.
+      // Shatters into fading green spark arcs during Frame 4 (1.8s - 2.4s).
       // ───────────────────────────────────────────────────────────────────────
       if (elapsed >= 1.15 && elapsed < 2.4) {
         const tBoundary = Math.min(1, Math.max(0, (elapsed - 1.15) / 0.55));
         const tBreak = elapsed > 1.8 ? Math.min(1, (elapsed - 1.8) / 0.6) : 0;
-        const lineOpacity = Math.max(0, (1 - tBreak * 1.4)) * Math.min(1, (elapsed - 1.15) / 0.15);
+        const lineOpacity = Math.max(0, 1 - tBreak * 1.4) * Math.min(1, (elapsed - 1.15) / 0.15);
 
         if (lineOpacity > 0.001) {
           ctx.save();
 
-          // Rapid organic flicker
+          // Rapid organic electrical flicker
           const flicker = 0.8 + 0.2 * Math.sin(elapsed * 45) * Math.cos(elapsed * 28);
           ctx.globalAlpha = lineOpacity * flicker;
 
           const boundaryBaseY = height * (0.46 + 0.03 * Math.sin(elapsed * 3));
           const reachX = width * Math.min(1, tBoundary * 1.3);
 
-          // Build fractal lightning path
           const stepX = 14;
           const points: { x: number; y: number }[] = [];
 
           for (let x = 0; x <= reachX; x += stepX) {
             const noiseOffset = simplex2D(x * 0.012, elapsed * 8) * 26;
             const jitter = (Math.sin(x * 0.3 + elapsed * 30) > 0.6 ? 1 : -1) * (Math.random() * 12);
-            // Shatter displacement during Frame 4
             const shatterY = tBreak > 0 ? (Math.random() - 0.5) * 60 * tBreak : 0;
             const shatterX = tBreak > 0 ? (Math.random() - 0.5) * 35 * tBreak : 0;
 
@@ -279,7 +266,7 @@ export function CinematicRedTransition({
             });
           }
 
-          // Pass 1: Outer Red Bloom Glow
+          // Pass 1: Outer Neon Green Bloom Glow
           ctx.beginPath();
           if (points.length > 0) {
             ctx.moveTo(points[0].x, points[0].y);
@@ -287,13 +274,13 @@ export function CinematicRedTransition({
               ctx.lineTo(points[i].x, points[i].y);
             }
           }
-          ctx.strokeStyle = "rgba(255, 0, 40, 0.4)";
+          ctx.strokeStyle = "rgba(0, 255, 65, 0.4)";
           ctx.lineWidth = 10;
-          ctx.shadowColor = "#FF002B";
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 28;
           ctx.stroke();
 
-          // Pass 2: Sharp Vivid Crimson Core
+          // Pass 2: Vivid Electric Green Core
           ctx.beginPath();
           if (points.length > 0) {
             ctx.moveTo(points[0].x, points[0].y);
@@ -301,13 +288,13 @@ export function CinematicRedTransition({
               ctx.lineTo(points[i].x, points[i].y);
             }
           }
-          ctx.strokeStyle = "#FF1E38";
+          ctx.strokeStyle = "#00FF41";
           ctx.lineWidth = 3;
-          ctx.shadowColor = "#FF1E38";
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 14;
           ctx.stroke();
 
-          // Pass 3: Incandescent Electric White-Red Filament
+          // Pass 3: Incandescent Electric White-Green Filament
           ctx.beginPath();
           if (points.length > 0) {
             ctx.moveTo(points[0].x, points[0].y);
@@ -315,7 +302,7 @@ export function CinematicRedTransition({
               ctx.lineTo(points[i].x, points[i].y);
             }
           }
-          ctx.strokeStyle = "#FFE8EB";
+          ctx.strokeStyle = "#E8FFE9";
           ctx.lineWidth = 1.2;
           ctx.shadowBlur = 0;
           ctx.stroke();
@@ -336,9 +323,9 @@ export function CinematicRedTransition({
 
               ctx.lineTo(midX, midY);
               ctx.lineTo(endX, endY);
-              ctx.strokeStyle = "#FF334B";
+              ctx.strokeStyle = "#39FF14";
               ctx.lineWidth = 1.4;
-              ctx.shadowColor = "#FF002B";
+              ctx.shadowColor = "#00FF41";
               ctx.shadowBlur = 8;
               ctx.stroke();
             }
@@ -350,18 +337,16 @@ export function CinematicRedTransition({
 
       // ───────────────────────────────────────────────────────────────────────
       // STAGE 5: DARK SUSPENSE (2.4s – 3.5s)
-      // Pure black canvas. Center completely dark. Faint edge energy traces.
+      // Pure black canvas. Center completely dark. Faint green edge energy traces.
       // ───────────────────────────────────────────────────────────────────────
       if (elapsed >= 2.35 && elapsed < 3.55) {
-        const tSuspense = (elapsed - 2.35) / 1.15;
-
         ctx.save();
 
-        // 1. Ensure Center is completely pure black (#000000)
+        // 1. Ensure Center is completely pitch black (#000000)
         ctx.fillStyle = "#000000";
         ctx.fillRect(width * 0.15, 0, width * 0.7, height);
 
-        // 2. Extremely subtle red edge energy traces near left (x < 0.12) & right (x > 0.88)
+        // 2. Extremely subtle green edge energy traces near left (x < 0.12) & right (x > 0.88)
         const edgePulse = Math.sin(elapsed * 12);
         if (edgePulse > 0.3) {
           const traceAlpha = (edgePulse - 0.3) * 0.45;
@@ -373,9 +358,9 @@ export function CinematicRedTransition({
           ctx.moveTo(0, yL);
           ctx.lineTo(width * 0.04, yL + (Math.random() - 0.5) * 15);
           ctx.lineTo(width * 0.08, yL + (Math.random() - 0.5) * 25);
-          ctx.strokeStyle = "#FF1E38";
+          ctx.strokeStyle = "#00FF41";
           ctx.lineWidth = 1.2;
-          ctx.shadowColor = "#FF002B";
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 10;
           ctx.stroke();
 
@@ -385,9 +370,9 @@ export function CinematicRedTransition({
           ctx.moveTo(width, yR);
           ctx.lineTo(width * 0.96, yR + (Math.random() - 0.5) * 15);
           ctx.lineTo(width * 0.92, yR + (Math.random() - 0.5) * 25);
-          ctx.strokeStyle = "#FF1E38";
+          ctx.strokeStyle = "#00FF41";
           ctx.lineWidth = 1.2;
-          ctx.shadowColor = "#FF002B";
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 10;
           ctx.stroke();
         }
@@ -395,7 +380,7 @@ export function CinematicRedTransition({
         ctx.restore();
       }
 
-      // ── Embers across Stages 4, 5, 8 ──
+      // ── Green Embers across Stages 4, 5, 8 ──
       if (elapsed >= 1.8) {
         ctx.save();
         for (const ember of embers) {
@@ -413,8 +398,8 @@ export function CinematicRedTransition({
           }
 
           const currentAlpha = ember.maxAlpha * (1 - ember.life / ember.maxLife);
-          ctx.fillStyle = `rgba(255, 30, 56, ${currentAlpha})`;
-          ctx.shadowColor = "#FF1E38";
+          ctx.fillStyle = `rgba(198, 255, 54, ${currentAlpha})`;
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 6;
           ctx.beginPath();
           ctx.arc(ember.x, ember.y, ember.radius, 0, Math.PI * 2);
@@ -424,10 +409,10 @@ export function CinematicRedTransition({
       }
 
       // ───────────────────────────────────────────────────────────────────────
-      // STAGES 6, 7 & 8: LEFT & RIGHT ENERGY ENTRANCE -> SYMMETRICAL EXPANSION
+      // STAGES 6, 7 & 8: LEFT & RIGHT GREEN ENERGY ENTRANCE -> SYMMETRICAL EXPANSION
       // (3.5s – 5.5s)
-      // Sharp, thin, glowing crimson energy streaks bursting from left & right,
-      // expanding into intricate symmetrical wings / organic flame branches.
+      // Sharp, thin, glowing neon-green energy streaks bursting from left & right,
+      // expanding into intricate symmetrical wings / organic cyber-flame branches.
       // ───────────────────────────────────────────────────────────────────────
       if (elapsed >= 3.5) {
         ctx.save();
@@ -439,34 +424,29 @@ export function CinematicRedTransition({
         const reach = isRevealedStage
           ? 1.0
           : tWingProgress < 0.45
-          ? easeOutQuart(tWingProgress / 0.45) * 0.45 // Stage 6 fast entrance
-          : 0.45 + easeInOutCubic((tWingProgress - 0.45) / 0.55) * 0.55; // Stage 7 expansion
+          ? easeOutQuart(tWingProgress / 0.45) * 0.45
+          : 0.45 + easeInOutCubic((tWingProgress - 0.45) / 0.55) * 0.55;
 
-        // High-frequency subtle electrical vibration / flicker
         const wingFlicker = isRevealedStage
           ? 0.92 + 0.08 * Math.sin(elapsed * 35)
           : 0.85 + 0.15 * Math.sin(elapsed * 45);
 
         ctx.globalAlpha = Math.min(1, (elapsed - 3.5) / 0.15) * wingFlicker;
 
-        // Pulse intensity during Stage 8 (5.0 - 5.5s)
         const glowBoost = isRevealedStage ? 1.0 + 0.18 * Math.sin((elapsed - 5.0) * 8) : 1.0;
 
         const centerX = width * 0.5;
         const centerY = height * 0.48;
 
-        // Render Symmetrical Wing Formation (Left side & Right side mirrored)
+        // Render Symmetrical Green Wing Formation (Left & Right mirrored)
         const drawWingHalf = (isLeft: boolean) => {
           ctx.save();
           const sign = isLeft ? 1 : -1;
           const originX = isLeft ? 0 : width;
 
-          // Main primary wing spine
-          // Curves from outer edge toward center
           const targetTipX = centerX - sign * width * (1 - reach) * 0.42;
           const targetTipY = centerY - height * 0.18 * reach;
 
-          // Multi-tendril spine paths (Primary Wing Spine + 5 Talon Branches)
           const spines = [
             // Spine 0: Main upper soaring wing tip
             {
@@ -527,7 +507,7 @@ export function CinematicRedTransition({
             },
           ];
 
-          // 1. Draw Charred Dark Interior Silhouette Fill (Aggressive Horn Wings)
+          // 1. Draw Charred Dark Interior Silhouette Fill (Cyber Wing Interior)
           if (reach > 0.15) {
             ctx.beginPath();
             ctx.moveTo(originX, centerY + height * 0.35);
@@ -545,16 +525,15 @@ export function CinematicRedTransition({
             );
             ctx.closePath();
 
-            // Dark charred interior with subtle deep maroon core
             const bodyGrad = ctx.createLinearGradient(originX, centerY, targetTipX, targetTipY);
-            bodyGrad.addColorStop(0, "rgba(5, 0, 1, 0.95)");
-            bodyGrad.addColorStop(0.65, "rgba(35, 0, 4, 0.88)");
-            bodyGrad.addColorStop(1, "rgba(75, 0, 8, 0.9)");
+            bodyGrad.addColorStop(0, "rgba(2, 10, 5, 0.95)");
+            bodyGrad.addColorStop(0.65, "rgba(0, 25, 12, 0.88)");
+            bodyGrad.addColorStop(1, "rgba(0, 48, 22, 0.9)");
             ctx.fillStyle = bodyGrad;
             ctx.fill();
           }
 
-          // 2. Draw Razor-Sharp Illuminated Crimson Edges (Multi-pass Glow)
+          // 2. Draw Razor-Sharp Illuminated Neon-Green Edges (Multi-pass Glow)
           for (const s of spines) {
             if (s.reachFactor <= 0.01) continue;
 
@@ -562,22 +541,22 @@ export function CinematicRedTransition({
             path.moveTo(s.start.x, s.start.y);
             path.bezierCurveTo(s.cp1.x, s.cp1.y, s.cp2.x, s.cp2.y, s.end.x, s.end.y);
 
-            // Pass A: Outer Vivid Crimson Bloom Glow
-            ctx.strokeStyle = "rgba(255, 0, 40, 0.5)";
+            // Pass A: Outer Neon Green Bloom Glow
+            ctx.strokeStyle = "rgba(0, 255, 65, 0.5)";
             ctx.lineWidth = s.width * 4;
-            ctx.shadowColor = "#FF002B";
+            ctx.shadowColor = "#00FF41";
             ctx.shadowBlur = 28 * glowBoost;
             ctx.stroke(path);
 
-            // Pass B: Intense Illuminated Razor Crimson Edge
-            ctx.strokeStyle = "#FF1E38";
+            // Pass B: Intense Illuminated Neon-Green Edge
+            ctx.strokeStyle = "#00FF41";
             ctx.lineWidth = s.width * 1.5;
-            ctx.shadowColor = "#FF1E38";
+            ctx.shadowColor = "#00FF41";
             ctx.shadowBlur = 12 * glowBoost;
             ctx.stroke(path);
 
-            // Pass C: Bright Electric Core Line
-            ctx.strokeStyle = "#FFD6DB";
+            // Pass C: Bright Electric White-Green Core Line
+            ctx.strokeStyle = "#E8FFE9";
             ctx.lineWidth = Math.max(1, s.width * 0.6);
             ctx.shadowBlur = 0;
             ctx.stroke(path);
@@ -585,8 +564,8 @@ export function CinematicRedTransition({
             // Concentrated glowing tip with spark emission
             ctx.beginPath();
             ctx.arc(s.end.x, s.end.y, 2.5 * s.width * 0.5, 0, Math.PI * 2);
-            ctx.fillStyle = "#FFE8EB";
-            ctx.shadowColor = "#FF1E38";
+            ctx.fillStyle = "#E8FFE9";
+            ctx.shadowColor = "#00FF41";
             ctx.shadowBlur = 24 * glowBoost;
             ctx.fill();
             ctx.shadowBlur = 0;
@@ -606,9 +585,9 @@ export function CinematicRedTransition({
               const spurLen = (15 + Math.random() * 25) * reach;
               ctx.lineTo(spurX + Math.cos(tipAngle) * spurLen, spurY + Math.sin(tipAngle) * spurLen);
 
-              ctx.strokeStyle = "#FF334B";
+              ctx.strokeStyle = "#39FF14";
               ctx.lineWidth = 1.3;
-              ctx.shadowColor = "#FF002B";
+              ctx.shadowColor = "#00FF41";
               ctx.shadowBlur = 8 * glowBoost;
               ctx.stroke();
             }
@@ -628,15 +607,15 @@ export function CinematicRedTransition({
           const convergenceProgress = (reach - 0.85) / 0.15;
           ctx.beginPath();
           ctx.arc(centerX, centerY - height * 0.12, 12 * convergenceProgress, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 30, 56, ${0.4 * convergenceProgress})`;
-          ctx.shadowColor = "#FF002B";
+          ctx.fillStyle = `rgba(0, 255, 65, ${0.4 * convergenceProgress})`;
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 40 * glowBoost;
           ctx.fill();
 
           ctx.beginPath();
           ctx.arc(centerX, centerY - height * 0.12, 3.5 * convergenceProgress, 0, Math.PI * 2);
-          ctx.fillStyle = "#FFE8EB";
-          ctx.shadowColor = "#FF1E38";
+          ctx.fillStyle = "#E8FFE9";
+          ctx.shadowColor = "#00FF41";
           ctx.shadowBlur = 15;
           ctx.fill();
           ctx.shadowBlur = 0;
