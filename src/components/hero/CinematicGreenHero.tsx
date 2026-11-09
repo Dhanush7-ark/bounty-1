@@ -204,56 +204,56 @@ export function CinematicGreenHero({
           ))}
         </div>
 
-        {/* Center: Minimalist Cross Telemetry Strip */}
+        {/* Center: Minimalist Plus Telemetry Strip (Exact Reference Video Match) */}
         <div className="flex items-center gap-3 sm:gap-8 md:gap-12 text-[10px] sm:text-xs font-semibold tracking-[0.28em] text-white/90">
           <svg
-            className="w-2.5 h-2.5 text-[#00FF41]/70 inline-block flex-shrink-0"
+            className="w-2.5 h-2.5 text-[#00FF41]/80 inline-block flex-shrink-0"
             viewBox="0 0 10 10"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.6"
+            strokeWidth="1.8"
           >
-            <line x1="1" y1="1" x2="9" y2="9" />
-            <line x1="9" y1="1" x2="1" y2="9" />
+            <line x1="5" y1="1" x2="5" y2="9" />
+            <line x1="1" y1="5" x2="9" y2="5" />
           </svg>
 
           <span className="tracking-[0.32em] text-white">TENSION</span>
 
           <svg
-            className="w-2.5 h-2.5 text-[#00FF41]/70 inline-block flex-shrink-0"
+            className="w-2.5 h-2.5 text-[#00FF41]/80 inline-block flex-shrink-0"
             viewBox="0 0 10 10"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.6"
+            strokeWidth="1.8"
           >
-            <line x1="1" y1="1" x2="9" y2="9" />
-            <line x1="9" y1="1" x2="1" y2="9" />
+            <line x1="5" y1="1" x2="5" y2="9" />
+            <line x1="1" y1="5" x2="9" y2="5" />
           </svg>
 
           <span className="tracking-[0.32em] text-white">IMMERSION</span>
 
           <svg
-            className="w-2.5 h-2.5 text-[#00FF41]/70 inline-block flex-shrink-0"
+            className="w-2.5 h-2.5 text-[#00FF41]/80 inline-block flex-shrink-0"
             viewBox="0 0 10 10"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.6"
+            strokeWidth="1.8"
           >
-            <line x1="1" y1="1" x2="9" y2="9" />
-            <line x1="9" y1="1" x2="1" y2="9" />
+            <line x1="5" y1="1" x2="5" y2="9" />
+            <line x1="1" y1="5" x2="9" y2="5" />
           </svg>
 
           <span className="tracking-[0.32em] text-white">IMPACT</span>
 
           <svg
-            className="w-2.5 h-2.5 text-[#00FF41]/70 inline-block flex-shrink-0"
+            className="w-2.5 h-2.5 text-[#00FF41]/80 inline-block flex-shrink-0"
             viewBox="0 0 10 10"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.6"
+            strokeWidth="1.8"
           >
-            <line x1="1" y1="1" x2="9" y2="9" />
-            <line x1="9" y1="1" x2="1" y2="9" />
+            <line x1="5" y1="1" x2="5" y2="9" />
+            <line x1="1" y1="5" x2="9" y2="5" />
           </svg>
         </div>
 
@@ -262,7 +262,7 @@ export function CinematicGreenHero({
           <div className="flex items-center gap-2.5 px-3 py-1.5 rounded bg-black/85 border border-[#00FF41]/30 shadow-[0_0_12px_rgba(0,0,0,0.9)]">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00FF41] shadow-[0_0_8px_#00FF41] animate-pulse" />
             <span className="text-[10px] text-white font-mono tracking-wider font-semibold">
-              ONLINE <span className="text-[#00FF41]">60FPS</span>
+              ONLINE <span className="text-[#00FF41]">&bull; Let&apos;s Connect</span>
             </span>
           </div>
         </div>

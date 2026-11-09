@@ -9,7 +9,6 @@ import { Navbar } from "@/components/navbar/Navbar";
 import { HeroSection } from "@/components/hero/HeroSection";
 import { CinematicGreenHero } from "@/components/hero/CinematicGreenHero";
 import { RevolutionizeSection } from "@/components/statement/RevolutionizeSection";
-import { CinematicRedMotionSection } from "@/components/statement/CinematicRedMotionSection";
 import { CinematicGreenSection } from "@/components/statement/CinematicGreenSection";
 import { IntegrationsSection } from "@/components/integrations/IntegrationsSection";
 import { WorkflowSection } from "@/components/workflow/WorkflowSection";
@@ -28,7 +27,7 @@ function HomeContent() {
   const [startFreeOpen, setStartFreeOpen] = useState(false);
   const [consultationOpen, setConsultationOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("Professional");
-  const [heroMode, setHeroMode] = useState<"both" | "vortex" | "flame">("both");
+  const [heroMode, setHeroMode] = useState<"flame" | "vortex" | "both">("flame");
 
   const handleOpenStartFree = (planName?: string) => {
     if (planName) setSelectedPlan(planName);
@@ -89,9 +88,6 @@ function HomeContent() {
           <RevolutionizeSection
             onBookConsultation={() => setConsultationOpen(true)}
           />
-
-          {/* 3. Pure Cinematic Abstract Motion-Graphics Background (Dark Red Liquid Ink & Flame Wings) */}
-          <CinematicRedMotionSection />
 
           {/* 4. Reference-Based Cinematic Green Flame & Tribal Emblem Showcase */}
           <CinematicGreenSection />
