@@ -153,6 +153,29 @@ export function ThisWillFeelDifferentSection({
               priority
               className="object-contain filter drop-shadow-[0_0_30px_rgba(0,255,65,0.55)] drop-shadow-[0_0_75px_rgba(0,255,65,0.25)] transition-all duration-300"
             />
+
+            {/* Glowing Winged Emblem Aura (Subtle 3D Breathing Pulse) */}
+            <motion.div
+              animate={{
+                opacity: [0.65, 0.95, 0.65],
+                scale: [0.99, 1.015, 0.99],
+              }}
+              transition={{
+                duration: 3.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+            >
+              <div className="relative w-[48%] aspect-[1060/750] -translate-y-[3%]">
+                <Image
+                  src="/cyber_tribal_emblem_green.png"
+                  alt="Cyber Emblem Glow"
+                  fill
+                  className="object-contain filter drop-shadow-[0_0_35px_rgba(57,255,20,0.7)]"
+                />
+              </div>
+            </motion.div>
           </div>
 
           {/* Holographic Glowing Pulse Layer */}
@@ -282,3 +305,4 @@ export function ThisWillFeelDifferentSection({
     </section>
   );
 }
+
