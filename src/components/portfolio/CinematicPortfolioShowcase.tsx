@@ -18,7 +18,6 @@ export interface ShowcaseProject {
   accentColor: string;
   ambientGlow: string;
   secondaryGlow?: string;
-  aspect: "landscape" | "laptop" | "monitor" | "mobile";
 }
 
 export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
@@ -33,7 +32,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#A78BFA",
     ambientGlow: "rgba(124, 58, 237, 0.45)",
     secondaryGlow: "rgba(249, 115, 22, 0.28)",
-    aspect: "landscape",
   },
   {
     id: "az-digital",
@@ -46,7 +44,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#F97316",
     ambientGlow: "rgba(234, 88, 12, 0.48)",
     secondaryGlow: "rgba(245, 158, 11, 0.22)",
-    aspect: "laptop",
   },
   {
     id: "amron",
@@ -59,7 +56,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#EF4444",
     ambientGlow: "rgba(220, 38, 38, 0.45)",
     secondaryGlow: "rgba(249, 115, 22, 0.25)",
-    aspect: "monitor",
   },
   {
     id: "chatone",
@@ -72,7 +68,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#C084FC",
     ambientGlow: "rgba(168, 85, 247, 0.45)",
     secondaryGlow: "rgba(147, 51, 234, 0.25)",
-    aspect: "mobile",
   },
   {
     id: "finance",
@@ -85,7 +80,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#F59E0B",
     ambientGlow: "rgba(217, 119, 6, 0.42)",
     secondaryGlow: "rgba(16, 185, 129, 0.18)",
-    aspect: "mobile",
   },
   {
     id: "nexus-labs",
@@ -98,7 +92,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#10B981",
     ambientGlow: "rgba(16, 185, 129, 0.45)",
     secondaryGlow: "rgba(6, 182, 212, 0.25)",
-    aspect: "monitor",
   },
   {
     id: "valkyrie",
@@ -111,7 +104,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#EF4444",
     ambientGlow: "rgba(239, 68, 68, 0.45)",
     secondaryGlow: "rgba(249, 115, 22, 0.25)",
-    aspect: "monitor",
   },
   {
     id: "orbital-sound",
@@ -124,7 +116,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#8B5CF6",
     ambientGlow: "rgba(139, 92, 246, 0.45)",
     secondaryGlow: "rgba(59, 130, 246, 0.25)",
-    aspect: "monitor",
   },
   {
     id: "kinetic-atelier",
@@ -137,7 +128,6 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#F59E0B",
     ambientGlow: "rgba(245, 158, 11, 0.48)",
     secondaryGlow: "rgba(217, 119, 6, 0.25)",
-    aspect: "monitor",
   },
 ];
 
@@ -180,7 +170,6 @@ export function CinematicPortfolioShowcase(): JSX.Element {
 
     const ctx = gsap.context(() => {
       const numProjects = SHOWCASE_PROJECTS.length; // 9 projects
-      const totalPhasesDuration = 32.0; // 32s normalized master timeline
       const projectSlot = 0.90 / numProjects;
 
       // MASTER SCROLL TIMELINE (Weighted scrub with physical momentum)
@@ -225,41 +214,32 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       const easeInOut = "power2.inOut";
       const easeRevealOut = "power3.out";
 
-      // ─── INITIAL POSITIONS AT t = 0 ───
-      // Project 0 starts at center stage
-      gsap.set(fg[0], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20 });
-      gsap.set(bg[0], { opacity: 0.45, scale: 1.25 });
-      gsap.set(amb[0], { opacity: 1 });
-      gsap.set(titleWrap[0], { opacity: 1 });
-      gsap.set(descWrap[0], { opacity: 1 });
-      gsap.set(titleLines[0], { y: "0%", opacity: 1 });
-      gsap.set(descLines[0], { y: "0%", opacity: 1 });
+      // ─── INITIAL TIMELINE STATES AT t = 0 (Ensures no card is ever stuck) ───
+      masterTl.set(fg[0], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20 }, 0);
+      masterTl.set(bg[0], { opacity: 0.45, scale: 1.25, filter: "blur(34px)" }, 0);
+      masterTl.set(amb[0], { opacity: 1 }, 0);
+      masterTl.set([titleWrap[0], descWrap[0]], { opacity: 1 }, 0);
+      masterTl.set([titleLines[0], descLines[0]], { y: "0%", opacity: 1 }, 0);
 
-      // Project 1 starts queued at bottom preview position (above telemetry bar)
-      gsap.set(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10 });
-      gsap.set(bg[1], { opacity: 0 });
-      gsap.set(amb[1], { opacity: 0 });
-      gsap.set(titleWrap[1], { opacity: 0 });
-      gsap.set(descWrap[1], { opacity: 0 });
+      // Card 1 queued at bottom preview position (above telemetry bar)
+      masterTl.set(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10 }, 0);
+      masterTl.set([bg[1], amb[1], titleWrap[1], descWrap[1]], { opacity: 0 }, 0);
 
-      // Projects 2..8 start below the viewport
+      // Cards 2..8 queued beneath the viewport
       for (let i = 2; i < numProjects; i++) {
-        gsap.set(fg[i], { y: "65vh", scale: 0.22, opacity: 0, zIndex: 1 });
-        gsap.set(bg[i], { opacity: 0 });
-        gsap.set(amb[i], { opacity: 0 });
-        gsap.set(titleWrap[i], { opacity: 0 });
-        gsap.set(descWrap[i], { opacity: 0 });
+        masterTl.set(fg[i], { y: "65vh", scale: 0.22, opacity: 0, zIndex: 1 }, 0);
+        masterTl.set([bg[i], amb[i], titleWrap[i], descWrap[i]], { opacity: 0 }, 0);
       }
 
-      // ─── CHOREOGRAPH 9 CARD TRANSITIONS (COMING FROM DOWN SIDE) ───
-      const phaseDuration = 3.2; // ~3.2s per card phase
-      const holdTime = 2.2;      // 2.2s active hold time
-      const transTime = 1.0;     // 1.0s smooth transition time
+      // ─── CHOREOGRAPH 9 UNIFORM CARD TRANSITIONS (EXACT SAME DURATION & ANIMATION) ───
+      const holdTime = 2.4;  // Exact same active hold for every card
+      const transTime = 1.2; // Exact same transition duration for every card
+      const phaseDuration = holdTime + transTime; // 3.6s per card phase
 
       for (let i = 0; i < numProjects; i++) {
         const start = i * phaseDuration;
 
-        // Active Plateau Hold for Current Center Card
+        // 1. Uniform Active Hold for Center Card
         masterTl.to(fg[i], { scale: 1.02, y: "-1vh", duration: holdTime, ease: "none" }, start);
         masterTl.to(bg[i], { scale: 1.30, duration: holdTime, ease: "none" }, start);
 
@@ -271,23 +251,35 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         const transStart = start + holdTime;
 
         if (i < numProjects - 1) {
-          // 1. Current card travels UPWARD and OUT of the screen
-          masterTl.to(fg[i], { y: "-75vh", opacity: 0, scale: 0.92, duration: transTime, ease: easeInOut }, transStart);
-          masterTl.to(bg[i], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: transTime, ease: easeInOut }, transStart);
+          // 2. Active Card travels UPWARD and OUT of the screen
+          masterTl.fromTo(fg[i], 
+            { y: "-1vh", scale: 1.02, opacity: 1 },
+            { y: "-75vh", opacity: 0, scale: 0.92, zIndex: 5, duration: transTime, ease: easeInOut },
+            transStart
+          );
+          masterTl.fromTo(bg[i],
+            { opacity: 0.45, scale: 1.30 },
+            { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: transTime, ease: easeInOut },
+            transStart
+          );
           masterTl.to(amb[i], { opacity: 0, duration: transTime, ease: easeInOut }, transStart);
 
           // Current text rolls UP & OUT through mask
-          masterTl.to(titleLines[i], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, transStart);
-          masterTl.to(descLines[i], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, transStart);
+          masterTl.to(titleLines[i], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, transStart);
+          masterTl.to(descLines[i], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, transStart);
           masterTl.set([titleWrap[i], descWrap[i]], { opacity: 0 }, transStart + transTime);
 
-          // Special beam handling for Amron (index 2)
+          // Orange light beam exit for Amron (index 2)
           if (i === 2 && orangeBeam) {
-            masterTl.to(orangeBeam, { opacity: 0, duration: 0.7, ease: easeInOut }, transStart);
+            masterTl.to(orangeBeam, { opacity: 0, duration: 0.8, ease: easeInOut }, transStart);
           }
 
-          // 2. NEXT CARD (i + 1) TRAVELS UP FROM BOTTOM PREVIEW INTO DEAD CENTER
-          masterTl.to(fg[i + 1], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: transTime, ease: easeInOut }, transStart);
+          // 3. NEXT CARD (i + 1) TRAVELS UP FROM BOTTOM PREVIEW INTO DEAD CENTER
+          masterTl.fromTo(fg[i + 1],
+            { y: "38vh", scale: 0.28, opacity: 0.95 },
+            { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: transTime, ease: easeInOut },
+            transStart
+          );
           masterTl.fromTo(bg[i + 1],
             { scale: 1.05, opacity: 0, filter: "blur(14px)" },
             { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: transTime, ease: easeInOut },
@@ -295,7 +287,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           );
           masterTl.fromTo(amb[i + 1], { opacity: 0 }, { opacity: 1, duration: transTime, ease: easeInOut }, transStart);
 
-          // If entering Amron (index 2), sweep orange beam in
+          // Orange light beam entrance for Amron (index 2)
           if (i + 1 === 2 && orangeBeam) {
             masterTl.fromTo(orangeBeam,
               { opacity: 0, scaleY: 0.5 },
@@ -304,25 +296,25 @@ export function CinematicPortfolioShowcase(): JSX.Element {
             );
           }
 
-          // 3. FOLLOWING CARD (i + 2) TRAVELS UP FROM BELOW INTO BOTTOM PREVIEW SLOT
+          // 4. FOLLOWING CARD (i + 2) TRAVELS UP FROM BELOW INTO BOTTOM PREVIEW SLOT
           if (i + 2 < numProjects) {
             masterTl.fromTo(fg[i + 2],
-              { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
-              { y: "38vh", scale: 0.28, opacity: 0.95, duration: 0.9, ease: easeInOut },
+              { y: "65vh", scale: 0.22, opacity: 0 },
+              { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10, duration: 1.0, ease: easeInOut },
               transStart + 0.1
             );
           }
 
-          // 4. NEXT TEXT (i + 1) REVEALS FROM DOWN TO UP
+          // 5. NEXT TEXT (i + 1) REVEALS FROM DOWN TO UP
           masterTl.set([titleWrap[i + 1], descWrap[i + 1]], { opacity: 1 }, transStart + 0.1);
           masterTl.fromTo(titleLines[i + 1],
             { y: "130%", opacity: 0 },
-            { y: "0%", opacity: 1, duration: 0.85, stagger: 0.08, ease: easeRevealOut },
+            { y: "0%", opacity: 1, duration: 0.9, stagger: 0.08, ease: easeRevealOut },
             transStart + 0.15
           );
           masterTl.fromTo(descLines[i + 1],
             { y: "130%", opacity: 0 },
-            { y: "0%", opacity: 1, duration: 0.85, stagger: 0.08, ease: easeRevealOut },
+            { y: "0%", opacity: 1, duration: 0.9, stagger: 0.08, ease: easeRevealOut },
             transStart + 0.2
           );
         }
@@ -330,15 +322,15 @@ export function CinematicPortfolioShowcase(): JSX.Element {
 
       // ─── PHASE 10: FINAL STATEMENT SECTION ───
       const lastIdx = numProjects - 1;
-      const finalStart = lastIdx * phaseDuration + holdTime; // around ~27.8s
+      const finalStart = lastIdx * phaseDuration + holdTime; // 31.2s
 
       // Last card (Kinetic) translates smoothly upward
-      masterTl.to(fg[lastIdx], { y: "-18vh", scale: 0.65, opacity: 0.55, duration: 1.0, ease: easeInOut }, finalStart);
-      masterTl.to(bg[lastIdx], { opacity: 0.08, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, finalStart);
-      masterTl.to(amb[lastIdx], { opacity: 0.12, duration: 1.0, ease: easeInOut }, finalStart);
-      masterTl.to(titleLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, finalStart);
-      masterTl.to(descLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, finalStart);
-      masterTl.set([titleWrap[lastIdx], descWrap[lastIdx]], { opacity: 0 }, finalStart + 1.0);
+      masterTl.to(fg[lastIdx], { y: "-18vh", scale: 0.65, opacity: 0.55, duration: 1.2, ease: easeInOut }, finalStart);
+      masterTl.to(bg[lastIdx], { opacity: 0.08, filter: "blur(55px)", duration: 1.2, ease: easeInOut }, finalStart);
+      masterTl.to(amb[lastIdx], { opacity: 0.12, duration: 1.2, ease: easeInOut }, finalStart);
+      masterTl.to(titleLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, finalStart);
+      masterTl.to(descLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, finalStart);
+      masterTl.set([titleWrap[lastIdx], descWrap[lastIdx]], { opacity: 0 }, finalStart + 1.2);
 
       // Red statement reveal
       if (statementSection && statementWords.length > 0) {
@@ -421,43 +413,36 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/85" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#050505]/90 via-transparent to-[#050505]/90" />
 
-        {/* ─── FOREGROUND PRESENTATION IMAGES (Stage Center & Bottom Preview) ─── */}
+        {/* ─── FOREGROUND PRESENTATION IMAGES (Uniform 16:10 Workstation Frame for ALL 9 Cards) ─── */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {SHOWCASE_PROJECTS.map((proj, idx) => {
-            const maxWidthStyle =
-              proj.aspect === "mobile"
-                ? "max-w-[320px] sm:max-w-[360px] md:max-w-[400px]"
-                : "max-w-[580px] sm:max-w-[640px] md:max-w-[700px] lg:max-w-[760px]";
-
-            return (
+          {SHOWCASE_PROJECTS.map((proj, idx) => (
+            <div
+              key={`fg-${proj.id}`}
+              className={`project-fg-${idx} absolute w-full max-w-[620px] sm:max-w-[680px] md:max-w-[740px] lg:max-w-[780px] px-4 flex items-center justify-center will-change-transform`}
+              style={{
+                transformOrigin: "center center",
+              }}
+            >
               <div
-                key={`fg-${proj.id}`}
-                className={`project-fg-${idx} absolute w-full ${maxWidthStyle} px-4 flex items-center justify-center will-change-transform`}
-                style={{
-                  transformOrigin: "center center",
+                onClick={() => {
+                  // Clicking on a card navigates to it if it's currently queued as bottom preview
+                  if (activeProjectIndex !== idx) {
+                    scrollToProject(idx);
+                  }
                 }}
+                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] ring-1 ring-white/15 bg-black/40 backdrop-blur-sm cursor-pointer pointer-events-auto transition-transform hover:scale-[1.01]"
               >
-                <div
-                  onClick={() => {
-                    // Clicking on a card navigates to it if it's currently queued as bottom preview
-                    if (activeProjectIndex !== idx) {
-                      scrollToProject(idx);
-                    }
-                  }}
-                  className="relative w-full rounded-2xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] ring-1 ring-white/15 bg-black/40 backdrop-blur-sm cursor-pointer pointer-events-auto transition-transform hover:scale-[1.01]"
-                >
-                  <img
-                    src={proj.image}
-                    alt={proj.name}
-                    className="w-full h-auto object-contain block select-none pointer-events-auto"
-                    draggable={false}
-                  />
-                  {/* Glass rim highlight */}
-                  <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10" />
-                </div>
+                <img
+                  src={proj.image}
+                  alt={proj.name}
+                  className="w-full h-full object-cover block select-none pointer-events-auto"
+                  draggable={false}
+                />
+                {/* Glass rim highlight */}
+                <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10" />
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         {/* ─── TOP-LEFT CORNER: ABSTRACT STUDIO GLYPH (Matching Reference) ─── */}

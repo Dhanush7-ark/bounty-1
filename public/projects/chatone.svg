@@ -1,123 +1,75 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
   <defs>
     <radialGradient id="ch_amb_purple" cx="50%" cy="45%" r="65%">
-      <stop offset="0%" stop-color="#7E22CE" stop-opacity="0.55"/>
-      <stop offset="50%" stop-color="#3B0764" stop-opacity="0.35"/>
+      <stop offset="0%" stop-color="#7E22CE" stop-opacity="0.5"/>
+      <stop offset="50%" stop-color="#3B0764" stop-opacity="0.32"/>
       <stop offset="100%" stop-color="#040206" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="ch_phone_border" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#C084FC"/>
-      <stop offset="40%" stop-color="#581C87"/>
-      <stop offset="100%" stop-color="#A855F7"/>
+    <radialGradient id="ch_amb_violet" cx="80%" cy="25%" r="45%">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#581C87" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="ch_card_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#120A1A"/>
+      <stop offset="100%" stop-color="#07030C"/>
     </linearGradient>
-    <linearGradient id="ch_bubble_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#9333EA"/>
-      <stop offset="100%" stop-color="#6B21A8"/>
-    </linearGradient>
-    <linearGradient id="ch_bubble_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2E1065"/>
-      <stop offset="100%" stop-color="#1E0B38"/>
+    <linearGradient id="ch_border_glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C084FC" stop-opacity="0.75"/>
+      <stop offset="50%" stop-color="#6B21A8" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#A855F7" stop-opacity="0.5"/>
     </linearGradient>
     <filter id="ch_glow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="32" result="blur"/>
+      <feGaussianBlur stdDeviation="28" result="blur"/>
       <feComposite in="SourceGraphic" in2="blur" operator="over"/>
     </filter>
   </defs>
 
-  <!-- Deep Canvas Background -->
-  <rect width="1440" height="900" fill="#050308"/>
+  <rect width="1440" height="900" fill="#040207"/>
   <rect width="1440" height="900" fill="url(#ch_amb_purple)"/>
+  <rect width="1440" height="900" fill="url(#ch_amb_violet)"/>
 
-  <!-- Centered Floating Smartphone Presentation -->
-  <g transform="translate(540, 70)">
-    <!-- Atmospheric Under-Glow -->
-    <ellipse cx="180" cy="400" rx="320" ry="380" fill="#9333EA" opacity="0.22" filter="url(#ch_glow)"/>
+  <!-- Stand & Monitor Shadow -->
+  <g transform="translate(180, 110)">
+    <rect x="20" y="30" width="1040" height="640" rx="18" fill="#7E22CE" opacity="0.22" filter="url(#ch_glow)"/>
+    <rect x="0" y="0" width="1080" height="680" rx="16" fill="url(#ch_card_bg)" stroke="url(#ch_border_glow)" stroke-width="1.5"/>
 
-    <!-- Phone Shadow -->
-    <ellipse cx="180" cy="740" rx="200" ry="20" fill="#000000" opacity="0.9" filter="url(#ch_glow)"/>
+    <!-- Top Window Bar -->
+    <rect x="0" y="0" width="1080" height="48" rx="16" fill="#180E24" fill-opacity="0.9"/>
+    <circle cx="28" cy="24" r="6" fill="#EF4444" opacity="0.8"/>
+    <circle cx="48" cy="24" r="6" fill="#F59E0B" opacity="0.8"/>
+    <circle cx="68" cy="24" r="6" fill="#10B981" opacity="0.8"/>
+    <text x="540" y="28" fill="#E9D5FF" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="3" text-anchor="middle" opacity="0.7">CHATONE ECOSYSTEM // ENCRYPTED MESSAGING</text>
 
-    <!-- Phone Hardware Outer Edge (Titanium / Obsidian) -->
-    <rect x="0" y="0" width="360" height="730" rx="54" fill="#120B1D" stroke="url(#ch_phone_border)" stroke-width="2.5"/>
+    <!-- Canvas Inner Content -->
+    <g transform="translate(60, 90)">
+      <text x="0" y="70" fill="#E9D5FF" font-family="'Inter', sans-serif" font-size="13" font-weight="600" letter-spacing="4">MOBILE SECURE PLATFORM</text>
+      <text x="0" y="150" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="64" font-weight="900" letter-spacing="-1">CHATONE</text>
+      <text x="0" y="220" fill="#C084FC" font-family="'Bodoni MT', 'Didot', Georgia, serif" font-size="64" font-weight="400" font-style="italic">Fluid Signals</text>
+      <text x="0" y="275" fill="#9CA3AF" font-family="'Inter', sans-serif" font-size="15" font-weight="300" max-width="400">Zero-knowledge encrypted protocol, tactile haptics, dynamic voice waveforms, and real-time biometric identity.</text>
 
-    <!-- Inner Screen Bezel -->
-    <rect x="12" y="12" width="336" height="706" rx="44" fill="#0A0612"/>
+      <!-- CTA Button -->
+      <rect x="0" y="330" width="190" height="46" rx="23" fill="#A855F7"/>
+      <text x="95" y="358" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="12" font-weight="800" letter-spacing="2" text-anchor="middle">LAUNCH APP →</text>
 
-    <!-- Dynamic Island Pill -->
-    <rect x="126" y="24" width="108" height="28" rx="14" fill="#000000"/>
-    <circle cx="216" cy="38" r="5" fill="#1F1530"/>
-
-    <!-- Chat App UI Layout -->
-    <g transform="translate(32, 70)">
-      <!-- App Header -->
-      <g>
-        <circle cx="24" cy="24" r="20" fill="#9333EA" fill-opacity="0.3"/>
-        <circle cx="24" cy="24" r="16" fill="#C084FC"/>
-        <text x="60" y="22" fill="#FFFFFF" font-family="-apple-system, sans-serif" font-size="16" font-weight="700">CHATONE</text>
-        <text x="60" y="36" fill="#A855F7" font-family="-apple-system, sans-serif" font-size="11" font-weight="500">Encrypted Neural Stream</text>
-        
-        <!-- Live status dot -->
-        <circle cx="280" cy="24" r="4" fill="#10B981"/>
-      </g>
-      <line x1="0" y1="58" x2="296" y2="58" stroke="#25143A" stroke-width="1"/>
-
-      <!-- Chat Stream -->
-      <g transform="translate(0, 80)">
-        <!-- Incoming message 1 -->
-        <rect x="0" y="0" width="230" height="64" rx="18" fill="url(#ch_bubble_grad2)" stroke="#3B1863" stroke-width="1"/>
-        <text x="16" y="26" fill="#F3E8FF" font-family="-apple-system, sans-serif" font-size="12" font-weight="400">Initialize generative canvas</text>
-        <text x="16" y="46" fill="#A855F7" font-family="-apple-system, sans-serif" font-size="10">09:41 AM · Verified Node</text>
-
-        <!-- Outgoing message 1 -->
-        <g transform="translate(56, 80)">
-          <rect x="0" y="0" width="240" height="78" rx="18" fill="url(#ch_bubble_grad1)"/>
-          <text x="16" y="26" fill="#FFFFFF" font-family="-apple-system, sans-serif" font-size="12" font-weight="500">Vector lattice rendered in 60fps.</text>
-          <text x="16" y="46" fill="#F3E8FF" font-family="-apple-system, sans-serif" font-size="11" opacity="0.9">Audio envelope synced to speech.</text>
-          <text x="16" y="66" fill="#E9D5FF" font-family="-apple-system, sans-serif" font-size="9" opacity="0.7">09:42 AM · Delivered</text>
-        </g>
-
-        <!-- Waveform Voice Note Card -->
-        <g transform="translate(0, 176)">
-          <rect x="0" y="0" width="280" height="72" rx="18" fill="url(#ch_bubble_grad2)" stroke="#3B1863" stroke-width="1"/>
-          <circle cx="36" cy="36" r="18" fill="#A855F7"/>
-          <polygon points="32,28 44,36 32,44" fill="#FFFFFF"/>
-          
-          <!-- Audio waveform bars -->
-          <g transform="translate(70, 24)" fill="#C084FC">
-            <rect x="0" y="8" width="3" height="12" rx="1.5"/>
-            <rect x="6" y="4" width="3" height="20" rx="1.5"/>
-            <rect x="12" y="0" width="3" height="28" rx="1.5"/>
-            <rect x="18" y="6" width="3" height="16" rx="1.5"/>
-            <rect x="24" y="2" width="3" height="24" rx="1.5"/>
-            <rect x="30" y="10" width="3" height="8" rx="1.5"/>
-            <rect x="36" y="0" width="3" height="28" rx="1.5"/>
-            <rect x="42" y="4" width="3" height="20" rx="1.5"/>
-            <rect x="48" y="8" width="3" height="12" rx="1.5"/>
-            <rect x="54" y="2" width="3" height="24" rx="1.5"/>
-            <rect x="60" y="6" width="3" height="16" rx="1.5"/>
-            <rect x="66" y="10" width="3" height="8" rx="1.5"/>
-          </g>
-          <text x="160" y="40" fill="#E9D5FF" font-family="-apple-system, sans-serif" font-size="11">0:24 / 1:18</text>
-        </g>
-
-        <!-- Incoming AI generated preview -->
-        <g transform="translate(0, 264)">
-          <rect x="0" y="0" width="270" height="130" rx="18" fill="#140924" stroke="#4C1D95" stroke-width="1"/>
-          <rect x="12" y="12" width="246" height="72" rx="10" fill="#240E40"/>
-          <!-- Little glowing sphere graphic -->
-          <circle cx="135" cy="48" r="26" fill="#C084FC" fill-opacity="0.3" filter="url(#ch_glow)"/>
-          <circle cx="135" cy="48" r="16" fill="#E879F9"/>
-          <text x="16" y="106" fill="#FFFFFF" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">Model Response: Aurora Alpha</text>
-          <text x="16" y="120" fill="#A855F7" font-family="-apple-system, sans-serif" font-size="9">Processing latency: 18ms</text>
-        </g>
-      </g>
-
-      <!-- Bottom Chat Input Bar -->
-      <g transform="translate(0, 560)">
-        <rect x="0" y="0" width="296" height="46" rx="23" fill="#150B24" stroke="#4C1D95" stroke-width="1"/>
-        <text x="20" y="28" fill="#7E22CE" font-family="-apple-system, sans-serif" font-size="12">Type an instruction...</text>
-        <circle cx="268" cy="23" r="16" fill="#9333EA"/>
-        <path d="M264 27 L272 19 M272 19 L272 26 M272 19 L265 19" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Smartphone Preview Frame on Right -->
+      <g transform="translate(680, 40)">
+        <rect x="0" y="0" width="220" height="430" rx="36" fill="#0D0714" stroke="#A855F7" stroke-width="2"/>
+        <rect x="8" y="8" width="204" height="414" rx="28" fill="#07030C"/>
+        <!-- Dynamic Island -->
+        <rect x="75" y="16" width="70" height="18" rx="9" fill="#000000"/>
+        <!-- Chat bubbles -->
+        <rect x="20" y="60" width="140" height="42" rx="14" fill="#9333EA"/>
+        <text x="32" y="86" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="11" font-weight="500">Encrypted handshake...</text>
+        <rect x="50" y="115" width="134" height="42" rx="14" fill="#2E1065" stroke="#7E22CE" stroke-width="1"/>
+        <text x="62" y="141" fill="#D8B4FE" font-family="'Inter', sans-serif" font-size="11">Verified key exchange ✓</text>
+        <!-- Waveform Pill -->
+        <rect x="20" y="170" width="164" height="50" rx="25" fill="#7E22CE" opacity="0.6"/>
+        <path d="M 40 195 L 48 190 L 56 200 L 64 185 L 72 205 L 80 192 L 88 198 L 96 188 L 104 202 L 112 195" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" fill="none"/>
       </g>
     </g>
+
+    <!-- Monitor Stand Base -->
+    <path d="M 440 680 L 480 730 L 600 730 L 640 680 Z" fill="#180E24" opacity="0.85"/>
   </g>
 </svg>
