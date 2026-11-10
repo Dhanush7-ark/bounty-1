@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Sparkles, Flame, Layers } from "lucide-react";
+import { Sparkles, Flame, Layers, Film } from "lucide-react";
 import { LoadingProvider, useLoadingState } from "@/hooks/useLoadingState";
 import { CinematicLoader } from "@/components/loader/CinematicLoader";
 import { BackgroundAnimationSystem } from "@/components/animations/BackgroundAnimationSystem";
@@ -21,6 +21,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WatchBuildModal } from "@/components/modals/WatchBuildModal";
 import { StartFreeModal } from "@/components/modals/StartFreeModal";
 import { ConsultationModal } from "@/components/modals/ConsultationModal";
+import { CinematicPortfolioShowcase } from "@/components/portfolio/CinematicPortfolioShowcase";
 
 function HomeContent() {
   const { isLoading } = useLoadingState();
@@ -28,7 +29,8 @@ function HomeContent() {
   const [startFreeOpen, setStartFreeOpen] = useState(false);
   const [consultationOpen, setConsultationOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("Professional");
-  // Default to the exact Red-and-Black Flame Hero requested
+  // Default to the exact reference showcase requested in the Master Prompt
+  const [viewMode, setViewMode] = useState<"reference-showcase" | "studio-landing">("reference-showcase");
   const [heroMode, setHeroMode] = useState<"red-flame" | "green-flame" | "vortex" | "both">("red-flame");
 
   const handleOpenStartFree = (planName?: string) => {
@@ -36,12 +38,56 @@ function HomeContent() {
     setStartFreeOpen(true);
   };
 
+  // ─── 1. EXACT REFERENCE SHOWCASE MODE (MASTER PROMPT FRAME-BY-FRAME RECREATION) ───
+  if (viewMode === "reference-showcase") {
+    return (
+      <main className="relative min-h-screen bg-[#050505] overflow-x-hidden selection:bg-[#FF1A00] selection:text-black">
+        {/* Master Pinned Showcase */}
+        <CinematicPortfolioShowcase />
+
+        {/* Discreet Mode Switcher Pill */}
+        <div className="fixed top-8 right-8 z-50 flex items-center gap-1.5 p-1 rounded-full bg-black/80 backdrop-blur-md border border-white/10 text-[10px] font-mono shadow-2xl">
+          <button
+            onClick={() => setViewMode("reference-showcase")}
+            className="px-3 py-1 rounded-full bg-white text-black font-semibold tracking-wider uppercase transition-all shadow-[0_0_12px_rgba(255,255,255,0.4)]"
+          >
+            Showcase
+          </button>
+          <button
+            onClick={() => setViewMode("studio-landing")}
+            className="px-3 py-1 rounded-full text-white/50 hover:text-white tracking-wider uppercase transition-all"
+          >
+            Studio Site
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  // ─── 2. CLASSIC STUDIO LANDING MODE (PREVIOUS MULTI-SECTION ARCHITECTURE) ───
   return (
     <>
       {/* ─── CINEMATIC 1 TO 100 PRELOADER ─── */}
       {isLoading && <CinematicLoader />}
 
       <div className="relative min-h-screen bg-[#000000] text-[#e5e5e5] selection:bg-[#FF1A00] selection:text-black overflow-x-hidden">
+        {/* Discreet Switcher Pill back to Showcase */}
+        <div className="fixed top-24 right-8 z-50 flex items-center gap-1.5 p-1 rounded-full bg-black/90 backdrop-blur-md border border-white/20 text-[10px] font-mono shadow-2xl">
+          <button
+            onClick={() => setViewMode("reference-showcase")}
+            className="px-3 py-1 rounded-full text-white/60 hover:text-white tracking-wider uppercase transition-all flex items-center gap-1.5"
+          >
+            <Film className="w-3 h-3 text-[#FF1A00]" />
+            <span>Showcase Mode</span>
+          </button>
+          <button
+            onClick={() => setViewMode("studio-landing")}
+            className="px-3 py-1 rounded-full bg-white/20 text-white font-semibold tracking-wider uppercase transition-all"
+          >
+            Studio
+          </button>
+        </div>
+
         {/* ─── CONTINUOUS FUTURISTIC BACKGROUND ANIMATION SYSTEM (LAYERED & SCROLL-REACTIVE) ─── */}
         <BackgroundAnimationSystem />
 

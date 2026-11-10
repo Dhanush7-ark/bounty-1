@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <defs>
+    <!-- Background Gradients -->
+    <radialGradient id="cn_amb_purple" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#4C1D95" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#1E1035" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#050508" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cn_amb_orange" cx="75%" cy="30%" r="45%">
+      <stop offset="0%" stop-color="#EA580C" stop-opacity="0.35"/>
+      <stop offset="60%" stop-color="#9A3412" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="cn_card_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#13111C"/>
+      <stop offset="100%" stop-color="#09080E"/>
+    </linearGradient>
+    <linearGradient id="cn_border_glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A78BFA" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#3B1D6E" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#F97316" stop-opacity="0.4"/>
+    </linearGradient>
+    <linearGradient id="cn_accent_grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#8B5CF6"/>
+      <stop offset="50%" stop-color="#EC4899"/>
+      <stop offset="100%" stop-color="#F97316"/>
+    </linearGradient>
+    <filter id="cn_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="24" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Deep Canvas Background -->
+  <rect width="1440" height="900" fill="#06050A"/>
+  <rect width="1440" height="900" fill="url(#cn_amb_purple)"/>
+  <rect width="1440" height="900" fill="url(#cn_amb_orange)"/>
+
+  <!-- Subtle Studio Grid -->
+  <g opacity="0.08" stroke="#FFFFFF" stroke-width="0.5">
+    <line x1="0" y1="180" x2="1440" y2="180"/>
+    <line x1="0" y1="360" x2="1440" y2="360"/>
+    <line x1="0" y1="540" x2="1440" y2="540"/>
+    <line x1="0" y1="720" x2="1440" y2="720"/>
+    <line x1="288" y1="0" x2="288" y2="900"/>
+    <line x1="576" y1="0" x2="576" y2="900"/>
+    <line x1="864" y1="0" x2="864" y2="900"/>
+    <line x1="1152" y1="0" x2="1152" y2="900"/>
+  </g>
+
+  <!-- Floating Browser / Workstation Frame -->
+  <g transform="translate(180, 110)">
+    <!-- Drop Shadow / Glow beneath frame -->
+    <rect x="20" y="30" width="1040" height="640" rx="18" fill="#4C1D95" opacity="0.25" filter="url(#cn_glow)"/>
+    
+    <!-- Outer Bezel -->
+    <rect x="0" y="0" width="1080" height="680" rx="16" fill="url(#cn_card_bg)" stroke="url(#cn_border_glow)" stroke-width="1.5"/>
+
+    <!-- Window Header -->
+    <rect x="0" y="0" width="1080" height="48" rx="16" fill="#171424" fill-opacity="0.8"/>
+    <line x1="0" y1="48" x2="1080" y2="48" stroke="#2D2644" stroke-width="1"/>
+    
+    <!-- Traffic lights -->
+    <circle cx="28" cy="24" r="5" fill="#EF4444" opacity="0.85"/>
+    <circle cx="46" cy="24" r="5" fill="#F59E0B" opacity="0.85"/>
+    <circle cx="64" cy="24" r="5" fill="#10B981" opacity="0.85"/>
+
+    <!-- Address Bar -->
+    <rect x="360" y="14" width="360" height="20" rx="10" fill="#0A0912" stroke="#2D2644" stroke-width="0.8"/>
+    <text x="540" y="28" fill="#A78BFA" opacity="0.7" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="10" font-weight="500" text-anchor="middle" letter-spacing="1">codenarts.studio // visual intelligence</text>
+
+    <!-- Canvas Inner Content -->
+    <g transform="translate(48, 88)">
+      <!-- Left side editorial info -->
+      <text x="0" y="36" fill="#8B5CF6" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3">01 // CREATIVE TECHNOLOGY</text>
+      
+      <text x="0" y="100" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="52" font-weight="800" letter-spacing="-1">CODENARTS</text>
+      
+      <text x="0" y="145" fill="#E2E8F0" opacity="0.8" font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif" font-size="20" font-weight="300" letter-spacing="0.5">Spatial Systems &amp; Neural Aesthetics</text>
+      
+      <line x1="0" y1="180" x2="480" y2="180" stroke="#2D2644" stroke-width="1"/>
+      
+      <!-- Metrics row -->
+      <g transform="translate(0, 210)">
+        <text x="0" y="0" fill="#94A3B8" font-family="'Inter', sans-serif" font-size="10" letter-spacing="2">DEPLOYMENT</text>
+        <text x="0" y="24" fill="#FFFFFF" font-family="'Inter', sans-serif" font-size="18" font-weight="700">TOKYO / GLOBAL</text>
+
+        <text x="180" y="0" fill="#94A3B8" font-family="'Inter', sans-serif" font-size="10" letter-spacing="2">FRAME LATENCY</text>
+        <text x="180" y="24" fill="#A78BFA" font-family="'Inter', sans-serif" font-size="18" font-weight="700">0.42 MS</text>
+
+        <text x="340" y="0" fill="#94A3B8" font-family="'Inter', sans-serif" font-size="10" letter-spacing="2">ARCHITECTURE</text>
+        <text x="340" y="24" fill="#F97316" font-family="'Inter', sans-serif" font-size="18" font-weight="700">WEBGL 2.0</text>
+      </g>
+
+      <!-- Code Snippet Card -->
+      <rect x="0" y="280" width="460" height="180" rx="10" fill="#0A0912" stroke="#272138" stroke-width="1"/>
+      <g transform="translate(24, 308)" font-family="'JetBrains Mono', monospace" font-size="11" fill="#A78BFA">
+        <text x="0" y="0" opacity="0.5">// neural shader pipeline initialization</text>
+        <text x="0" y="24" fill="#EC4899">const</text> <text x="45" y="24" fill="#FFFFFF">pipeline</text> <text x="105" y="24" fill="#F97316">=</text> <text x="120" y="24" fill="#8B5CF6">new</text> <text x="150" y="24" fill="#67E8F9">RenderGraph</text><text x="235" y="24" fill="#FFFFFF">({</text>
+        <text x="16" y="48" fill="#94A3B8">precision: <tspan fill="#F59E0B">'highp-float'</tspan>,</text>
+        <text x="16" y="72" fill="#94A3B8">temporalFiltering: <tspan fill="#10B981">true</tspan>,</text>
+        <text x="16" y="96" fill="#94A3B8">colorSpace: <tspan fill="#F59E0B">'rec2020-cinematic'</tspan></text>
+        <text x="0" y="120" fill="#FFFFFF">});</text>
+      </g>
+
+      <!-- Right 3D Visual Composition -->
+      <g transform="translate(560, 20)">
+        <!-- Multi-layered glowing concentric circles & nodes -->
+        <circle cx="200" cy="220" r="180" stroke="#8B5CF6" stroke-width="1" stroke-dasharray="4 8" opacity="0.3"/>
+        <circle cx="200" cy="220" r="140" stroke="#F97316" stroke-width="1.5" stroke-dasharray="1 6" opacity="0.45"/>
+        <circle cx="200" cy="220" r="95" stroke="#EC4899" stroke-width="1" opacity="0.5"/>
+        <circle cx="200" cy="220" r="50" fill="#8B5CF6" fill-opacity="0.15" stroke="#A78BFA" stroke-width="2"/>
+        
+        <!-- Crosshairs & Orbit nodes -->
+        <line x1="200" y1="10" x2="200" y2="430" stroke="#A78BFA" stroke-width="0.5" opacity="0.25"/>
+        <line x1="-10" y1="220" x2="410" y2="220" stroke="#A78BFA" stroke-width="0.5" opacity="0.25"/>
+
+        <circle cx="200" cy="80" r="6" fill="#F97316"/>
+        <circle cx="340" cy="220" r="4" fill="#A78BFA"/>
+        <circle cx="120" cy="300" r="5" fill="#EC4899"/>
+        <circle cx="200" cy="220" r="12" fill="#FFFFFF" filter="url(#cn_glow)"/>
+
+        <!-- Sine waves / graph lines -->
+        <path d="M 0 380 Q 100 320, 200 380 T 400 380" fill="none" stroke="url(#cn_accent_grad)" stroke-width="3" opacity="0.75"/>
+        <path d="M 0 400 Q 100 350, 200 400 T 400 400" fill="none" stroke="#8B5CF6" stroke-width="1" opacity="0.4"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Warm orange reflection along bottom edge -->
+  <rect x="0" y="860" width="1440" height="40" fill="url(#cn_amb_orange)" opacity="0.4"/>
+</svg>
