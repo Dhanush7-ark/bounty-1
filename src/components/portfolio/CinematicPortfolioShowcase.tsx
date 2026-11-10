@@ -146,7 +146,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
 export function CinematicPortfolioShowcase(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinnedStageRef = useRef<HTMLDivElement>(null);
-
+  
   // Track active project index for UI indicators
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
@@ -193,7 +193,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
             // Phase tracking for bottom UI indicators
             const totalProjects = SHOWCASE_PROJECTS.length; // 9
             const stepRatio = 0.91 / totalProjects;
-
+            
             if (p < 0.91) {
               setIsFinalPhase(false);
               const idx = Math.min(totalProjects - 1, Math.max(0, Math.floor(p / stepRatio)));
@@ -346,9 +346,9 @@ export function CinematicPortfolioShowcase(): JSX.Element {
 
       // Final Statement reveals in Bodoni Red with words stagger
       if (statementSection && statementWords.length > 0) {
-        masterTl.fromTo(statementSection,
-          { opacity: 0, y: 40 },
-          { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" },
+        masterTl.fromTo(statementSection, 
+          { opacity: 0, y: 40 }, 
+          { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 
           lastCardHoldEnd + 0.6
         );
         masterTl.fromTo(

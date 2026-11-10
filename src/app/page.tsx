@@ -137,10 +137,11 @@ function HomeContent() {
           </span>
           <button
             onClick={() => setHeroMode("red-flame")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${heroMode === "red-flame"
+            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+              heroMode === "red-flame"
                 ? "bg-[#FF1A00] text-black shadow-[0_0_15px_rgba(255,26,0,0.6)] font-bold"
                 : "text-neutral-400 hover:text-white hover:bg-white/10"
-              }`}
+            }`}
             title="Show Exact Red Flame Hero (Reference Match)"
           >
             <Flame className="w-3.5 h-3.5" />
@@ -148,10 +149,11 @@ function HomeContent() {
           </button>
           <button
             onClick={() => setHeroMode("green-flame")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${heroMode === "green-flame"
+            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+              heroMode === "green-flame"
                 ? "bg-[#00FF41] text-black shadow-[0_0_15px_rgba(0,255,65,0.5)] font-bold"
                 : "text-neutral-400 hover:text-white hover:bg-white/10"
-              }`}
+            }`}
             title="Show Cyber Green Flame Hero"
           >
             <Flame className="w-3.5 h-3.5" />
@@ -159,10 +161,11 @@ function HomeContent() {
           </button>
           <button
             onClick={() => setHeroMode("vortex")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${heroMode === "vortex"
+            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+              heroMode === "vortex"
                 ? "bg-[#C6FF36] text-black shadow-[0_0_15px_rgba(198,255,54,0.5)] font-bold"
                 : "text-neutral-400 hover:text-white hover:bg-white/10"
-              }`}
+            }`}
             title="Show 3D Light Ribbon Vortex"
           >
             <Sparkles className="w-3.5 h-3.5" />
@@ -170,10 +173,11 @@ function HomeContent() {
           </button>
           <button
             onClick={() => setHeroMode("both")}
-            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${heroMode === "both"
+            className={`px-3 py-1.5 rounded-full text-xs font-mono font-medium tracking-wide transition-all duration-200 flex items-center gap-1.5 cursor-pointer ${
+              heroMode === "both"
                 ? "bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)] font-bold"
                 : "text-neutral-400 hover:text-white hover:bg-white/10"
-              }`}
+            }`}
             title="Display Red & Green Flames Stacked"
           >
             <Layers className="w-3.5 h-3.5" />
