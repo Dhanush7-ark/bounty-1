@@ -114,7 +114,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const scrollToProject = (index: number) => {
     if (!containerRef.current) return;
     const totalScroll = containerRef.current.offsetHeight - window.innerHeight;
-    const fraction = index / (SHOWCASE_PROJECTS.length + 0.5);
+    const fraction = index < 5 ? (index * 0.86) / 5 + 0.08 : 0.95;
     const targetY = containerRef.current.offsetTop + totalScroll * fraction;
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
@@ -130,7 +130,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
     if (!container || !stage) return;
 
     const ctx = gsap.context(() => {
-      // MASTER SCROLL TIMELINE (12.2s total normalized duration matching Master Prompt)
+      // MASTER SCROLL TIMELINE (20.0s total normalized duration with generous holds & slow weighted scrub)
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -138,16 +138,16 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           end: "bottom bottom",
           pin: stage,
           anticipatePin: 1,
-          scrub: 1.0, // Smooth scrubbing with inertia
+          scrub: 1.5, // Weighted smooth scrubbing with inertia
           onUpdate: (self) => {
             const p = self.progress;
             setOverallProgress(p);
 
             // Phase tracking for bottom UI indicators
             const numProjects = SHOWCASE_PROJECTS.length;
-            const projectDuration = 0.84 / numProjects;
+            const projectDuration = 0.86 / numProjects;
             
-            if (p < 0.84) {
+            if (p < 0.86) {
               setIsFinalPhase(false);
               const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectDuration)));
               setActiveProjectIndex(idx);
@@ -177,227 +177,227 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       const easeRevealOut = "power3.out";
 
       /* ─────────────────────────────────────────────────────────────
-         PHASE 01: CODENARTS (0.0s – 2.5s)
+         PHASE 01: CODENARTS (0.0s – 3.8s)
          ───────────────────────────────────────────────────────────── */
-      // 0.0s -> 1.8s: Active plateau, subtle floating zoom
-      masterTl.to(fg[0], { scale: 1.04, y: -12, duration: 1.8, ease: "none" }, 0);
-      masterTl.to(bg[0], { scale: 1.32, opacity: 0.5, filter: "blur(38px)", duration: 1.8, ease: "none" }, 0);
+      // 0.0s -> 2.6s: Active plateau hold, subtle floating zoom
+      masterTl.to(fg[0], { scale: 1.04, y: -12, duration: 2.6, ease: "none" }, 0);
+      masterTl.to(bg[0], { scale: 1.32, opacity: 0.5, filter: "blur(38px)", duration: 2.6, ease: "none" }, 0);
 
-      // 1.8s -> 2.5s: Codenarts EASES OUT (Card scales out, text rolls UP & OUT through mask)
-      masterTl.to(fg[0], { scale: 1.15, opacity: 0, y: -45, duration: 0.7, ease: easeInOut }, 1.8);
-      masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.7, ease: easeInOut }, 1.8);
-      masterTl.to(amb[0], { opacity: 0, duration: 0.7, ease: easeInOut }, 1.8);
+      // 2.6s -> 3.6s: Codenarts EASES OUT (Card scales out, text rolls UP & OUT through mask)
+      masterTl.to(fg[0], { scale: 1.15, opacity: 0, y: -45, duration: 1.0, ease: easeInOut }, 2.6);
+      masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, 2.6);
+      masterTl.to(amb[0], { opacity: 0, duration: 1.0, ease: easeInOut }, 2.6);
 
       // Text lines roll upward and out through overflow-hidden mask
-      masterTl.to(titleLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 1.8);
-      masterTl.to(descLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 1.8);
-      masterTl.set([titleWrap[0], descWrap[0]], { opacity: 0 }, 2.5);
+      masterTl.to(titleLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 2.6);
+      masterTl.to(descLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 2.6);
+      masterTl.set([titleWrap[0], descWrap[0]], { opacity: 0 }, 3.6);
 
       /* ─────────────────────────────────────────────────────────────
-         PHASE 02: AZ-DIGITAL-VENTURES (2.5s – 4.5s)
+         PHASE 02: AZ-DIGITAL-VENTURES (3.0s – 7.4s)
          ───────────────────────────────────────────────────────────── */
-      // 2.0s -> 2.8s: AZ-Digital EASES IN (Card scales in, text REVEALS FROM DOWN TO UP)
-      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 1 }, 2.0);
+      // 3.0s -> 4.0s: AZ-Digital EASES IN (Card scales in, text REVEALS FROM DOWN TO UP)
+      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 1 }, 3.0);
       masterTl.fromTo(fg[1], 
         { scale: 0.8, opacity: 0, y: 45 }, 
-        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
-        2.0
+        { scale: 1.0, opacity: 1, y: 0, duration: 1.0, ease: easeInOut }, 
+        3.0
       );
       masterTl.fromTo(bg[1], 
         { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
-        2.0
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.0, ease: easeInOut }, 
+        3.0
       );
       masterTl.fromTo(amb[1], 
         { opacity: 0 }, 
-        { opacity: 1, duration: 0.7, ease: easeInOut }, 
-        2.0
+        { opacity: 1, duration: 1.0, ease: easeInOut }, 
+        3.0
       );
 
       // Left & Right text lines slide from DOWN to UP through mask
       masterTl.fromTo(titleLines[1], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        2.1
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        3.15
       );
       masterTl.fromTo(descLines[1], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        2.15
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        3.25
       );
 
-      // 2.8s -> 3.9s: AZ-Digital plateau + gentle float
-      masterTl.to(fg[1], { scale: 1.04, y: -12, duration: 1.1, ease: "none" }, 2.8);
-      masterTl.to(bg[1], { scale: 1.34, duration: 1.1, ease: "none" }, 2.8);
+      // 4.0s -> 6.4s: AZ-Digital plateau hold + gentle float (2.4s generous hold)
+      masterTl.to(fg[1], { scale: 1.04, y: -12, duration: 2.4, ease: "none" }, 4.0);
+      masterTl.to(bg[1], { scale: 1.34, duration: 2.4, ease: "none" }, 4.0);
 
-      // 3.9s -> 4.5s: AZ-Digital EASES OUT (Card scales up, text rolls UP & OUT)
-      masterTl.to(fg[1], { scale: 1.15, opacity: 0, y: -45, duration: 0.6, ease: easeInOut }, 3.9);
-      masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.6, ease: easeInOut }, 3.9);
-      masterTl.to(amb[1], { opacity: 0, duration: 0.6, ease: easeInOut }, 3.9);
-      masterTl.to(titleLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 3.9);
-      masterTl.to(descLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 3.9);
-      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 0 }, 4.5);
+      // 6.4s -> 7.4s: AZ-Digital EASES OUT (Card scales up, text rolls UP & OUT)
+      masterTl.to(fg[1], { scale: 1.15, opacity: 0, y: -45, duration: 1.0, ease: easeInOut }, 6.4);
+      masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, 6.4);
+      masterTl.to(amb[1], { opacity: 0, duration: 1.0, ease: easeInOut }, 6.4);
+      masterTl.to(titleLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 6.4);
+      masterTl.to(descLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 6.4);
+      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 0 }, 7.4);
 
       /* ─────────────────────────────────────────────────────────────
-         PHASE 03: AMRON (4.5s – 6.5s)
+         PHASE 03: AMRON (6.8s – 11.2s)
          ───────────────────────────────────────────────────────────── */
-      // 4.0s -> 4.8s: Amron EASES IN (Card scales in, text REVEALS FROM DOWN TO UP)
-      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 1 }, 4.0);
+      // 6.8s -> 7.8s: Amron EASES IN (Card scales in, text REVEALS FROM DOWN TO UP)
+      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 1 }, 6.8);
       masterTl.fromTo(fg[2], 
         { scale: 0.8, opacity: 0, y: 45 }, 
-        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
-        4.0
+        { scale: 1.0, opacity: 1, y: 0, duration: 1.0, ease: easeInOut }, 
+        6.8
       );
       masterTl.fromTo(bg[2], 
         { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
-        4.0
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.0, ease: easeInOut }, 
+        6.8
       );
       masterTl.fromTo(amb[2], 
         { opacity: 0 }, 
-        { opacity: 1, duration: 0.7, ease: easeInOut }, 
-        4.0
+        { opacity: 1, duration: 1.0, ease: easeInOut }, 
+        6.8
       );
       if (orangeBeam) {
         masterTl.fromTo(orangeBeam, 
           { opacity: 0, scaleY: 0.5 }, 
-          { opacity: 0.85, scaleY: 1, duration: 0.7, ease: easeInOut }, 
-          4.1
+          { opacity: 0.85, scaleY: 1, duration: 1.0, ease: easeInOut }, 
+          6.9
         );
       }
 
       // Text lines reveal from down to up
       masterTl.fromTo(titleLines[2], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        4.1
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        6.95
       );
       masterTl.fromTo(descLines[2], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        4.15
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        7.05
       );
 
-      // 4.8s -> 5.9s: Amron plateau + parallax
-      masterTl.to(fg[2], { scale: 1.04, y: -12, duration: 1.1, ease: "none" }, 4.8);
-      masterTl.to(bg[2], { scale: 1.34, duration: 1.1, ease: "none" }, 4.8);
+      // 7.8s -> 10.2s: Amron plateau hold + parallax (2.4s generous hold)
+      masterTl.to(fg[2], { scale: 1.04, y: -12, duration: 2.4, ease: "none" }, 7.8);
+      masterTl.to(bg[2], { scale: 1.34, duration: 2.4, ease: "none" }, 7.8);
 
-      // 5.9s -> 6.5s: Amron EASES OUT
-      masterTl.to(fg[2], { scale: 1.15, opacity: 0, y: -45, duration: 0.6, ease: easeInOut }, 5.9);
-      masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.6, ease: easeInOut }, 5.9);
-      masterTl.to(amb[2], { opacity: 0, duration: 0.6, ease: easeInOut }, 5.9);
-      masterTl.to(titleLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 5.9);
-      masterTl.to(descLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 5.9);
+      // 10.2s -> 11.2s: Amron EASES OUT
+      masterTl.to(fg[2], { scale: 1.15, opacity: 0, y: -45, duration: 1.0, ease: easeInOut }, 10.2);
+      masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, 10.2);
+      masterTl.to(amb[2], { opacity: 0, duration: 1.0, ease: easeInOut }, 10.2);
+      masterTl.to(titleLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 10.2);
+      masterTl.to(descLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 10.2);
       if (orangeBeam) {
-        masterTl.to(orangeBeam, { opacity: 0, duration: 0.5, ease: easeInOut }, 5.9);
+        masterTl.to(orangeBeam, { opacity: 0, duration: 0.8, ease: easeInOut }, 10.2);
       }
-      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 0 }, 6.5);
+      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 0 }, 11.2);
 
       /* ─────────────────────────────────────────────────────────────
-         PHASE 04: CHATONE (6.5s – 8.0s)
+         PHASE 04: CHATONE (10.6s – 15.0s)
          ───────────────────────────────────────────────────────────── */
-      // 6.0s -> 6.7s: ChatOne EASES IN (Card + Down-to-Up Text Reveal)
-      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 1 }, 6.0);
+      // 10.6s -> 11.6s: ChatOne EASES IN (Card + Down-to-Up Text Reveal)
+      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 1 }, 10.6);
       masterTl.fromTo(fg[3], 
         { scale: 0.8, opacity: 0, y: 45 }, 
-        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
-        6.0
+        { scale: 1.0, opacity: 1, y: 0, duration: 1.0, ease: easeInOut }, 
+        10.6
       );
       masterTl.fromTo(bg[3], 
         { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
-        6.0
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.0, ease: easeInOut }, 
+        10.6
       );
       masterTl.fromTo(amb[3], 
         { opacity: 0 }, 
-        { opacity: 1, duration: 0.7, ease: easeInOut }, 
-        6.0
+        { opacity: 1, duration: 1.0, ease: easeInOut }, 
+        10.6
       );
 
       // Text reveal from down to up
       masterTl.fromTo(titleLines[3], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        6.1
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        10.75
       );
       masterTl.fromTo(descLines[3], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        6.15
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        10.85
       );
 
-      // 6.7s -> 7.5s: ChatOne plateau
-      masterTl.to(fg[3], { scale: 1.04, y: -12, duration: 0.8, ease: "none" }, 6.7);
-      masterTl.to(bg[3], { scale: 1.34, duration: 0.8, ease: "none" }, 6.7);
+      // 11.6s -> 14.0s: ChatOne plateau hold (2.4s generous hold)
+      masterTl.to(fg[3], { scale: 1.04, y: -12, duration: 2.4, ease: "none" }, 11.6);
+      masterTl.to(bg[3], { scale: 1.34, duration: 2.4, ease: "none" }, 11.6);
 
-      // 7.5s -> 8.0s: ChatOne EASES OUT
-      masterTl.to(fg[3], { scale: 1.15, opacity: 0, y: -45, duration: 0.5, ease: easeInOut }, 7.5);
-      masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.5, ease: easeInOut }, 7.5);
-      masterTl.to(amb[3], { opacity: 0, duration: 0.5, ease: easeInOut }, 7.5);
-      masterTl.to(titleLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.45, ease: easeInOut }, 7.5);
-      masterTl.to(descLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.45, ease: easeInOut }, 7.5);
-      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 0 }, 8.0);
+      // 14.0s -> 15.0s: ChatOne EASES OUT
+      masterTl.to(fg[3], { scale: 1.15, opacity: 0, y: -45, duration: 1.0, ease: easeInOut }, 14.0);
+      masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, 14.0);
+      masterTl.to(amb[3], { opacity: 0, duration: 1.0, ease: easeInOut }, 14.0);
+      masterTl.to(titleLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 14.0);
+      masterTl.to(descLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 14.0);
+      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 0 }, 15.0);
 
       /* ─────────────────────────────────────────────────────────────
-         PHASE 05: FINANCE (8.0s – 9.5s)
+         PHASE 05: FINANCE (14.4s – 18.6s)
          ───────────────────────────────────────────────────────────── */
-      // 7.6s -> 8.3s: Finance EASES IN (Card + Down-to-Up Text Reveal)
-      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 1 }, 7.6);
+      // 14.4s -> 15.4s: Finance EASES IN (Card + Down-to-Up Text Reveal)
+      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 1 }, 14.4);
       masterTl.fromTo(fg[4], 
         { scale: 0.8, opacity: 0, y: 45 }, 
-        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
-        7.6
+        { scale: 1.0, opacity: 1, y: 0, duration: 1.0, ease: easeInOut }, 
+        14.4
       );
       masterTl.fromTo(bg[4], 
         { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
-        7.6
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.0, ease: easeInOut }, 
+        14.4
       );
       masterTl.fromTo(amb[4], 
         { opacity: 0 }, 
-        { opacity: 1, duration: 0.7, ease: easeInOut }, 
-        7.6
+        { opacity: 1, duration: 1.0, ease: easeInOut }, 
+        14.4
       );
 
       // Text reveal from down to up
       masterTl.fromTo(titleLines[4], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        7.7
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        14.55
       );
       masterTl.fromTo(descLines[4], 
         { y: "130%", opacity: 0 }, 
-        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
-        7.75
+        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut }, 
+        14.65
       );
 
-      // 8.3s -> 9.4s: Finance plateau
-      masterTl.to(fg[4], { scale: 1.04, y: -12, duration: 1.1, ease: "none" }, 8.3);
-      masterTl.to(bg[4], { scale: 1.34, duration: 1.1, ease: "none" }, 8.3);
+      // 15.4s -> 17.6s: Finance plateau hold (2.2s generous hold)
+      masterTl.to(fg[4], { scale: 1.04, y: -12, duration: 2.2, ease: "none" }, 15.4);
+      masterTl.to(bg[4], { scale: 1.34, duration: 2.2, ease: "none" }, 15.4);
 
       /* ─────────────────────────────────────────────────────────────
-         PHASE 06: FINAL ENDING SECTION (9.5s – 12.2s)
+         PHASE 06: FINAL ENDING SECTION (17.6s – 20.0s)
          ───────────────────────────────────────────────────────────── */
-      // 9.4s -> 10.3s: Finance slides upward smoothly to upper-middle; side text rolls out; background turns pure black
-      masterTl.to(fg[4], { y: -160, scale: 0.65, opacity: 0.55, duration: 0.9, ease: easeInOut }, 9.4);
-      masterTl.to(bg[4], { opacity: 0.08, filter: "blur(55px)", duration: 0.9, ease: easeInOut }, 9.4);
-      masterTl.to(amb[4], { opacity: 0.12, duration: 0.9, ease: easeInOut }, 9.4);
-      masterTl.to(titleLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 9.4);
-      masterTl.to(descLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 9.4);
-      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 0 }, 10.3);
+      // 17.6s -> 18.6s: Finance slides upward smoothly to upper-middle; side text rolls out; background turns pure black
+      masterTl.to(fg[4], { y: -160, scale: 0.65, opacity: 0.55, duration: 1.0, ease: easeInOut }, 17.6);
+      masterTl.to(bg[4], { opacity: 0.08, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, 17.6);
+      masterTl.to(amb[4], { opacity: 0.12, duration: 1.0, ease: easeInOut }, 17.6);
+      masterTl.to(titleLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 17.6);
+      masterTl.to(descLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 17.6);
+      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 0 }, 18.6);
 
-      // 10.0s -> 12.2s: Red statement reveals with smooth upward ease-in-and-out stagger
+      // 18.2s -> 20.0s: Red statement reveals with smooth upward ease-in-and-out stagger
       if (statementSection && statementWords.length > 0) {
         masterTl.fromTo(statementSection, 
           { opacity: 0, y: 40 }, 
-          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 
-          10.0
+          { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 
+          18.2
         );
         masterTl.fromTo(
           statementWords,
           { opacity: 0, y: 28, filter: "blur(8px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.055, duration: 0.85, ease: easeInOut },
-          10.1
+          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.055, duration: 1.0, ease: easeInOut },
+          18.3
         );
       }
     }, container);
@@ -413,8 +413,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       onMouseMove={handleMouseMove}
       className="relative w-full bg-[#050505] text-white selection:bg-[#FF1A00] selection:text-black z-30"
       style={{
-        // 600vh scroll track gives generous, smooth scrub time for all 6 phases
-        height: "600vh",
+        // 1100vh scroll track gives relaxed, slow, weighted scroll time for all cards and text
+        height: "1100vh",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
