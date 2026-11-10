@@ -114,8 +114,7 @@ export function CinematicPortfolioShowcase() {
   const scrollToProject = (index: number) => {
     if (!containerRef.current) return;
     const totalScroll = containerRef.current.offsetHeight - window.innerHeight;
-    // index 0..4 maps to 0% .. ~72%, index 5 is final statement (~92%)
-    const fraction = (index / (SHOWCASE_PROJECTS.length + 0.5));
+    const fraction = index / (SHOWCASE_PROJECTS.length + 0.5);
     const targetY = containerRef.current.offsetTop + totalScroll * fraction;
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
@@ -131,161 +130,135 @@ export function CinematicPortfolioShowcase() {
     if (!container || !stage) return;
 
     const ctx = gsap.context(() => {
-      // Create master ScrollTrigger pinning the entire experience
-      const pinTrigger = ScrollTrigger.create({
-        trigger: container,
-        start: "top top",
-        end: "bottom bottom",
-        pin: stage,
-        anticipatePin: 1,
-        scrub: 0.8,
-        onUpdate: (self) => {
-          const p = self.progress;
-          setOverallProgress(p);
+      // MASTER SCROLL TIMELINE (12.2s total duration matching the Master Prompt timeline)
+      const masterTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "bottom bottom",
+          pin: stage,
+          anticipatePin: 1,
+          scrub: 0.8,
+          onUpdate: (self) => {
+            const p = self.progress;
+            setOverallProgress(p);
 
-          // Phase mapping:
-          // 0.00 - 0.18 => Codenarts (0)
-          // 0.18 - 0.36 => AZ-Digital (1)
-          // 0.36 - 0.54 => Amron (2)
-          // 0.54 - 0.72 => ChatOne (3)
-          // 0.72 - 0.88 => Finance (4)
-          // 0.88 - 1.00 => Final Statement (5)
-          const numProjects = SHOWCASE_PROJECTS.length;
-          const projectDuration = 0.86 / numProjects;
-          
-          if (p < 0.86) {
-            setIsFinalPhase(false);
-            const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectDuration)));
-            setActiveProjectIndex(idx);
-          } else {
-            setIsFinalPhase(true);
-            setActiveProjectIndex(numProjects - 1);
-          }
+            // Phase tracking:
+            // 0.00 - 0.18 => Codenarts (0)
+            // 0.18 - 0.36 => AZ-Digital (1)
+            // 0.36 - 0.54 => Amron (2)
+            // 0.54 - 0.72 => ChatOne (3)
+            // 0.72 - 0.86 => Finance (4)
+            // 0.86 - 1.00 => Final Statement (5)
+            const numProjects = SHOWCASE_PROJECTS.length;
+            const projectDuration = 0.84 / numProjects;
+            
+            if (p < 0.84) {
+              setIsFinalPhase(false);
+              const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectDuration)));
+              setActiveProjectIndex(idx);
+            } else {
+              setIsFinalPhase(true);
+              setActiveProjectIndex(numProjects - 1);
+            }
+          },
         },
       });
 
-      // Timeline for project layer crossfades, scaling and blur
-      // Each project has its own fg, bg, title, and desc
-      SHOWCASE_PROJECTS.forEach((_, idx) => {
-        const fg = stage.querySelector(`.project-fg-${idx}`);
-        const bg = stage.querySelector(`.project-bg-${idx}`);
-        const amb = stage.querySelector(`.project-amb-${idx}`);
-
-        // Duration of each phase in normalized scroll progress
-        const step = 0.86 / SHOWCASE_PROJECTS.length;
-        const enterStart = Math.max(0, idx * step - 0.04);
-        const enterEnd = idx * step + 0.04;
-        const exitStart = (idx + 1) * step - 0.04;
-        const exitEnd = Math.min(0.88, (idx + 1) * step + 0.04);
-
-        if (idx === 0) {
-          // First project starts visible and zooms gently
-          gsap.timeline({
-            scrollTrigger: {
-              trigger: container,
-              start: "top top",
-              end: `${step * 100}% top`,
-              scrub: true,
-            },
-          })
-          .fromTo(fg, { scale: 0.92, opacity: 1, y: 0 }, { scale: 1.04, opacity: 1, y: -15, ease: "none" })
-          .fromTo(bg, { scale: 1.15, opacity: 0.45, filter: "blur(28px)" }, { scale: 1.35, opacity: 0.5, filter: "blur(40px)", ease: "none" }, 0);
-
-          // Exit transition to next project
-          gsap.timeline({
-            scrollTrigger: {
-              trigger: container,
-              start: `${exitStart * 100}% top`,
-              end: `${exitEnd * 100}% top`,
-              scrub: true,
-            },
-          })
-          .to(fg, { scale: 1.12, opacity: 0, y: -40, ease: "power2.in" })
-          .to(bg, { scale: 1.5, opacity: 0, filter: "blur(50px)", ease: "power2.in" }, 0)
-          .to(amb, { opacity: 0, ease: "power2.in" }, 0);
-        } else {
-          // Subsequent projects: Enter, Plateau/Float, Exit
-          // Entrance
-          gsap.timeline({
-            scrollTrigger: {
-              trigger: container,
-              start: `${enterStart * 100}% top`,
-              end: `${enterEnd * 100}% top`,
-              scrub: true,
-            },
-          })
-          .fromTo(fg, 
-            { scale: 0.8, opacity: 0, y: 50 }, 
-            { scale: 1.0, opacity: 1, y: 0, ease: "power2.out" }
-          )
-          .fromTo(bg, 
-            { scale: 1.0, opacity: 0, filter: "blur(12px)" }, 
-            { scale: 1.25, opacity: 0.48, filter: "blur(32px)", ease: "power2.out" }, 
-            0
-          )
-          .fromTo(amb, { opacity: 0 }, { opacity: 1, ease: "power2.out" }, 0);
-
-          // If not the last project, configure its exit
-          if (idx < SHOWCASE_PROJECTS.length - 1) {
-            gsap.timeline({
-              scrollTrigger: {
-                trigger: container,
-                start: `${exitStart * 100}% top`,
-                end: `${exitEnd * 100}% top`,
-                scrub: true,
-              },
-            })
-            .to(fg, { scale: 1.1, opacity: 0, y: -35, ease: "power2.in" })
-            .to(bg, { scale: 1.45, opacity: 0, filter: "blur(48px)", ease: "power2.in" }, 0)
-            .to(amb, { opacity: 0, ease: "power2.in" }, 0);
-          } else {
-            // LAST PROJECT (FINANCE) -> Shifts up for Phase 06 Final Statement
-            gsap.timeline({
-              scrollTrigger: {
-                trigger: container,
-                start: "86% top",
-                end: "96% top",
-                scrub: true,
-              },
-            })
-            .to(fg, {
-              y: -140,
-              scale: 0.72,
-              opacity: 0.65,
-              ease: "power2.out",
-            })
-            .to(bg, {
-              opacity: 0.15,
-              filter: "blur(50px)",
-              ease: "power2.out",
-            }, 0)
-            .to(amb, {
-              opacity: 0.2,
-              ease: "power2.out",
-            }, 0);
-          }
-        }
-      });
-
-      // Phase 06: Final Statement text reveal
+      // Targets
+      const fg = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-fg-${i}`));
+      const bg = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-bg-${i}`));
+      const amb = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-amb-${i}`));
+      const orangeBeam = stage.querySelector(".amron-orange-beam");
       const statementSection = stage.querySelector(".final-statement-wrap");
       const statementWords = stage.querySelectorAll(".statement-word");
 
+      /* ─── PHASE 01: CODENARTS (0.0s – 2.5s) ─── */
+      // Initial state: Codenarts fg=1, bg=0.45
+      // 0.0s -> 2.0s: Slow zoom + floating movement
+      masterTl.to(fg[0], { scale: 1.05, y: -15, duration: 2.0, ease: "none" }, 0);
+      masterTl.to(bg[0], { scale: 1.35, opacity: 0.5, filter: "blur(40px)", duration: 2.0, ease: "none" }, 0);
+
+      // 2.0s -> 2.5s: Codenarts exits
+      masterTl.to(fg[0], { scale: 1.15, opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 2.0);
+      masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.5, ease: "power2.in" }, 2.0);
+      masterTl.to(amb[0], { opacity: 0, duration: 0.5, ease: "power2.in" }, 2.0);
+
+      /* ─── PHASE 02: AZ-DIGITAL-VENTURES (2.5s – 4.5s) ─── */
+      // 2.3s -> 2.8s: AZ-Digital enters
+      masterTl.fromTo(fg[1], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 2.3);
+      masterTl.fromTo(bg[1], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 2.3);
+      masterTl.fromTo(amb[1], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 2.3);
+
+      // 2.8s -> 4.0s: AZ-Digital plateau + gentle zoom
+      masterTl.to(fg[1], { scale: 1.05, y: -15, duration: 1.4, ease: "none" }, 2.8);
+      masterTl.to(bg[1], { scale: 1.35, duration: 1.4, ease: "none" }, 2.8);
+
+      // 4.0s -> 4.5s: AZ-Digital exits
+      masterTl.to(fg[1], { scale: 1.15, opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 4.0);
+      masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.5, ease: "power2.in" }, 4.0);
+      masterTl.to(amb[1], { opacity: 0, duration: 0.5, ease: "power2.in" }, 4.0);
+
+      /* ─── PHASE 03: AMRON (4.5s – 6.5s) ─── */
+      // 4.3s -> 4.8s: Amron enters
+      masterTl.fromTo(fg[2], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 4.3);
+      masterTl.fromTo(bg[2], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 4.3);
+      masterTl.fromTo(amb[2], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 4.3);
+      if (orangeBeam) {
+        masterTl.fromTo(orangeBeam, { opacity: 0, scaleY: 0.6 }, { opacity: 0.85, scaleY: 1, duration: 0.6, ease: "power2.out" }, 4.3);
+      }
+
+      // 4.8s -> 6.0s: Amron plateau + parallax
+      masterTl.to(fg[2], { scale: 1.05, y: -15, duration: 1.4, ease: "none" }, 4.8);
+      masterTl.to(bg[2], { scale: 1.35, duration: 1.4, ease: "none" }, 4.8);
+
+      // 6.0s -> 6.5s: Amron exits
+      masterTl.to(fg[2], { scale: 1.15, opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 6.0);
+      masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.5, ease: "power2.in" }, 6.0);
+      masterTl.to(amb[2], { opacity: 0, duration: 0.5, ease: "power2.in" }, 6.0);
+      if (orangeBeam) {
+        masterTl.to(orangeBeam, { opacity: 0, duration: 0.4 }, 6.1);
+      }
+
+      /* ─── PHASE 04: CHATONE (6.5s – 8.0s) ─── */
+      // 6.3s -> 6.8s: ChatOne enters
+      masterTl.fromTo(fg[3], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 6.3);
+      masterTl.fromTo(bg[3], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 6.3);
+      masterTl.fromTo(amb[3], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 6.3);
+
+      // 6.8s -> 7.6s: ChatOne plateau
+      masterTl.to(fg[3], { scale: 1.05, y: -15, duration: 1.0, ease: "none" }, 6.8);
+      masterTl.to(bg[3], { scale: 1.35, duration: 1.0, ease: "none" }, 6.8);
+
+      // 7.6s -> 8.0s: ChatOne exits
+      masterTl.to(fg[3], { scale: 1.15, opacity: 0, y: -40, duration: 0.4, ease: "power2.in" }, 7.6);
+      masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.4, ease: "power2.in" }, 7.6);
+      masterTl.to(amb[3], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.6);
+
+      /* ─── PHASE 05: FINANCE (8.0s – 9.5s) ─── */
+      // 7.8s -> 8.3s: Finance enters
+      masterTl.fromTo(fg[4], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 7.8);
+      masterTl.fromTo(bg[4], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 7.8);
+      masterTl.fromTo(amb[4], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 7.8);
+
+      // 8.3s -> 9.5s: Finance plateau
+      masterTl.to(fg[4], { scale: 1.04, y: -15, duration: 1.2, ease: "none" }, 8.3);
+      masterTl.to(bg[4], { scale: 1.35, duration: 1.2, ease: "none" }, 8.3);
+
+      /* ─── PHASE 06: FINAL ENDING SECTION (9.5s – 12.2s) ─── */
+      // 9.5s -> 10.3s: Finance translates upward, scales down, background returns to pure black
+      masterTl.to(fg[4], { y: -150, scale: 0.68, opacity: 0.6, duration: 0.8, ease: "power2.out" }, 9.5);
+      masterTl.to(bg[4], { opacity: 0.1, filter: "blur(50px)", duration: 0.8, ease: "power2.out" }, 9.5);
+      masterTl.to(amb[4], { opacity: 0.15, duration: 0.8, ease: "power2.out" }, 9.5);
+
+      // 10.0s -> 12.2s: Staggered red statement reveal
       if (statementSection && statementWords.length > 0) {
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: container,
-            start: "87% top",
-            end: "98% top",
-            scrub: true,
-          },
-        })
-        .fromTo(statementSection, { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power3.out" })
-        .fromTo(
+        masterTl.fromTo(statementSection, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 10.0);
+        masterTl.fromTo(
           statementWords,
           { opacity: 0, y: 30, filter: "blur(6px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.05, ease: "power3.out" },
-          0.1
+          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.06, duration: 0.9, ease: "power3.out" },
+          10.1
         );
       }
     }, container);
@@ -299,7 +272,7 @@ export function CinematicPortfolioShowcase() {
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full bg-[#050505] text-white selection:bg-[#FF1A00] selection:text-black"
+      className="relative w-full bg-[#050505] text-white selection:bg-[#FF1A00] selection:text-black z-30"
       style={{
         // 600vh scroll track gives generous, smooth scrub time for all 6 phases
         height: "600vh",
@@ -309,7 +282,7 @@ export function CinematicPortfolioShowcase() {
       {/* ─── PINNED FULL-SCREEN STAGE ─── */}
       <div
         ref={pinnedStageRef}
-        className="sticky top-0 h-screen w-full overflow-hidden bg-[#050505] select-none"
+        className="relative h-screen w-full overflow-hidden bg-[#050505] select-none"
       >
         {/* ─── BACKGROUND AMBIENT GLOW SYSTEM ─── */}
         {SHOWCASE_PROJECTS.map((proj, idx) => (
@@ -322,6 +295,11 @@ export function CinematicPortfolioShowcase() {
             }}
           />
         ))}
+
+        {/* ─── PHASE 03 VERTICAL ORANGE LIGHT BEAM (Master prompt requirement) ─── */}
+        <div
+          className="amron-orange-beam pointer-events-none absolute left-6 sm:left-10 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#F97316] to-transparent opacity-0 shadow-[0_0_15px_#F97316]"
+        />
 
         {/* ─── ENLARGED BLURRED BACKGROUND IMAGES (Atmospheric Layer) ─── */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden">
@@ -355,7 +333,6 @@ export function CinematicPortfolioShowcase() {
         {/* ─── SHARP CENTERED FOREGROUND IMAGES (Stage Center) ─── */}
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           {SHOWCASE_PROJECTS.map((proj, idx) => {
-            // Fine-tuned compact max-widths matching the reference proportions
             const maxWidthStyle =
               proj.aspect === "mobile"
                 ? "max-w-[340px] sm:max-w-[380px] md:max-w-[420px]"
