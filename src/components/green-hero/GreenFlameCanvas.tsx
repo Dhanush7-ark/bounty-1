@@ -48,7 +48,8 @@ export function GreenFlameCanvas({
     if (!ctx) return;
 
     let animId: number;
-    let width = 0;
+    let width = 0; 
+    
     let height = 0;
     let dpr = 1;
 
