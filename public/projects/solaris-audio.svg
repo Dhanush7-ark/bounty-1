@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <defs>
+    <radialGradient id="sa_glow_lime" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#C6FF36" stop-opacity="0.45"/>
+      <stop offset="50%" stop-color="#4D7C0F" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#050802" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sa_glow_gold" cx="80%" cy="50%" r="45%">
+      <stop offset="0%" stop-color="#EAB308" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="sa_card_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#121808"/>
+      <stop offset="100%" stop-color="#050802"/>
+    </linearGradient>
+    <linearGradient id="sa_border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C6FF36" stop-opacity="0.75"/>
+      <stop offset="50%" stop-color="#65A30D" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#EAB308" stop-opacity="0.5"/>
+    </linearGradient>
+    <filter id="sa_blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="24" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Deep Canvas -->
+  <rect width="1440" height="900" fill="#040602"/>
+  <rect width="1440" height="900" fill="url(#sa_glow_lime)"/>
+  <rect width="1440" height="900" fill="url(#sa_glow_gold)"/>
+
+  <!-- Acoustic Grid -->
+  <g opacity="0.07" stroke="#C6FF36" stroke-width="0.5">
+    <line x1="0" y1="180" x2="1440" y2="180"/>
+    <line x1="0" y1="360" x2="1440" y2="360"/>
+    <line x1="0" y1="540" x2="1440" y2="540"/>
+    <line x1="0" y1="720" x2="1440" y2="720"/>
+    <line x1="288" y1="0" x2="288" y2="900"/>
+    <line x1="576" y1="0" x2="576" y2="900"/>
+    <line x1="864" y1="0" x2="864" y2="900"/>
+    <line x1="1152" y1="0" x2="1152" y2="900"/>
+  </g>
+
+  <!-- Monitor / Acoustic Deck Frame -->
+  <g transform="translate(180, 110)">
+    <rect x="20" y="30" width="1040" height="640" rx="18" fill="#C6FF36" opacity="0.2" filter="url(#sa_blur)"/>
+    <rect x="0" y="0" width="1080" height="680" rx="16" fill="url(#sa_card_bg)" stroke="url(#sa_border)" stroke-width="1.5"/>
+
+    <!-- Header bar -->
+    <rect x="0" y="0" width="1080" height="48" rx="16" fill="#1A220B" fill-opacity="0.9"/>
+    <circle cx="28" cy="24" r="5" fill="#C6FF36" opacity="0.9"/>
+    <circle cx="46" cy="24" r="5" fill="#84CC16" opacity="0.7"/>
+    <circle cx="64" cy="24" r="5" fill="#EAB308" opacity="0.5"/>
+    <text x="540" y="29" fill="#C6FF36" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3" text-anchor="middle">SOLARIS-AUDIO // SPATIAL ACOUSTICS DECK</text>
+
+    <!-- Inner Content -->
+    <g transform="translate(80, 90)">
+      <text x="0" y="60" fill="#C6FF36" font-family="'Inter', monospace" font-size="12" font-weight="600" letter-spacing="4">MODULE // LOSSLESS ANALOG ENGINE</text>
+      <text x="0" y="125" fill="#FFFFFF" font-family="'Syne', 'Inter', sans-serif" font-size="48" font-weight="800" letter-spacing="1">HARMONIC</text>
+      <text x="0" y="180" fill="#C6FF36" font-family="'Bodoni MT', 'Didot', serif" font-size="52" font-style="italic">Frequency</text>
+      <text x="0" y="235" fill="#A3E635" font-family="'Inter', sans-serif" font-size="14" font-weight="300" opacity="0.8">
+        <tspan x="0" dy="0">High-resolution spatial audio workstation and waveform visualizer.</tspan>
+        <tspan x="0" dy="24">Lossless binaural acoustics with dynamic phase alignment.</tspan>
+      </text>
+
+      <!-- CTA Button -->
+      <g transform="translate(0, 300)">
+        <rect width="180" height="44" rx="22" fill="#C6FF36" fill-opacity="0.15" stroke="#C6FF36" stroke-width="1.2"/>
+        <text x="90" y="27" fill="#C6FF36" font-family="'Inter', monospace" font-size="11" font-weight="600" letter-spacing="2" text-anchor="middle">PLAY MASTER DEMO</text>
+      </g>
+
+      <!-- Center-Right Audio Frequency Spectrum & VU Meters Visual -->
+      <g transform="translate(500, 30)">
+        <!-- Waveform Ribbon -->
+        <path d="M 20 180 Q 80 80, 140 180 T 260 180 T 380 180 T 480 180" fill="none" stroke="#C6FF36" stroke-width="3"/>
+        <path d="M 20 180 Q 80 120, 140 180 T 260 180 T 380 180 T 480 180" fill="none" stroke="#EAB308" stroke-width="1.5" opacity="0.6"/>
+        
+        <!-- Equalizer Bars -->
+        <g transform="translate(60, 210)" fill="#C6FF36">
+          <rect x="0" y="0" width="6" height="50" rx="3" opacity="0.7"/>
+          <rect x="14" y="-20" width="6" height="70" rx="3" opacity="0.9"/>
+          <rect x="28" y="-45" width="6" height="95" rx="3" opacity="1"/>
+          <rect x="42" y="-30" width="6" height="80" rx="3" opacity="0.85"/>
+          <rect x="56" y="-60" width="6" height="110" rx="3" opacity="1"/>
+          <rect x="70" y="-15" width="6" height="65" rx="3" opacity="0.75"/>
+          <rect x="84" y="-35" width="6" height="85" rx="3" opacity="0.9"/>
+          <rect x="98" y="-55" width="6" height="105" rx="3" opacity="1"/>
+          <rect x="112" y="-40" width="6" height="90" rx="3" opacity="0.85"/>
+          <rect x="126" y="-25" width="6" height="75" rx="3" opacity="0.8"/>
+          <rect x="140" y="-70" width="6" height="120" rx="3" opacity="1"/>
+          <rect x="154" y="-50" width="6" height="100" rx="3" opacity="0.9"/>
+          <rect x="168" y="-30" width="6" height="80" rx="3" opacity="0.8"/>
+          <rect x="182" y="-15" width="6" height="65" rx="3" opacity="0.7"/>
+        </g>
+        
+        <text x="250" y="325" fill="#C6FF36" font-family="'Inter', monospace" font-size="10" letter-spacing="3" text-anchor="middle">384 kHz // 32-BIT FLOAT MASTERING</text>
+      </g>
+    </g>
+
+    <!-- Bottom Telemetry strip -->
+    <g transform="translate(40, 620)">
+      <line x1="0" y1="0" x2="1000" y2="0" stroke="#C6FF36" stroke-width="0.5" opacity="0.3"/>
+      <text x="0" y="25" fill="#4D7C0F" font-family="'Inter', monospace" font-size="10" letter-spacing="2">SURROUND DECODE: 9.1.4 DOLBY ATMOS</text>
+      <text x="1000" y="25" fill="#C6FF36" font-family="'Inter', monospace" font-size="10" letter-spacing="2" text-anchor="end">SIGNAL: PRISTINE 0.0001% THD</text>
+    </g>
+  </g>
+</svg>

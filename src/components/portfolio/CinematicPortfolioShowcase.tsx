@@ -18,6 +18,7 @@ export interface ShowcaseProject {
   accentColor: string;
   ambientGlow: string;
   secondaryGlow?: string;
+  aspect: "landscape" | "laptop" | "monitor" | "mobile";
 }
 
 export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
@@ -32,6 +33,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#A78BFA",
     ambientGlow: "rgba(124, 58, 237, 0.45)",
     secondaryGlow: "rgba(249, 115, 22, 0.28)",
+    aspect: "landscape",
   },
   {
     id: "az-digital",
@@ -44,6 +46,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#F97316",
     ambientGlow: "rgba(234, 88, 12, 0.48)",
     secondaryGlow: "rgba(245, 158, 11, 0.22)",
+    aspect: "laptop",
   },
   {
     id: "amron",
@@ -56,6 +59,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#EF4444",
     ambientGlow: "rgba(220, 38, 38, 0.45)",
     secondaryGlow: "rgba(249, 115, 22, 0.25)",
+    aspect: "monitor",
   },
   {
     id: "chatone",
@@ -68,6 +72,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#C084FC",
     ambientGlow: "rgba(168, 85, 247, 0.45)",
     secondaryGlow: "rgba(147, 51, 234, 0.25)",
+    aspect: "mobile",
   },
   {
     id: "finance",
@@ -80,54 +85,59 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     accentColor: "#F59E0B",
     ambientGlow: "rgba(217, 119, 6, 0.42)",
     secondaryGlow: "rgba(16, 185, 129, 0.18)",
+    aspect: "mobile",
   },
   {
-    id: "nexus-labs",
-    name: "NEXUS LABS",
-    category: "SPATIAL AI & BIOMETRICS",
-    year: "2024",
+    id: "neura-core",
+    name: "NEURA-CORE",
+    category: "SPATIAL INTELLIGENCE",
+    year: "2025",
     description:
-      "Autonomous multi-agent intelligence operating with real-time biometric telemetry, neon emerald radiance, and spatial graph visualization.",
-    image: "/projects/nexus.svg",
-    accentColor: "#10B981",
-    ambientGlow: "rgba(16, 185, 129, 0.45)",
-    secondaryGlow: "rgba(6, 182, 212, 0.25)",
+      "An autonomous neural interface platform with holographic volumetric data trees, real-time quantum telemetry, and fluid glass shaders.",
+    image: "/projects/neura-core.svg",
+    accentColor: "#00F0FF",
+    ambientGlow: "rgba(0, 240, 255, 0.45)",
+    secondaryGlow: "rgba(14, 165, 233, 0.25)",
+    aspect: "laptop",
   },
   {
-    id: "valkyrie",
-    name: "VALKYRIE",
-    category: "AERODYNAMIC LUXURY",
-    year: "2024",
+    id: "aether-kinetics",
+    name: "AETHER-KINETICS",
+    category: "KINETIC ARCHITECTURE",
+    year: "2025",
     description:
-      "A bespoke hypercar monograph featuring active aero flow dynamics, carbon-composite engineering, and crimson obsidian velocity accents.",
-    image: "/projects/valkyrie.svg",
-    accentColor: "#EF4444",
-    ambientGlow: "rgba(239, 68, 68, 0.45)",
-    secondaryGlow: "rgba(249, 115, 22, 0.25)",
+      "A precision automotive design atelier exploring aerodynamic carbon chassis, dynamic light ribbons, and computational fluid modeling.",
+    image: "/projects/aether-kinetics.svg",
+    accentColor: "#F43F5E",
+    ambientGlow: "rgba(244, 63, 94, 0.45)",
+    secondaryGlow: "rgba(225, 29, 72, 0.25)",
+    aspect: "monitor",
   },
   {
-    id: "orbital-sound",
-    name: "ORBITAL SOUND",
+    id: "solaris-audio",
+    name: "SOLARIS-AUDIO",
     category: "SPATIAL ACOUSTICS",
-    year: "2024",
+    year: "2025",
     description:
-      "Object-based binaural soundscapes, spherical harmonic synthesis, and ultra-low-latency spatial rendering with deep violet lighting.",
-    image: "/projects/orbital.svg",
-    accentColor: "#8B5CF6",
-    ambientGlow: "rgba(139, 92, 246, 0.45)",
-    secondaryGlow: "rgba(59, 130, 246, 0.25)",
+      "Next-generation sonic visualizer featuring real-time frequency waveforms, lossless analog warmth, and immersive tactile soundstage controls.",
+    image: "/projects/solaris-audio.svg",
+    accentColor: "#C6FF36",
+    ambientGlow: "rgba(198, 255, 54, 0.42)",
+    secondaryGlow: "rgba(132, 204, 22, 0.22)",
+    aspect: "landscape",
   },
   {
-    id: "kinetic-atelier",
-    name: "KINETIC ATELIER",
-    category: "PARAMETRIC SPATIAL ART",
-    year: "2024",
+    id: "vortex-studios",
+    name: "VORTEX-STUDIOS",
+    category: "METAVERSE CINEMATICS",
+    year: "2025",
     description:
-      "Generative kinetic facades, molten bronze sculptural structures, and real-time solar responsive geometry with warm golden highlights.",
-    image: "/projects/kinetic.svg",
-    accentColor: "#F59E0B",
-    ambientGlow: "rgba(245, 158, 11, 0.48)",
-    secondaryGlow: "rgba(217, 119, 6, 0.25)",
+      "A global creative direction studio crafting cinematic CG brand identities, photorealistic environments, and experiential digital campaigns.",
+    image: "/projects/vortex-studios.svg",
+    accentColor: "#D946EF",
+    ambientGlow: "rgba(217, 70, 239, 0.45)",
+    secondaryGlow: "rgba(168, 85, 247, 0.26)",
+    aspect: "laptop",
   },
 ];
 
@@ -137,7 +147,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinnedStageRef = useRef<HTMLDivElement>(null);
   
-  // Track active project index for UI indicators (0 to 8)
+  // Track active project index for UI indicators
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
   const [isFinalPhase, setIsFinalPhase] = useState(false);
@@ -156,9 +166,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const scrollToProject = (index: number) => {
     if (!containerRef.current) return;
     const totalScroll = containerRef.current.offsetHeight - window.innerHeight;
-    const fraction = index < SHOWCASE_PROJECTS.length 
-      ? (index * 0.90) / SHOWCASE_PROJECTS.length + 0.04 
-      : 0.96;
+    const fraction = index < 9 ? (index * 0.91) / 9 + 0.05 : 0.96;
     const targetY = containerRef.current.offsetTop + totalScroll * fraction;
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
@@ -169,10 +177,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
     if (!container || !stage) return;
 
     const ctx = gsap.context(() => {
-      const numProjects = SHOWCASE_PROJECTS.length; // 9 projects
-      const projectSlot = 0.90 / numProjects;
-
-      // MASTER SCROLL TIMELINE (Weighted scrub with physical momentum)
+      // MASTER SCROLL TIMELINE (36.6s total normalized duration for all 9 cards + final statement)
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -180,15 +185,18 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           end: "bottom bottom",
           pin: stage,
           anticipatePin: 1,
-          scrub: 1.5, // Weighted smooth scrubbing with inertia
+          scrub: 1.5, // Weighted smooth scrubbing with physical momentum
           onUpdate: (self) => {
             const p = self.progress;
             setOverallProgress(p);
 
             // Phase tracking for bottom UI indicators
-            if (p < 0.90) {
+            const numProjects = SHOWCASE_PROJECTS.length; // 9
+            const projectDuration = 0.91 / numProjects;
+            
+            if (p < 0.91) {
               setIsFinalPhase(false);
-              const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectSlot)));
+              const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectDuration)));
               setActiveProjectIndex(idx);
             } else {
               setIsFinalPhase(true);
@@ -211,139 +219,143 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       const statementSection = stage.querySelector(".final-statement-wrap");
       const statementWords = stage.querySelectorAll(".statement-word");
 
+      // Shared smooth inOut easing curve
       const easeInOut = "power2.inOut";
       const easeRevealOut = "power3.out";
 
-      // ─── INITIAL TIMELINE STATES AT t = 0 (Ensures no card is ever stuck) ───
-      masterTl.set(fg[0], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20 }, 0);
-      masterTl.set(bg[0], { opacity: 0.45, scale: 1.25, filter: "blur(34px)" }, 0);
-      masterTl.set(amb[0], { opacity: 1 }, 0);
-      masterTl.set([titleWrap[0], descWrap[0]], { opacity: 1 }, 0);
-      masterTl.set([titleLines[0], descLines[0]], { y: "0%", opacity: 1 }, 0);
+      // ─── INITIAL POSITIONS AT t = 0 ───
+      // Project 0 is at center stage
+      gsap.set(fg[0], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20 });
+      gsap.set(bg[0], { opacity: 0.45, scale: 1.25 });
+      gsap.set(amb[0], { opacity: 1 });
+      gsap.set(titleWrap[0], { opacity: 1 });
+      gsap.set(descWrap[0], { opacity: 1 });
+      gsap.set(titleLines[0], { y: "0%", opacity: 1 });
+      gsap.set(descLines[0], { y: "0%", opacity: 1 });
 
-      // Card 1 queued at bottom preview position (above telemetry bar)
-      masterTl.set(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10 }, 0);
-      masterTl.set([bg[1], amb[1], titleWrap[1], descWrap[1]], { opacity: 0 }, 0);
+      // Project 1 is queued at bottom center as preview card (sitting right above telemetry bar)
+      gsap.set(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10 });
+      gsap.set(bg[1], { opacity: 0 });
+      gsap.set(amb[1], { opacity: 0 });
+      gsap.set(titleWrap[1], { opacity: 0 });
+      gsap.set(descWrap[1], { opacity: 0 });
 
-      // Cards 2..8 queued beneath the viewport
-      for (let i = 2; i < numProjects; i++) {
-        masterTl.set(fg[i], { y: "65vh", scale: 0.22, opacity: 0, zIndex: 1 }, 0);
-        masterTl.set([bg[i], amb[i], titleWrap[i], descWrap[i]], { opacity: 0 }, 0);
+      // Projects 2..8 are queued beneath the viewport
+      for (let i = 2; i < fg.length; i++) {
+        gsap.set(fg[i], { y: "65vh", scale: 0.22, opacity: 0, zIndex: 1 });
+        gsap.set(bg[i], { opacity: 0 });
+        gsap.set(amb[i], { opacity: 0 });
+        gsap.set(titleWrap[i], { opacity: 0 });
+        gsap.set(descWrap[i], { opacity: 0 });
       }
 
-      // ─── CHOREOGRAPH 9 UNIFORM CARD TRANSITIONS (EXACT SAME DURATION & ANIMATION) ───
-      const holdTime = 2.4;  // Exact same active hold for every card
-      const transTime = 1.2; // Exact same transition duration for every card
-      const phaseDuration = holdTime + transTime; // 3.6s per card phase
+      /* ─────────────────────────────────────────────────────────────
+         DYNAMIC TIMELINE FOR ALL 9 CARDS WITH IDENTICAL SMOOTH PACING
+         Each phase: 2.6s hold, 1.2s smooth ease-in-and-out transition
+         ───────────────────────────────────────────────────────────── */
+      const numCards = SHOWCASE_PROJECTS.length; // 9
+      const stepDuration = 3.8; // 3.8s per project
+      const holdDuration = 2.6; // 2.6s active hold per project
+      const transitionDuration = 1.2; // 1.2s ease in & out
 
-      for (let i = 0; i < numProjects; i++) {
-        const start = i * phaseDuration;
+      for (let i = 0; i < numCards - 1; i++) {
+        const startHold = i * stepDuration;
+        const endHold = startHold + holdDuration;
+        const endTransition = startHold + stepDuration;
 
-        // 1. Uniform Active Hold for Center Card
-        masterTl.to(fg[i], { scale: 1.02, y: "-1vh", duration: holdTime, ease: "none" }, start);
-        masterTl.to(bg[i], { scale: 1.30, duration: holdTime, ease: "none" }, start);
+        // 1. Current card i floats gently at center stage during active hold
+        masterTl.to(fg[i], { scale: 1.02, y: "-1vh", duration: holdDuration, ease: "none" }, startHold);
+        masterTl.to(bg[i], { scale: 1.30, duration: holdDuration, ease: "none" }, startHold);
 
-        // Keep the upcoming card steady in the bottom preview slot during the hold
-        if (i + 1 < numProjects) {
-          masterTl.to(fg[i + 1], { y: "38vh", scale: 0.28, opacity: 0.95, duration: holdTime, ease: "none" }, start);
+        // 2. Next card i+1 holds steady as preview card at the bottom
+        masterTl.to(fg[i + 1], { y: "38vh", scale: 0.28, opacity: 0.95, duration: holdDuration, ease: "none" }, startHold);
+
+        // 3. Current card i EXITS UPWARD out of the viewport
+        masterTl.to(fg[i], { y: "-75vh", opacity: 0, scale: 0.92, duration: transitionDuration, ease: easeInOut }, endHold);
+        masterTl.to(bg[i], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: transitionDuration, ease: easeInOut }, endHold);
+        masterTl.to(amb[i], { opacity: 0, duration: transitionDuration, ease: easeInOut }, endHold);
+
+        // Text i rolls UP & OUT through mask
+        masterTl.to(titleLines[i], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, endHold);
+        masterTl.to(descLines[i], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, endHold);
+        masterTl.set([titleWrap[i], descWrap[i]], { opacity: 0 }, endTransition);
+
+        // 4. Next card i+1 TRAVELS UP FROM BOTTOM PREVIEW INTO CENTER STAGE
+        masterTl.to(fg[i + 1], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: transitionDuration, ease: easeInOut }, endHold);
+        masterTl.fromTo(bg[i + 1],
+          { scale: 1.05, opacity: 0, filter: "blur(14px)" },
+          { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: transitionDuration, ease: easeInOut },
+          endHold
+        );
+        masterTl.fromTo(amb[i + 1], { opacity: 0 }, { opacity: 1, duration: transitionDuration, ease: easeInOut }, endHold);
+
+        // Special accent light beam for Amron (project index 2)
+        if (i === 1 && orangeBeam) {
+          masterTl.fromTo(orangeBeam,
+            { opacity: 0, scaleY: 0.5 },
+            { opacity: 0.85, scaleY: 1, duration: 1.0, ease: easeInOut },
+            endHold + 0.1
+          );
+        } else if (i === 2 && orangeBeam) {
+          masterTl.to(orangeBeam, { opacity: 0, duration: 0.8, ease: easeInOut }, endHold);
         }
 
-        const transStart = start + holdTime;
-
-        if (i < numProjects - 1) {
-          // 2. Active Card travels UPWARD and OUT of the screen
-          masterTl.fromTo(fg[i], 
-            { y: "-1vh", scale: 1.02, opacity: 1 },
-            { y: "-75vh", opacity: 0, scale: 0.92, zIndex: 5, duration: transTime, ease: easeInOut },
-            transStart
-          );
-          masterTl.fromTo(bg[i],
-            { opacity: 0.45, scale: 1.30 },
-            { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: transTime, ease: easeInOut },
-            transStart
-          );
-          masterTl.to(amb[i], { opacity: 0, duration: transTime, ease: easeInOut }, transStart);
-
-          // Current text rolls UP & OUT through mask
-          masterTl.to(titleLines[i], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, transStart);
-          masterTl.to(descLines[i], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, transStart);
-          masterTl.set([titleWrap[i], descWrap[i]], { opacity: 0 }, transStart + transTime);
-
-          // Orange light beam exit for Amron (index 2)
-          if (i === 2 && orangeBeam) {
-            masterTl.to(orangeBeam, { opacity: 0, duration: 0.8, ease: easeInOut }, transStart);
-          }
-
-          // 3. NEXT CARD (i + 1) TRAVELS UP FROM BOTTOM PREVIEW INTO DEAD CENTER
-          masterTl.fromTo(fg[i + 1],
-            { y: "38vh", scale: 0.28, opacity: 0.95 },
-            { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: transTime, ease: easeInOut },
-            transStart
-          );
-          masterTl.fromTo(bg[i + 1],
-            { scale: 1.05, opacity: 0, filter: "blur(14px)" },
-            { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: transTime, ease: easeInOut },
-            transStart
-          );
-          masterTl.fromTo(amb[i + 1], { opacity: 0 }, { opacity: 1, duration: transTime, ease: easeInOut }, transStart);
-
-          // Orange light beam entrance for Amron (index 2)
-          if (i + 1 === 2 && orangeBeam) {
-            masterTl.fromTo(orangeBeam,
-              { opacity: 0, scaleY: 0.5 },
-              { opacity: 0.85, scaleY: 1, duration: transTime, ease: easeInOut },
-              transStart
-            );
-          }
-
-          // 4. FOLLOWING CARD (i + 2) TRAVELS UP FROM BELOW INTO BOTTOM PREVIEW SLOT
-          if (i + 2 < numProjects) {
-            masterTl.fromTo(fg[i + 2],
-              { y: "65vh", scale: 0.22, opacity: 0 },
-              { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10, duration: 1.0, ease: easeInOut },
-              transStart + 0.1
-            );
-          }
-
-          // 5. NEXT TEXT (i + 1) REVEALS FROM DOWN TO UP
-          masterTl.set([titleWrap[i + 1], descWrap[i + 1]], { opacity: 1 }, transStart + 0.1);
-          masterTl.fromTo(titleLines[i + 1],
-            { y: "130%", opacity: 0 },
-            { y: "0%", opacity: 1, duration: 0.9, stagger: 0.08, ease: easeRevealOut },
-            transStart + 0.15
-          );
-          masterTl.fromTo(descLines[i + 1],
-            { y: "130%", opacity: 0 },
-            { y: "0%", opacity: 1, duration: 0.9, stagger: 0.08, ease: easeRevealOut },
-            transStart + 0.2
+        // 5. Following card i+2 SLIDES UP INTO THE BOTTOM PREVIEW SLOT from below
+        if (i + 2 < numCards) {
+          masterTl.fromTo(fg[i + 2],
+            { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
+            { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
+            endHold + 0.2
           );
         }
+
+        // 6. Text i+1 rolls IN from DOWN to UP
+        masterTl.set([titleWrap[i + 1], descWrap[i + 1]], { opacity: 1 }, endHold + 0.2);
+        masterTl.fromTo(titleLines[i + 1],
+          { y: "130%", opacity: 0 },
+          { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
+          endHold + 0.3
+        );
+        masterTl.fromTo(descLines[i + 1],
+          { y: "130%", opacity: 0 },
+          { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
+          endHold + 0.4
+        );
       }
 
-      // ─── PHASE 10: FINAL STATEMENT SECTION ───
-      const lastIdx = numProjects - 1;
-      const finalStart = lastIdx * phaseDuration + holdTime; // 31.2s
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 09: LAST CARD (Vortex-Studios, index 8)
+         ───────────────────────────────────────────────────────────── */
+      const lastIndex = numCards - 1; // 8
+      const lastCardStart = lastIndex * stepDuration; // 30.4s
+      const lastCardHoldEnd = lastCardStart + 3.2; // 33.6s (generous 3.2s hold)
 
-      // Last card (Kinetic) translates smoothly upward
-      masterTl.to(fg[lastIdx], { y: "-18vh", scale: 0.65, opacity: 0.55, duration: 1.2, ease: easeInOut }, finalStart);
-      masterTl.to(bg[lastIdx], { opacity: 0.08, filter: "blur(55px)", duration: 1.2, ease: easeInOut }, finalStart);
-      masterTl.to(amb[lastIdx], { opacity: 0.12, duration: 1.2, ease: easeInOut }, finalStart);
-      masterTl.to(titleLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, finalStart);
-      masterTl.to(descLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.8, ease: easeInOut }, finalStart);
-      masterTl.set([titleWrap[lastIdx], descWrap[lastIdx]], { opacity: 0 }, finalStart + 1.2);
+      masterTl.to(fg[lastIndex], { scale: 1.02, y: "-1vh", duration: 3.2, ease: "none" }, lastCardStart);
+      masterTl.to(bg[lastIndex], { scale: 1.30, duration: 3.2, ease: "none" }, lastCardStart);
 
-      // Red statement reveal
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 10: FINAL STATEMENT (33.6s – 36.6s)
+         ───────────────────────────────────────────────────────────── */
+      // Last card slides upward smoothly to upper-middle; side text rolls out
+      masterTl.to(fg[lastIndex], { y: "-18vh", scale: 0.65, opacity: 0.55, duration: 1.0, ease: easeInOut }, lastCardHoldEnd);
+      masterTl.to(bg[lastIndex], { opacity: 0.08, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, lastCardHoldEnd);
+      masterTl.to(amb[lastIndex], { opacity: 0.12, duration: 1.0, ease: easeInOut }, lastCardHoldEnd);
+      masterTl.to(titleLines[lastIndex], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, lastCardHoldEnd);
+      masterTl.to(descLines[lastIndex], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, lastCardHoldEnd);
+      masterTl.set([titleWrap[lastIndex], descWrap[lastIndex]], { opacity: 0 }, lastCardHoldEnd + 1.2);
+
+      // Final Statement reveals in Bodoni Red with words stagger
       if (statementSection && statementWords.length > 0) {
         masterTl.fromTo(statementSection, 
           { opacity: 0, y: 40 }, 
           { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 
-          finalStart + 0.4
+          lastCardHoldEnd + 0.6
         );
         masterTl.fromTo(
           statementWords,
           { opacity: 0, y: 28, filter: "blur(8px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.045, duration: 1.0, ease: easeInOut },
-          finalStart + 0.5
+          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.055, duration: 1.0, ease: easeInOut },
+          lastCardHoldEnd + 0.7
         );
       }
     }, container);
@@ -357,8 +369,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       onMouseMove={handleMouseMove}
       className="relative w-full bg-[#050505] text-white selection:bg-[#FF1A00] selection:text-black z-30"
       style={{
-        // 1600vh scroll track gives generous, slow, weighted scroll pacing for all 9 cards
-        height: "1600vh",
+        // 1800vh scroll track gives identical slow, relaxed scroll pacing for all 9 cards + final statement
+        height: "1800vh",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
@@ -413,36 +425,43 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-[#050505]/85" />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#050505]/90 via-transparent to-[#050505]/90" />
 
-        {/* ─── FOREGROUND PRESENTATION IMAGES (Uniform 16:10 Workstation Frame for ALL 9 Cards) ─── */}
+        {/* ─── FOREGROUND PRESENTATION IMAGES (Stage Center & Bottom Preview) ─── */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {SHOWCASE_PROJECTS.map((proj, idx) => (
-            <div
-              key={`fg-${proj.id}`}
-              className={`project-fg-${idx} absolute w-full max-w-[620px] sm:max-w-[680px] md:max-w-[740px] lg:max-w-[780px] px-4 flex items-center justify-center will-change-transform`}
-              style={{
-                transformOrigin: "center center",
-              }}
-            >
+          {SHOWCASE_PROJECTS.map((proj, idx) => {
+            const maxWidthStyle =
+              proj.aspect === "mobile"
+                ? "max-w-[320px] sm:max-w-[360px] md:max-w-[400px]"
+                : "max-w-[580px] sm:max-w-[640px] md:max-w-[700px] lg:max-w-[760px]";
+
+            return (
               <div
-                onClick={() => {
-                  // Clicking on a card navigates to it if it's currently queued as bottom preview
-                  if (activeProjectIndex !== idx) {
-                    scrollToProject(idx);
-                  }
+                key={`fg-${proj.id}`}
+                className={`project-fg-${idx} absolute w-full ${maxWidthStyle} px-4 flex items-center justify-center will-change-transform`}
+                style={{
+                  transformOrigin: "center center",
                 }}
-                className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] ring-1 ring-white/15 bg-black/40 backdrop-blur-sm cursor-pointer pointer-events-auto transition-transform hover:scale-[1.01]"
               >
-                <img
-                  src={proj.image}
-                  alt={proj.name}
-                  className="w-full h-full object-cover block select-none pointer-events-auto"
-                  draggable={false}
-                />
-                {/* Glass rim highlight */}
-                <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10" />
+                <div
+                  onClick={() => {
+                    // Clicking on a card will navigate to it if it's currently queued as bottom preview
+                    if (activeProjectIndex !== idx) {
+                      scrollToProject(idx);
+                    }
+                  }}
+                  className="relative w-full rounded-2xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] ring-1 ring-white/15 bg-black/40 backdrop-blur-sm cursor-pointer pointer-events-auto transition-transform hover:scale-[1.01]"
+                >
+                  <img
+                    src={proj.image}
+                    alt={proj.name}
+                    className="w-full h-auto object-contain block select-none pointer-events-auto"
+                    draggable={false}
+                  />
+                  {/* Glass rim highlight */}
+                  <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-white/10" />
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* ─── TOP-LEFT CORNER: ABSTRACT STUDIO GLYPH (Matching Reference) ─── */}

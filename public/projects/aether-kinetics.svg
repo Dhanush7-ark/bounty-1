@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" fill="none">
+  <defs>
+    <radialGradient id="ak_glow_rose" cx="50%" cy="40%" r="65%">
+      <stop offset="0%" stop-color="#F43F5E" stop-opacity="0.55"/>
+      <stop offset="50%" stop-color="#881337" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#050205" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="ak_glow_amber" cx="25%" cy="60%" r="40%">
+      <stop offset="0%" stop-color="#FB7185" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <linearGradient id="ak_card_bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A0A10"/>
+      <stop offset="100%" stop-color="#080305"/>
+    </linearGradient>
+    <linearGradient id="ak_border" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F43F5E" stop-opacity="0.75"/>
+      <stop offset="50%" stop-color="#4C0519" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#FB7185" stop-opacity="0.6"/>
+    </linearGradient>
+    <filter id="ak_blur" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="24" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Deep Canvas -->
+  <rect width="1440" height="900" fill="#050204"/>
+  <rect width="1440" height="900" fill="url(#ak_glow_rose)"/>
+  <rect width="1440" height="900" fill="url(#ak_glow_amber)"/>
+
+  <!-- Atelier Grid -->
+  <g opacity="0.07" stroke="#FB7185" stroke-width="0.5">
+    <line x1="0" y1="180" x2="1440" y2="180"/>
+    <line x1="0" y1="360" x2="1440" y2="360"/>
+    <line x1="0" y1="540" x2="1440" y2="540"/>
+    <line x1="0" y1="720" x2="1440" y2="720"/>
+    <line x1="288" y1="0" x2="288" y2="900"/>
+    <line x1="576" y1="0" x2="576" y2="900"/>
+    <line x1="864" y1="0" x2="864" y2="900"/>
+    <line x1="1152" y1="0" x2="1152" y2="900"/>
+  </g>
+
+  <!-- Monitor / Atelier Showcase Frame -->
+  <g transform="translate(180, 110)">
+    <rect x="20" y="30" width="1040" height="640" rx="18" fill="#F43F5E" opacity="0.22" filter="url(#ak_blur)"/>
+    <rect x="0" y="0" width="1080" height="680" rx="16" fill="url(#ak_card_bg)" stroke="url(#ak_border)" stroke-width="1.5"/>
+
+    <!-- Header bar -->
+    <rect x="0" y="0" width="1080" height="48" rx="16" fill="#240A12" fill-opacity="0.9"/>
+    <circle cx="28" cy="24" r="5" fill="#F43F5E" opacity="0.9"/>
+    <circle cx="46" cy="24" r="5" fill="#FB7185" opacity="0.6"/>
+    <circle cx="64" cy="24" r="5" fill="#FDA4AF" opacity="0.4"/>
+    <text x="540" y="29" fill="#FB7185" font-family="'Inter', sans-serif" font-size="11" font-weight="600" letter-spacing="3" text-anchor="middle">AETHER-KINETICS // HYPERCAR ATELIER</text>
+
+    <!-- Inner Content -->
+    <g transform="translate(80, 90)">
+      <text x="0" y="60" fill="#FB7185" font-family="'Inter', monospace" font-size="12" font-weight="600" letter-spacing="4">PROJECT // CHASSIS AERODYNAMICS</text>
+      <text x="0" y="125" fill="#FFFFFF" font-family="'Syne', 'Inter', sans-serif" font-size="48" font-weight="800" letter-spacing="1">VELOCITY</text>
+      <text x="0" y="180" fill="#F43F5E" font-family="'Bodoni MT', 'Didot', serif" font-size="52" font-style="italic">Unleashed</text>
+      <text x="0" y="235" fill="#FDA4AF" font-family="'Inter', sans-serif" font-size="14" font-weight="300" opacity="0.8">
+        <tspan x="0" dy="0">Computational streamline modeling and carbon synthesis.</tspan>
+        <tspan x="0" dy="24">Precision wind-tunnel aesthetics for high-velocity craft.</tspan>
+      </text>
+
+      <!-- CTA Button -->
+      <g transform="translate(0, 300)">
+        <rect width="180" height="44" rx="22" fill="#F43F5E" fill-opacity="0.15" stroke="#F43F5E" stroke-width="1.2"/>
+        <text x="90" y="27" fill="#FB7185" font-family="'Inter', monospace" font-size="11" font-weight="600" letter-spacing="2" text-anchor="middle">VIEW SIMULATION</text>
+      </g>
+
+      <!-- Center-Right Sleek Aerodynamic Silhouette Visual -->
+      <g transform="translate(480, 40)">
+        <!-- Aerodynamic Flow Ribbons -->
+        <path d="M 40 240 C 140 180, 260 120, 440 140 C 360 210, 240 280, 80 270 Z" fill="url(#ak_glow_rose)" opacity="0.35"/>
+        <path d="M 60 220 C 180 150, 320 100, 460 120" fill="none" stroke="#F43F5E" stroke-width="3" stroke-linecap="round"/>
+        <path d="M 80 240 C 200 170, 340 130, 440 150" fill="none" stroke="#FB7185" stroke-width="1.5" stroke-dasharray="4 6"/>
+        <path d="M 100 260 C 220 200, 320 170, 420 180" fill="none" stroke="#FDA4AF" stroke-width="1" opacity="0.7"/>
+
+        <!-- High-tech telemetry points -->
+        <circle cx="460" cy="120" r="4" fill="#FFFFFF"/>
+        <circle cx="460" cy="120" r="8" fill="none" stroke="#F43F5E" stroke-width="1"/>
+        <text x="260" y="325" fill="#FB7185" font-family="'Inter', monospace" font-size="10" letter-spacing="3" text-anchor="middle">DOWNFORCE: 1,840 KG // Cd: 0.23</text>
+      </g>
+    </g>
+
+    <!-- Bottom Telemetry strip -->
+    <g transform="translate(40, 620)">
+      <line x1="0" y1="0" x2="1000" y2="0" stroke="#F43F5E" stroke-width="0.5" opacity="0.3"/>
+      <text x="0" y="25" fill="#881337" font-family="'Inter', monospace" font-size="10" letter-spacing="2">CARBON MATRIX: T1000 UNIDIRECTIONAL</text>
+      <text x="1000" y="25" fill="#FB7185" font-family="'Inter', monospace" font-size="10" letter-spacing="2" text-anchor="end">STATUS: READY FOR PRODUCTION</text>
+    </g>
+  </g>
+</svg>
