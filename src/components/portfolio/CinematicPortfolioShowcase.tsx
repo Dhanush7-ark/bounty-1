@@ -95,7 +95,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinnedStageRef = useRef<HTMLDivElement>(null);
   
-  // Track active project index for UI
+  // Track active project index for UI indicators
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
   const [isFinalPhase, setIsFinalPhase] = useState(false);
@@ -110,7 +110,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
     setMousePos({ x, y });
   }, []);
 
-  // Programmatic scroll to project
+  // Programmatic smooth scroll to any project
   const scrollToProject = (index: number) => {
     if (!containerRef.current) return;
     const totalScroll = containerRef.current.offsetHeight - window.innerHeight;
@@ -130,7 +130,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
     if (!container || !stage) return;
 
     const ctx = gsap.context(() => {
-      // MASTER SCROLL TIMELINE (12.2s total duration matching the Master Prompt timeline)
+      // MASTER SCROLL TIMELINE (12.2s total normalized duration matching Master Prompt)
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -138,18 +138,12 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           end: "bottom bottom",
           pin: stage,
           anticipatePin: 1,
-          scrub: 0.8,
+          scrub: 1.0, // Smooth scrubbing with momentum
           onUpdate: (self) => {
             const p = self.progress;
             setOverallProgress(p);
 
-            // Phase tracking:
-            // 0.00 - 0.18 => Codenarts (0)
-            // 0.18 - 0.36 => AZ-Digital (1)
-            // 0.36 - 0.54 => Amron (2)
-            // 0.54 - 0.72 => ChatOne (3)
-            // 0.72 - 0.86 => Finance (4)
-            // 0.86 - 1.00 => Final Statement (5)
+            // Phase tracking for bottom UI indicators
             const numProjects = SHOWCASE_PROJECTS.length;
             const projectDuration = 0.84 / numProjects;
             
@@ -165,99 +159,221 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         },
       });
 
-      // Targets
+      // Query animated elements
       const fg = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-fg-${i}`));
       const bg = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-bg-${i}`));
       const amb = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-amb-${i}`));
+      const title = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-title-${i}`));
+      const desc = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-desc-${i}`));
       const orangeBeam = stage.querySelector(".amron-orange-beam");
       const statementSection = stage.querySelector(".final-statement-wrap");
       const statementWords = stage.querySelectorAll(".statement-word");
 
-      /* ─── PHASE 01: CODENARTS (0.0s – 2.5s) ─── */
-      // Initial state: Codenarts fg=1, bg=0.45
-      // 0.0s -> 2.0s: Slow zoom + floating movement
-      masterTl.to(fg[0], { scale: 1.05, y: -15, duration: 2.0, ease: "none" }, 0);
-      masterTl.to(bg[0], { scale: 1.35, opacity: 0.5, filter: "blur(40px)", duration: 2.0, ease: "none" }, 0);
+      // Shared smooth inOut easing curve
+      const easeInOut = "power2.inOut";
 
-      // 2.0s -> 2.5s: Codenarts exits
-      masterTl.to(fg[0], { scale: 1.15, opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 2.0);
-      masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.5, ease: "power2.in" }, 2.0);
-      masterTl.to(amb[0], { opacity: 0, duration: 0.5, ease: "power2.in" }, 2.0);
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 01: CODENARTS (0.0s – 2.5s)
+         ───────────────────────────────────────────────────────────── */
+      // 0.0s -> 1.8s: Active plateau, subtle floating zoom
+      masterTl.to(fg[0], { scale: 1.04, y: -12, duration: 1.8, ease: "none" }, 0);
+      masterTl.to(bg[0], { scale: 1.32, opacity: 0.5, filter: "blur(38px)", duration: 1.8, ease: "none" }, 0);
 
-      /* ─── PHASE 02: AZ-DIGITAL-VENTURES (2.5s – 4.5s) ─── */
-      // 2.3s -> 2.8s: AZ-Digital enters
-      masterTl.fromTo(fg[1], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 2.3);
-      masterTl.fromTo(bg[1], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 2.3);
-      masterTl.fromTo(amb[1], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 2.3);
+      // 1.8s -> 2.5s: Codenarts EASES OUT (Card + Text)
+      masterTl.to(fg[0], { scale: 1.15, opacity: 0, y: -45, duration: 0.7, ease: easeInOut }, 1.8);
+      masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.7, ease: easeInOut }, 1.8);
+      masterTl.to(amb[0], { opacity: 0, duration: 0.7, ease: easeInOut }, 1.8);
+      masterTl.to(title[0], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 1.8);
+      masterTl.to(desc[0], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 1.8);
 
-      // 2.8s -> 4.0s: AZ-Digital plateau + gentle zoom
-      masterTl.to(fg[1], { scale: 1.05, y: -15, duration: 1.4, ease: "none" }, 2.8);
-      masterTl.to(bg[1], { scale: 1.35, duration: 1.4, ease: "none" }, 2.8);
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 02: AZ-DIGITAL-VENTURES (2.5s – 4.5s)
+         ───────────────────────────────────────────────────────────── */
+      // 2.0s -> 2.7s: AZ-Digital EASES IN (Card + Text)
+      masterTl.fromTo(fg[1], 
+        { scale: 0.8, opacity: 0, y: 45 }, 
+        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        2.0
+      );
+      masterTl.fromTo(bg[1], 
+        { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
+        2.0
+      );
+      masterTl.fromTo(amb[1], 
+        { opacity: 0 }, 
+        { opacity: 1, duration: 0.7, ease: easeInOut }, 
+        2.0
+      );
+      masterTl.fromTo(title[1], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        2.1
+      );
+      masterTl.fromTo(desc[1], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        2.15
+      );
 
-      // 4.0s -> 4.5s: AZ-Digital exits
-      masterTl.to(fg[1], { scale: 1.15, opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 4.0);
-      masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.5, ease: "power2.in" }, 4.0);
-      masterTl.to(amb[1], { opacity: 0, duration: 0.5, ease: "power2.in" }, 4.0);
+      // 2.7s -> 3.9s: AZ-Digital plateau + gentle float
+      masterTl.to(fg[1], { scale: 1.04, y: -12, duration: 1.2, ease: "none" }, 2.7);
+      masterTl.to(bg[1], { scale: 1.34, duration: 1.2, ease: "none" }, 2.7);
 
-      /* ─── PHASE 03: AMRON (4.5s – 6.5s) ─── */
-      // 4.3s -> 4.8s: Amron enters
-      masterTl.fromTo(fg[2], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 4.3);
-      masterTl.fromTo(bg[2], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 4.3);
-      masterTl.fromTo(amb[2], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 4.3);
+      // 3.9s -> 4.5s: AZ-Digital EASES OUT (Card + Text)
+      masterTl.to(fg[1], { scale: 1.15, opacity: 0, y: -45, duration: 0.6, ease: easeInOut }, 3.9);
+      masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.6, ease: easeInOut }, 3.9);
+      masterTl.to(amb[1], { opacity: 0, duration: 0.6, ease: easeInOut }, 3.9);
+      masterTl.to(title[1], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 3.9);
+      masterTl.to(desc[1], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 3.9);
+
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 03: AMRON (4.5s – 6.5s)
+         ───────────────────────────────────────────────────────────── */
+      // 4.0s -> 4.7s: Amron EASES IN (Card + Text + Left Orange Light Streak)
+      masterTl.fromTo(fg[2], 
+        { scale: 0.8, opacity: 0, y: 45 }, 
+        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        4.0
+      );
+      masterTl.fromTo(bg[2], 
+        { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
+        4.0
+      );
+      masterTl.fromTo(amb[2], 
+        { opacity: 0 }, 
+        { opacity: 1, duration: 0.7, ease: easeInOut }, 
+        4.0
+      );
+      masterTl.fromTo(title[2], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        4.1
+      );
+      masterTl.fromTo(desc[2], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        4.15
+      );
       if (orangeBeam) {
-        masterTl.fromTo(orangeBeam, { opacity: 0, scaleY: 0.6 }, { opacity: 0.85, scaleY: 1, duration: 0.6, ease: "power2.out" }, 4.3);
+        masterTl.fromTo(orangeBeam, 
+          { opacity: 0, scaleY: 0.5 }, 
+          { opacity: 0.85, scaleY: 1, duration: 0.7, ease: easeInOut }, 
+          4.1
+        );
       }
 
-      // 4.8s -> 6.0s: Amron plateau + parallax
-      masterTl.to(fg[2], { scale: 1.05, y: -15, duration: 1.4, ease: "none" }, 4.8);
-      masterTl.to(bg[2], { scale: 1.35, duration: 1.4, ease: "none" }, 4.8);
+      // 4.7s -> 5.9s: Amron plateau + parallax
+      masterTl.to(fg[2], { scale: 1.04, y: -12, duration: 1.2, ease: "none" }, 4.7);
+      masterTl.to(bg[2], { scale: 1.34, duration: 1.2, ease: "none" }, 4.7);
 
-      // 6.0s -> 6.5s: Amron exits
-      masterTl.to(fg[2], { scale: 1.15, opacity: 0, y: -40, duration: 0.5, ease: "power2.in" }, 6.0);
-      masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.5, ease: "power2.in" }, 6.0);
-      masterTl.to(amb[2], { opacity: 0, duration: 0.5, ease: "power2.in" }, 6.0);
+      // 5.9s -> 6.5s: Amron EASES OUT (Card + Text + Beam)
+      masterTl.to(fg[2], { scale: 1.15, opacity: 0, y: -45, duration: 0.6, ease: easeInOut }, 5.9);
+      masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.6, ease: easeInOut }, 5.9);
+      masterTl.to(amb[2], { opacity: 0, duration: 0.6, ease: easeInOut }, 5.9);
+      masterTl.to(title[2], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 5.9);
+      masterTl.to(desc[2], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 5.9);
       if (orangeBeam) {
-        masterTl.to(orangeBeam, { opacity: 0, duration: 0.4 }, 6.1);
+        masterTl.to(orangeBeam, { opacity: 0, duration: 0.5, ease: easeInOut }, 5.9);
       }
 
-      /* ─── PHASE 04: CHATONE (6.5s – 8.0s) ─── */
-      // 6.3s -> 6.8s: ChatOne enters
-      masterTl.fromTo(fg[3], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 6.3);
-      masterTl.fromTo(bg[3], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 6.3);
-      masterTl.fromTo(amb[3], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 6.3);
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 04: CHATONE (6.5s – 8.0s)
+         ───────────────────────────────────────────────────────────── */
+      // 6.0s -> 6.7s: ChatOne EASES IN (Card + Text)
+      masterTl.fromTo(fg[3], 
+        { scale: 0.8, opacity: 0, y: 45 }, 
+        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        6.0
+      );
+      masterTl.fromTo(bg[3], 
+        { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
+        6.0
+      );
+      masterTl.fromTo(amb[3], 
+        { opacity: 0 }, 
+        { opacity: 1, duration: 0.7, ease: easeInOut }, 
+        6.0
+      );
+      masterTl.fromTo(title[3], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        6.1
+      );
+      masterTl.fromTo(desc[3], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        6.15
+      );
 
-      // 6.8s -> 7.6s: ChatOne plateau
-      masterTl.to(fg[3], { scale: 1.05, y: -15, duration: 1.0, ease: "none" }, 6.8);
-      masterTl.to(bg[3], { scale: 1.35, duration: 1.0, ease: "none" }, 6.8);
+      // 6.7s -> 7.5s: ChatOne plateau
+      masterTl.to(fg[3], { scale: 1.04, y: -12, duration: 0.8, ease: "none" }, 6.7);
+      masterTl.to(bg[3], { scale: 1.34, duration: 0.8, ease: "none" }, 6.7);
 
-      // 7.6s -> 8.0s: ChatOne exits
-      masterTl.to(fg[3], { scale: 1.15, opacity: 0, y: -40, duration: 0.4, ease: "power2.in" }, 7.6);
-      masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(50px)", duration: 0.4, ease: "power2.in" }, 7.6);
-      masterTl.to(amb[3], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.6);
+      // 7.5s -> 8.0s: ChatOne EASES OUT (Card + Text)
+      masterTl.to(fg[3], { scale: 1.15, opacity: 0, y: -45, duration: 0.5, ease: easeInOut }, 7.5);
+      masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.5, ease: easeInOut }, 7.5);
+      masterTl.to(amb[3], { opacity: 0, duration: 0.5, ease: easeInOut }, 7.5);
+      masterTl.to(title[3], { opacity: 0, y: -30, duration: 0.45, ease: easeInOut }, 7.5);
+      masterTl.to(desc[3], { opacity: 0, y: -30, duration: 0.45, ease: easeInOut }, 7.5);
 
-      /* ─── PHASE 05: FINANCE (8.0s – 9.5s) ─── */
-      // 7.8s -> 8.3s: Finance enters
-      masterTl.fromTo(fg[4], { scale: 0.78, opacity: 0, y: 50 }, { scale: 1.0, opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 7.8);
-      masterTl.fromTo(bg[4], { scale: 1.0, opacity: 0, filter: "blur(14px)" }, { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.6, ease: "power2.out" }, 7.8);
-      masterTl.fromTo(amb[4], { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out" }, 7.8);
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 05: FINANCE (8.0s – 9.5s)
+         ───────────────────────────────────────────────────────────── */
+      // 7.6s -> 8.3s: Finance EASES IN (Card + Text)
+      masterTl.fromTo(fg[4], 
+        { scale: 0.8, opacity: 0, y: 45 }, 
+        { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        7.6
+      );
+      masterTl.fromTo(bg[4], 
+        { scale: 1.05, opacity: 0, filter: "blur(14px)" }, 
+        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 0.7, ease: easeInOut }, 
+        7.6
+      );
+      masterTl.fromTo(amb[4], 
+        { opacity: 0 }, 
+        { opacity: 1, duration: 0.7, ease: easeInOut }, 
+        7.6
+      );
+      masterTl.fromTo(title[4], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        7.7
+      );
+      masterTl.fromTo(desc[4], 
+        { opacity: 0, y: 30 }, 
+        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+        7.75
+      );
 
-      // 8.3s -> 9.5s: Finance plateau
-      masterTl.to(fg[4], { scale: 1.04, y: -15, duration: 1.2, ease: "none" }, 8.3);
-      masterTl.to(bg[4], { scale: 1.35, duration: 1.2, ease: "none" }, 8.3);
+      // 8.3s -> 9.4s: Finance plateau
+      masterTl.to(fg[4], { scale: 1.04, y: -12, duration: 1.1, ease: "none" }, 8.3);
+      masterTl.to(bg[4], { scale: 1.34, duration: 1.1, ease: "none" }, 8.3);
 
-      /* ─── PHASE 06: FINAL ENDING SECTION (9.5s – 12.2s) ─── */
-      // 9.5s -> 10.3s: Finance translates upward, scales down, background returns to pure black
-      masterTl.to(fg[4], { y: -150, scale: 0.68, opacity: 0.6, duration: 0.8, ease: "power2.out" }, 9.5);
-      masterTl.to(bg[4], { opacity: 0.1, filter: "blur(50px)", duration: 0.8, ease: "power2.out" }, 9.5);
-      masterTl.to(amb[4], { opacity: 0.15, duration: 0.8, ease: "power2.out" }, 9.5);
+      /* ─────────────────────────────────────────────────────────────
+         PHASE 06: FINAL ENDING SECTION (9.5s – 12.2s)
+         ───────────────────────────────────────────────────────────── */
+      // 9.4s -> 10.3s: Finance slides upward smoothly to upper-middle; side text eases out; background turns pure black
+      masterTl.to(fg[4], { y: -160, scale: 0.65, opacity: 0.55, duration: 0.9, ease: easeInOut }, 9.4);
+      masterTl.to(bg[4], { opacity: 0.08, filter: "blur(55px)", duration: 0.9, ease: easeInOut }, 9.4);
+      masterTl.to(amb[4], { opacity: 0.12, duration: 0.9, ease: easeInOut }, 9.4);
+      masterTl.to(title[4], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 9.4);
+      masterTl.to(desc[4], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 9.4);
 
-      // 10.0s -> 12.2s: Staggered red statement reveal
+      // 10.0s -> 12.2s: Red statement reveals with smooth upward ease-in-and-out stagger
       if (statementSection && statementWords.length > 0) {
-        masterTl.fromTo(statementSection, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 10.0);
+        masterTl.fromTo(statementSection, 
+          { opacity: 0, y: 40 }, 
+          { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" }, 
+          10.0
+        );
         masterTl.fromTo(
           statementWords,
-          { opacity: 0, y: 30, filter: "blur(6px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.06, duration: 0.9, ease: "power3.out" },
+          { opacity: 0, y: 28, filter: "blur(8px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.055, duration: 0.85, ease: easeInOut },
           10.1
         );
       }
@@ -335,8 +451,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           {SHOWCASE_PROJECTS.map((proj, idx) => {
             const maxWidthStyle =
               proj.aspect === "mobile"
-                ? "max-w-[340px] sm:max-w-[380px] md:max-w-[420px]"
-                : "max-w-[560px] sm:max-w-[660px] md:max-w-[760px] lg:max-w-[840px]";
+                ? "max-w-[320px] sm:max-w-[360px] md:max-w-[400px]"
+                : "max-w-[560px] sm:max-w-[640px] md:max-w-[720px] lg:max-w-[800px]";
 
             return (
               <div
@@ -387,49 +503,50 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           </span>
         </div>
 
-        {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Vertically Centered) ─── */}
-        <div
-          className={`absolute left-8 sm:left-12 lg:left-16 top-1/2 -translate-y-1/2 z-40 max-w-[220px] transition-all duration-700 pointer-events-none ${
-            isFinalPhase ? "opacity-30 -translate-y-2/3" : "opacity-100"
-          }`}
-        >
-          {/* Subtle category tracker */}
-          <div className="flex items-center gap-2 mb-3">
-            <span
-              className="inline-block h-[2px] w-5 rounded-full transition-all duration-500"
-              style={{ backgroundColor: currentProject.accentColor }}
-            />
-            <span className="font-mono text-[9px] tracking-[0.25em] text-white/40 uppercase">
-              0{activeProjectIndex + 1} // {currentProject.category}
-            </span>
-          </div>
-
-          {/* Project Title */}
-          <h2 className="text-sm sm:text-base lg:text-lg font-semibold tracking-[0.2em] text-white uppercase leading-snug">
-            {currentProject.name}
-          </h2>
-
-          <div className="mt-2 text-[10px] font-mono tracking-[0.2em] text-white/30 uppercase">
-            {currentProject.year} ARCHIVE
-          </div>
+        {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Synchronized Ease In & Out) ─── */}
+        <div className="absolute left-8 sm:left-12 lg:left-20 top-1/2 -translate-y-1/2 z-40 w-[220px] sm:w-[260px] h-[160px] pointer-events-none">
+          {SHOWCASE_PROJECTS.map((proj, idx) => (
+            <div
+              key={`title-${proj.id}`}
+              className={`project-title-${idx} absolute inset-0 flex flex-col justify-center will-change-transform`}
+              style={{ opacity: idx === 0 ? 1 : 0 }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span
+                  className="inline-block h-[2px] w-6 rounded-full"
+                  style={{ backgroundColor: proj.accentColor }}
+                />
+                <span className="font-mono text-[9px] tracking-[0.25em] text-white/40 uppercase">
+                  0{idx + 1} // {proj.category}
+                </span>
+              </div>
+              <h2 className="text-base sm:text-lg lg:text-xl font-semibold tracking-[0.22em] text-white uppercase leading-snug">
+                {proj.name}
+              </h2>
+              <div className="mt-2 text-[10px] font-mono tracking-[0.2em] text-white/30 uppercase">
+                {proj.year} ARCHIVE
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* ─── RIGHT SIDE: EDITORIAL PROJECT DESCRIPTION (Vertically Centered) ─── */}
-        <div
-          className={`hidden md:block absolute right-8 sm:right-12 lg:right-16 top-1/2 -translate-y-1/2 z-40 max-w-[260px] lg:max-w-[290px] transition-all duration-700 pointer-events-none ${
-            isFinalPhase ? "opacity-20 translate-y-[-40%]" : "opacity-100"
-          }`}
-        >
-          <div className="space-y-3">
-            <p className="text-[11px] sm:text-[12px] font-light leading-[1.8] tracking-wide text-neutral-400">
-              {currentProject.description}
-            </p>
-
-            <div className="pt-2 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.25em] text-white/30 border-t border-white/10">
-              <span>EXPLORE CASE</span>
-              <span>—&gt;</span>
+        {/* ─── RIGHT SIDE: EDITORIAL PROJECT DESCRIPTION (Synchronized Ease In & Out) ─── */}
+        <div className="hidden md:block absolute right-8 sm:right-12 lg:right-20 top-1/2 -translate-y-1/2 z-40 w-[240px] lg:w-[280px] h-[200px] pointer-events-none">
+          {SHOWCASE_PROJECTS.map((proj, idx) => (
+            <div
+              key={`desc-${proj.id}`}
+              className={`project-desc-${idx} absolute inset-0 flex flex-col justify-center will-change-transform`}
+              style={{ opacity: idx === 0 ? 1 : 0 }}
+            >
+              <p className="text-[11px] sm:text-[12px] font-light leading-[1.8] tracking-wide text-neutral-300">
+                {proj.description}
+              </p>
+              <div className="mt-4 pt-3 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.25em] text-white/40 border-t border-white/10">
+                <span>EXPLORE CASE</span>
+                <span style={{ color: proj.accentColor }}>—&gt;</span>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
         {/* ─── PHASE 06: FINAL ENDING SECTION (Red Statement Bottom-Center) ─── */}
