@@ -133,7 +133,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           end: "bottom bottom",
           pin: stage,
           anticipatePin: 1,
-          scrub: 1.5, // Weighted smooth scrubbing with inertia
+          scrub: 1.5, // Weighted smooth scrubbing with physical momentum
           onUpdate: (self) => {
             const p = self.progress;
             setOverallProgress(p);
@@ -174,11 +174,27 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       // ─── INITIAL POSITIONS AT t = 0 ───
       // Project 0 is at center stage
       gsap.set(fg[0], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20 });
-      // Project 1 is queued at bottom center as preview card
-      gsap.set(fg[1], { y: "30vh", scale: 0.3, opacity: 0.92, zIndex: 10 });
+      gsap.set(bg[0], { opacity: 0.45, scale: 1.25 });
+      gsap.set(amb[0], { opacity: 1 });
+      gsap.set(titleWrap[0], { opacity: 1 });
+      gsap.set(descWrap[0], { opacity: 1 });
+      gsap.set(titleLines[0], { y: "0%", opacity: 1 });
+      gsap.set(descLines[0], { y: "0%", opacity: 1 });
+
+      // Project 1 is queued at bottom center as preview card (sitting right above telemetry bar)
+      gsap.set(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10 });
+      gsap.set(bg[1], { opacity: 0 });
+      gsap.set(amb[1], { opacity: 0 });
+      gsap.set(titleWrap[1], { opacity: 0 });
+      gsap.set(descWrap[1], { opacity: 0 });
+
       // Projects 2..4 are queued beneath the viewport
       for (let i = 2; i < fg.length; i++) {
-        gsap.set(fg[i], { y: "45vh", scale: 0.25, opacity: 0, zIndex: 1 });
+        gsap.set(fg[i], { y: "65vh", scale: 0.22, opacity: 0, zIndex: 1 });
+        gsap.set(bg[i], { opacity: 0 });
+        gsap.set(amb[i], { opacity: 0 });
+        gsap.set(titleWrap[i], { opacity: 0 });
+        gsap.set(descWrap[i], { opacity: 0 });
       }
 
       /* ─────────────────────────────────────────────────────────────
@@ -186,14 +202,13 @@ export function CinematicPortfolioShowcase(): JSX.Element {
          Active Center: Codenarts | Bottom Preview: AZ-Digital
          ───────────────────────────────────────────────────────────── */
       // 0.0s -> 2.6s: Active plateau hold, subtle floating zoom
-      masterTl.to(fg[0], { scale: 1.02, y: "-1.5vh", duration: 2.6, ease: "none" }, 0);
-      masterTl.to(bg[0], { scale: 1.30, opacity: 0.5, filter: "blur(38px)", duration: 2.6, ease: "none" }, 0);
-      // Keep AZ-Digital steady at bottom preview slot during hold
-      masterTl.to(fg[1], { y: "30vh", scale: 0.3, opacity: 0.92, duration: 2.6, ease: "none" }, 0);
+      masterTl.to(fg[0], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 0);
+      masterTl.to(bg[0], { scale: 1.30, duration: 2.6, ease: "none" }, 0);
+      masterTl.to(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 0);
 
-      // 2.6s -> 3.8s: Codenarts EASES OUT UPWARD, AZ-Digital RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[0], { scale: 1.18, opacity: 0, y: "-12vh", zIndex: 5, duration: 1.2, ease: easeInOut }, 2.6);
-      masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.2, ease: easeInOut }, 2.6);
+      // 2.6s -> 3.8s: Codenarts exits UPWARD, AZ-Digital RISES FROM BOTTOM INTO CENTER
+      masterTl.to(fg[0], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 2.6);
+      masterTl.to(bg[0], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 2.6);
       masterTl.to(amb[0], { opacity: 0, duration: 1.2, ease: easeInOut }, 2.6);
 
       // Text 0 rolls UP & OUT through mask
@@ -214,10 +229,10 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         2.6
       );
 
-      // Amron enters into bottom preview slot
+      // Amron enters into bottom preview slot from below
       masterTl.fromTo(fg[2],
-        { y: "45vh", scale: 0.25, opacity: 0, zIndex: 10 },
-        { y: "30vh", scale: 0.3, opacity: 0.92, duration: 1.0, ease: easeInOut },
+        { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
+        { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
         2.8
       );
 
@@ -239,13 +254,13 @@ export function CinematicPortfolioShowcase(): JSX.Element {
          Active Center: AZ-Digital | Bottom Preview: Amron
          ───────────────────────────────────────────────────────────── */
       // 3.8s -> 6.4s: AZ-Digital plateau hold (2.6s hold)
-      masterTl.to(fg[1], { scale: 1.02, y: "-1.5vh", duration: 2.6, ease: "none" }, 3.8);
-      masterTl.to(bg[1], { scale: 1.32, duration: 2.6, ease: "none" }, 3.8);
-      masterTl.to(fg[2], { y: "30vh", scale: 0.3, opacity: 0.92, duration: 2.6, ease: "none" }, 3.8);
+      masterTl.to(fg[1], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 3.8);
+      masterTl.to(bg[1], { scale: 1.30, duration: 2.6, ease: "none" }, 3.8);
+      masterTl.to(fg[2], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 3.8);
 
-      // 6.4s -> 7.6s: AZ-Digital EASES OUT, Amron RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[1], { scale: 1.18, opacity: 0, y: "-12vh", zIndex: 5, duration: 1.2, ease: easeInOut }, 6.4);
-      masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.2, ease: easeInOut }, 6.4);
+      // 6.4s -> 7.6s: AZ-Digital exits UPWARD, Amron RISES FROM BOTTOM INTO CENTER
+      masterTl.to(fg[1], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 6.4);
+      masterTl.to(bg[1], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 6.4);
       masterTl.to(amb[1], { opacity: 0, duration: 1.2, ease: easeInOut }, 6.4);
 
       // Text 1 rolls OUT
@@ -273,10 +288,10 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         );
       }
 
-      // ChatOne enters into bottom preview slot
+      // ChatOne enters into bottom preview slot from below
       masterTl.fromTo(fg[3],
-        { y: "45vh", scale: 0.25, opacity: 0, zIndex: 10 },
-        { y: "30vh", scale: 0.3, opacity: 0.92, duration: 1.0, ease: easeInOut },
+        { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
+        { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
         6.6
       );
 
@@ -298,13 +313,13 @@ export function CinematicPortfolioShowcase(): JSX.Element {
          Active Center: Amron | Bottom Preview: ChatOne
          ───────────────────────────────────────────────────────────── */
       // 7.6s -> 10.2s: Amron plateau hold (2.6s hold)
-      masterTl.to(fg[2], { scale: 1.02, y: "-1.5vh", duration: 2.6, ease: "none" }, 7.6);
-      masterTl.to(bg[2], { scale: 1.32, duration: 2.6, ease: "none" }, 7.6);
-      masterTl.to(fg[3], { y: "30vh", scale: 0.3, opacity: 0.92, duration: 2.6, ease: "none" }, 7.6);
+      masterTl.to(fg[2], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 7.6);
+      masterTl.to(bg[2], { scale: 1.30, duration: 2.6, ease: "none" }, 7.6);
+      masterTl.to(fg[3], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 7.6);
 
-      // 10.2s -> 11.4s: Amron EASES OUT, ChatOne RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[2], { scale: 1.18, opacity: 0, y: "-12vh", zIndex: 5, duration: 1.2, ease: easeInOut }, 10.2);
-      masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.2, ease: easeInOut }, 10.2);
+      // 10.2s -> 11.4s: Amron exits UPWARD, ChatOne RISES FROM BOTTOM INTO CENTER
+      masterTl.to(fg[2], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 10.2);
+      masterTl.to(bg[2], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 10.2);
       masterTl.to(amb[2], { opacity: 0, duration: 1.2, ease: easeInOut }, 10.2);
       if (orangeBeam) {
         masterTl.to(orangeBeam, { opacity: 0, duration: 0.8, ease: easeInOut }, 10.2);
@@ -328,10 +343,10 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         10.2
       );
 
-      // Finance enters into bottom preview slot
+      // Finance enters into bottom preview slot from below
       masterTl.fromTo(fg[4],
-        { y: "45vh", scale: 0.25, opacity: 0, zIndex: 10 },
-        { y: "30vh", scale: 0.3, opacity: 0.92, duration: 1.0, ease: easeInOut },
+        { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
+        { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
         10.4
       );
 
@@ -353,13 +368,13 @@ export function CinematicPortfolioShowcase(): JSX.Element {
          Active Center: ChatOne | Bottom Preview: Finance
          ───────────────────────────────────────────────────────────── */
       // 11.4s -> 14.0s: ChatOne plateau hold (2.6s hold)
-      masterTl.to(fg[3], { scale: 1.02, y: "-1.5vh", duration: 2.6, ease: "none" }, 11.4);
-      masterTl.to(bg[3], { scale: 1.32, duration: 2.6, ease: "none" }, 11.4);
-      masterTl.to(fg[4], { y: "30vh", scale: 0.3, opacity: 0.92, duration: 2.6, ease: "none" }, 11.4);
+      masterTl.to(fg[3], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 11.4);
+      masterTl.to(bg[3], { scale: 1.30, duration: 2.6, ease: "none" }, 11.4);
+      masterTl.to(fg[4], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 11.4);
 
-      // 14.0s -> 15.2s: ChatOne EASES OUT, Finance RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[3], { scale: 1.18, opacity: 0, y: "-12vh", zIndex: 5, duration: 1.2, ease: easeInOut }, 14.0);
-      masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 1.2, ease: easeInOut }, 14.0);
+      // 14.0s -> 15.2s: ChatOne exits UPWARD, Finance RISES FROM BOTTOM INTO CENTER
+      masterTl.to(fg[3], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 14.0);
+      masterTl.to(bg[3], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 14.0);
       masterTl.to(amb[3], { opacity: 0, duration: 1.2, ease: easeInOut }, 14.0);
 
       // Text 3 rolls OUT
@@ -398,8 +413,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
          Active Center: Finance
          ───────────────────────────────────────────────────────────── */
       // 15.2s -> 17.6s: Finance plateau hold (2.4s hold)
-      masterTl.to(fg[4], { scale: 1.02, y: "-1.5vh", duration: 2.4, ease: "none" }, 15.2);
-      masterTl.to(bg[4], { scale: 1.32, duration: 2.4, ease: "none" }, 15.2);
+      masterTl.to(fg[4], { scale: 1.02, y: "-1vh", duration: 2.4, ease: "none" }, 15.2);
+      masterTl.to(bg[4], { scale: 1.30, duration: 2.4, ease: "none" }, 15.2);
 
       /* ─────────────────────────────────────────────────────────────
          PHASE 06: FINAL ENDING SECTION (17.6s – 20.0s)
@@ -499,7 +514,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
             const maxWidthStyle =
               proj.aspect === "mobile"
                 ? "max-w-[320px] sm:max-w-[360px] md:max-w-[400px]"
-                : "max-w-[580px] sm:max-w-[640px] md:max-w-[700px] lg:max-w-[780px]";
+                : "max-w-[580px] sm:max-w-[640px] md:max-w-[700px] lg:max-w-[760px]";
 
             return (
               <div
@@ -517,10 +532,6 @@ export function CinematicPortfolioShowcase(): JSX.Element {
                     }
                   }}
                   className="relative w-full rounded-2xl overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] ring-1 ring-white/15 bg-black/40 backdrop-blur-sm cursor-pointer pointer-events-auto transition-transform hover:scale-[1.01]"
-                  style={{
-                    transform: `translate3d(${mousePos.x * 8}px, ${mousePos.y * 8}px, 0) rotateX(${mousePos.y * -3}deg) rotateY(${mousePos.x * 3}deg)`,
-                    transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                  }}
                 >
                   <img
                     src={proj.image}
@@ -545,8 +556,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           </div>
         </div>
 
-        {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Large Bold Minimal Text) ─── */}
-        <div className="absolute left-6 sm:left-12 lg:left-20 top-1/2 -translate-y-1/2 z-40 w-[260px] sm:w-[320px] pointer-events-none">
+        {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Large Bold Minimal Text with Explicit Height) ─── */}
+        <div className="absolute left-6 sm:left-12 lg:left-20 top-1/2 -translate-y-1/2 z-40 w-[260px] sm:w-[340px] h-[200px] pointer-events-none">
           {SHOWCASE_PROJECTS.map((proj, idx) => (
             <div
               key={`title-${proj.id}`}
@@ -562,8 +573,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           ))}
         </div>
 
-        {/* ─── RIGHT SIDE: EDITORIAL PROJECT DESCRIPTION & CIRCULAR ORBIT INDICATOR ─── */}
-        <div className="hidden md:flex absolute right-8 sm:right-12 lg:right-20 top-1/2 -translate-y-1/2 z-40 w-[260px] lg:w-[320px] pointer-events-none flex-col">
+        {/* ─── RIGHT SIDE: EDITORIAL PROJECT DESCRIPTION & CIRCULAR ORBIT INDICATOR (with Explicit Height) ─── */}
+        <div className="hidden md:block absolute right-8 sm:right-12 lg:right-20 top-1/2 -translate-y-1/2 z-40 w-[260px] lg:w-[320px] h-[240px] pointer-events-none">
           {SHOWCASE_PROJECTS.map((proj, idx) => (
             <div
               key={`desc-${proj.id}`}
