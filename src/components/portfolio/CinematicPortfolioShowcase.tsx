@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/* ─────────────────────────── PROJECT DATA ─────────────────────────── */
+/* ─────────────────────────── PROJECT DATA (9 PROJECTS) ─────────────────────────── */
 
 export interface ShowcaseProject {
   id: string;
@@ -87,6 +87,58 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
     secondaryGlow: "rgba(16, 185, 129, 0.18)",
     aspect: "mobile",
   },
+  {
+    id: "nexus-labs",
+    name: "NEXUS LABS",
+    category: "SPATIAL AI & BIOMETRICS",
+    year: "2024",
+    description:
+      "Autonomous multi-agent intelligence operating with real-time biometric telemetry, neon emerald radiance, and spatial graph visualization.",
+    image: "/projects/nexus.svg",
+    accentColor: "#10B981",
+    ambientGlow: "rgba(16, 185, 129, 0.45)",
+    secondaryGlow: "rgba(6, 182, 212, 0.25)",
+    aspect: "monitor",
+  },
+  {
+    id: "valkyrie",
+    name: "VALKYRIE",
+    category: "AERODYNAMIC LUXURY",
+    year: "2024",
+    description:
+      "A bespoke hypercar monograph featuring active aero flow dynamics, carbon-composite engineering, and crimson obsidian velocity accents.",
+    image: "/projects/valkyrie.svg",
+    accentColor: "#EF4444",
+    ambientGlow: "rgba(239, 68, 68, 0.45)",
+    secondaryGlow: "rgba(249, 115, 22, 0.25)",
+    aspect: "monitor",
+  },
+  {
+    id: "orbital-sound",
+    name: "ORBITAL SOUND",
+    category: "SPATIAL ACOUSTICS",
+    year: "2024",
+    description:
+      "Object-based binaural soundscapes, spherical harmonic synthesis, and ultra-low-latency spatial rendering with deep violet lighting.",
+    image: "/projects/orbital.svg",
+    accentColor: "#8B5CF6",
+    ambientGlow: "rgba(139, 92, 246, 0.45)",
+    secondaryGlow: "rgba(59, 130, 246, 0.25)",
+    aspect: "monitor",
+  },
+  {
+    id: "kinetic-atelier",
+    name: "KINETIC ATELIER",
+    category: "PARAMETRIC SPATIAL ART",
+    year: "2024",
+    description:
+      "Generative kinetic facades, molten bronze sculptural structures, and real-time solar responsive geometry with warm golden highlights.",
+    image: "/projects/kinetic.svg",
+    accentColor: "#F59E0B",
+    ambientGlow: "rgba(245, 158, 11, 0.48)",
+    secondaryGlow: "rgba(217, 119, 6, 0.25)",
+    aspect: "monitor",
+  },
 ];
 
 /* ─────────────────────────── COMPONENT ─────────────────────────── */
@@ -95,7 +147,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinnedStageRef = useRef<HTMLDivElement>(null);
   
-  // Track active project index for UI indicators
+  // Track active project index for UI indicators (0 to 8)
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
   const [isFinalPhase, setIsFinalPhase] = useState(false);
@@ -114,7 +166,9 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const scrollToProject = (index: number) => {
     if (!containerRef.current) return;
     const totalScroll = containerRef.current.offsetHeight - window.innerHeight;
-    const fraction = index < 5 ? (index * 0.86) / 5 + 0.08 : 0.95;
+    const fraction = index < SHOWCASE_PROJECTS.length 
+      ? (index * 0.90) / SHOWCASE_PROJECTS.length + 0.04 
+      : 0.96;
     const targetY = containerRef.current.offsetTop + totalScroll * fraction;
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
@@ -125,7 +179,11 @@ export function CinematicPortfolioShowcase(): JSX.Element {
     if (!container || !stage) return;
 
     const ctx = gsap.context(() => {
-      // MASTER SCROLL TIMELINE (20.0s total normalized duration with generous holds & slow weighted scrub)
+      const numProjects = SHOWCASE_PROJECTS.length; // 9 projects
+      const totalPhasesDuration = 32.0; // 32s normalized master timeline
+      const projectSlot = 0.90 / numProjects;
+
+      // MASTER SCROLL TIMELINE (Weighted scrub with physical momentum)
       const masterTl = gsap.timeline({
         scrollTrigger: {
           trigger: container,
@@ -133,18 +191,15 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           end: "bottom bottom",
           pin: stage,
           anticipatePin: 1,
-          scrub: 1.5, // Weighted smooth scrubbing with physical momentum
+          scrub: 1.5, // Weighted smooth scrubbing with inertia
           onUpdate: (self) => {
             const p = self.progress;
             setOverallProgress(p);
 
             // Phase tracking for bottom UI indicators
-            const numProjects = SHOWCASE_PROJECTS.length;
-            const projectDuration = 0.86 / numProjects;
-            
-            if (p < 0.86) {
+            if (p < 0.90) {
               setIsFinalPhase(false);
-              const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectDuration)));
+              const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectSlot)));
               setActiveProjectIndex(idx);
             } else {
               setIsFinalPhase(true);
@@ -167,12 +222,11 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       const statementSection = stage.querySelector(".final-statement-wrap");
       const statementWords = stage.querySelectorAll(".statement-word");
 
-      // Shared smooth inOut easing curve
       const easeInOut = "power2.inOut";
       const easeRevealOut = "power3.out";
 
       // ─── INITIAL POSITIONS AT t = 0 ───
-      // Project 0 is at center stage
+      // Project 0 starts at center stage
       gsap.set(fg[0], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20 });
       gsap.set(bg[0], { opacity: 0.45, scale: 1.25 });
       gsap.set(amb[0], { opacity: 1 });
@@ -181,15 +235,15 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       gsap.set(titleLines[0], { y: "0%", opacity: 1 });
       gsap.set(descLines[0], { y: "0%", opacity: 1 });
 
-      // Project 1 is queued at bottom center as preview card (sitting right above telemetry bar)
+      // Project 1 starts queued at bottom preview position (above telemetry bar)
       gsap.set(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, zIndex: 10 });
       gsap.set(bg[1], { opacity: 0 });
       gsap.set(amb[1], { opacity: 0 });
       gsap.set(titleWrap[1], { opacity: 0 });
       gsap.set(descWrap[1], { opacity: 0 });
 
-      // Projects 2..4 are queued beneath the viewport
-      for (let i = 2; i < fg.length; i++) {
+      // Projects 2..8 start below the viewport
+      for (let i = 2; i < numProjects; i++) {
         gsap.set(fg[i], { y: "65vh", scale: 0.22, opacity: 0, zIndex: 1 });
         gsap.set(bg[i], { opacity: 0 });
         gsap.set(amb[i], { opacity: 0 });
@@ -197,248 +251,107 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         gsap.set(descWrap[i], { opacity: 0 });
       }
 
-      /* ─────────────────────────────────────────────────────────────
-         PHASE 01: CODENARTS (0.0s – 3.8s)
-         Active Center: Codenarts | Bottom Preview: AZ-Digital
-         ───────────────────────────────────────────────────────────── */
-      // 0.0s -> 2.6s: Active plateau hold, subtle floating zoom
-      masterTl.to(fg[0], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 0);
-      masterTl.to(bg[0], { scale: 1.30, duration: 2.6, ease: "none" }, 0);
-      masterTl.to(fg[1], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 0);
+      // ─── CHOREOGRAPH 9 CARD TRANSITIONS (COMING FROM DOWN SIDE) ───
+      const phaseDuration = 3.2; // ~3.2s per card phase
+      const holdTime = 2.2;      // 2.2s active hold time
+      const transTime = 1.0;     // 1.0s smooth transition time
 
-      // 2.6s -> 3.8s: Codenarts exits UPWARD, AZ-Digital RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[0], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 2.6);
-      masterTl.to(bg[0], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 2.6);
-      masterTl.to(amb[0], { opacity: 0, duration: 1.2, ease: easeInOut }, 2.6);
+      for (let i = 0; i < numProjects; i++) {
+        const start = i * phaseDuration;
 
-      // Text 0 rolls UP & OUT through mask
-      masterTl.to(titleLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 2.6);
-      masterTl.to(descLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 2.6);
-      masterTl.set([titleWrap[0], descWrap[0]], { opacity: 0 }, 3.8);
+        // Active Plateau Hold for Current Center Card
+        masterTl.to(fg[i], { scale: 1.02, y: "-1vh", duration: holdTime, ease: "none" }, start);
+        masterTl.to(bg[i], { scale: 1.30, duration: holdTime, ease: "none" }, start);
 
-      // AZ-Digital expands from bottom preview up into dead center
-      masterTl.to(fg[1], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: 1.2, ease: easeInOut }, 2.6);
-      masterTl.fromTo(bg[1],
-        { scale: 1.05, opacity: 0, filter: "blur(14px)" },
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.2, ease: easeInOut },
-        2.6
-      );
-      masterTl.fromTo(amb[1],
-        { opacity: 0 },
-        { opacity: 1, duration: 1.2, ease: easeInOut },
-        2.6
-      );
+        // Keep the upcoming card steady in the bottom preview slot during the hold
+        if (i + 1 < numProjects) {
+          masterTl.to(fg[i + 1], { y: "38vh", scale: 0.28, opacity: 0.95, duration: holdTime, ease: "none" }, start);
+        }
 
-      // Amron enters into bottom preview slot from below
-      masterTl.fromTo(fg[2],
-        { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
-        { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
-        2.8
-      );
+        const transStart = start + holdTime;
 
-      // Text 1 rolls IN from DOWN to UP
-      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 1 }, 2.8);
-      masterTl.fromTo(titleLines[1],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        2.9
-      );
-      masterTl.fromTo(descLines[1],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        3.0
-      );
+        if (i < numProjects - 1) {
+          // 1. Current card travels UPWARD and OUT of the screen
+          masterTl.to(fg[i], { y: "-75vh", opacity: 0, scale: 0.92, duration: transTime, ease: easeInOut }, transStart);
+          masterTl.to(bg[i], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: transTime, ease: easeInOut }, transStart);
+          masterTl.to(amb[i], { opacity: 0, duration: transTime, ease: easeInOut }, transStart);
 
-      /* ─────────────────────────────────────────────────────────────
-         PHASE 02: AZ-DIGITAL-VENTURES (3.8s – 7.6s)
-         Active Center: AZ-Digital | Bottom Preview: Amron
-         ───────────────────────────────────────────────────────────── */
-      // 3.8s -> 6.4s: AZ-Digital plateau hold (2.6s hold)
-      masterTl.to(fg[1], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 3.8);
-      masterTl.to(bg[1], { scale: 1.30, duration: 2.6, ease: "none" }, 3.8);
-      masterTl.to(fg[2], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 3.8);
+          // Current text rolls UP & OUT through mask
+          masterTl.to(titleLines[i], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, transStart);
+          masterTl.to(descLines[i], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, transStart);
+          masterTl.set([titleWrap[i], descWrap[i]], { opacity: 0 }, transStart + transTime);
 
-      // 6.4s -> 7.6s: AZ-Digital exits UPWARD, Amron RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[1], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 6.4);
-      masterTl.to(bg[1], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 6.4);
-      masterTl.to(amb[1], { opacity: 0, duration: 1.2, ease: easeInOut }, 6.4);
+          // Special beam handling for Amron (index 2)
+          if (i === 2 && orangeBeam) {
+            masterTl.to(orangeBeam, { opacity: 0, duration: 0.7, ease: easeInOut }, transStart);
+          }
 
-      // Text 1 rolls OUT
-      masterTl.to(titleLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 6.4);
-      masterTl.to(descLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 6.4);
-      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 0 }, 7.6);
+          // 2. NEXT CARD (i + 1) TRAVELS UP FROM BOTTOM PREVIEW INTO DEAD CENTER
+          masterTl.to(fg[i + 1], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: transTime, ease: easeInOut }, transStart);
+          masterTl.fromTo(bg[i + 1],
+            { scale: 1.05, opacity: 0, filter: "blur(14px)" },
+            { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: transTime, ease: easeInOut },
+            transStart
+          );
+          masterTl.fromTo(amb[i + 1], { opacity: 0 }, { opacity: 1, duration: transTime, ease: easeInOut }, transStart);
 
-      // Amron expands from bottom preview up into dead center
-      masterTl.to(fg[2], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: 1.2, ease: easeInOut }, 6.4);
-      masterTl.fromTo(bg[2],
-        { scale: 1.05, opacity: 0, filter: "blur(14px)" },
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.2, ease: easeInOut },
-        6.4
-      );
-      masterTl.fromTo(amb[2],
-        { opacity: 0 },
-        { opacity: 1, duration: 1.2, ease: easeInOut },
-        6.4
-      );
-      if (orangeBeam) {
-        masterTl.fromTo(orangeBeam,
-          { opacity: 0, scaleY: 0.5 },
-          { opacity: 0.85, scaleY: 1, duration: 1.0, ease: easeInOut },
-          6.5
-        );
+          // If entering Amron (index 2), sweep orange beam in
+          if (i + 1 === 2 && orangeBeam) {
+            masterTl.fromTo(orangeBeam,
+              { opacity: 0, scaleY: 0.5 },
+              { opacity: 0.85, scaleY: 1, duration: transTime, ease: easeInOut },
+              transStart
+            );
+          }
+
+          // 3. FOLLOWING CARD (i + 2) TRAVELS UP FROM BELOW INTO BOTTOM PREVIEW SLOT
+          if (i + 2 < numProjects) {
+            masterTl.fromTo(fg[i + 2],
+              { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
+              { y: "38vh", scale: 0.28, opacity: 0.95, duration: 0.9, ease: easeInOut },
+              transStart + 0.1
+            );
+          }
+
+          // 4. NEXT TEXT (i + 1) REVEALS FROM DOWN TO UP
+          masterTl.set([titleWrap[i + 1], descWrap[i + 1]], { opacity: 1 }, transStart + 0.1);
+          masterTl.fromTo(titleLines[i + 1],
+            { y: "130%", opacity: 0 },
+            { y: "0%", opacity: 1, duration: 0.85, stagger: 0.08, ease: easeRevealOut },
+            transStart + 0.15
+          );
+          masterTl.fromTo(descLines[i + 1],
+            { y: "130%", opacity: 0 },
+            { y: "0%", opacity: 1, duration: 0.85, stagger: 0.08, ease: easeRevealOut },
+            transStart + 0.2
+          );
+        }
       }
 
-      // ChatOne enters into bottom preview slot from below
-      masterTl.fromTo(fg[3],
-        { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
-        { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
-        6.6
-      );
+      // ─── PHASE 10: FINAL STATEMENT SECTION ───
+      const lastIdx = numProjects - 1;
+      const finalStart = lastIdx * phaseDuration + holdTime; // around ~27.8s
 
-      // Text 2 rolls IN from DOWN to UP
-      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 1 }, 6.6);
-      masterTl.fromTo(titleLines[2],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        6.7
-      );
-      masterTl.fromTo(descLines[2],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        6.8
-      );
+      // Last card (Kinetic) translates smoothly upward
+      masterTl.to(fg[lastIdx], { y: "-18vh", scale: 0.65, opacity: 0.55, duration: 1.0, ease: easeInOut }, finalStart);
+      masterTl.to(bg[lastIdx], { opacity: 0.08, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, finalStart);
+      masterTl.to(amb[lastIdx], { opacity: 0.12, duration: 1.0, ease: easeInOut }, finalStart);
+      masterTl.to(titleLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, finalStart);
+      masterTl.to(descLines[lastIdx], { y: "-125%", opacity: 0, duration: 0.75, ease: easeInOut }, finalStart);
+      masterTl.set([titleWrap[lastIdx], descWrap[lastIdx]], { opacity: 0 }, finalStart + 1.0);
 
-      /* ─────────────────────────────────────────────────────────────
-         PHASE 03: AMRON (7.6s – 11.4s)
-         Active Center: Amron | Bottom Preview: ChatOne
-         ───────────────────────────────────────────────────────────── */
-      // 7.6s -> 10.2s: Amron plateau hold (2.6s hold)
-      masterTl.to(fg[2], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 7.6);
-      masterTl.to(bg[2], { scale: 1.30, duration: 2.6, ease: "none" }, 7.6);
-      masterTl.to(fg[3], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 7.6);
-
-      // 10.2s -> 11.4s: Amron exits UPWARD, ChatOne RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[2], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 10.2);
-      masterTl.to(bg[2], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 10.2);
-      masterTl.to(amb[2], { opacity: 0, duration: 1.2, ease: easeInOut }, 10.2);
-      if (orangeBeam) {
-        masterTl.to(orangeBeam, { opacity: 0, duration: 0.8, ease: easeInOut }, 10.2);
-      }
-
-      // Text 2 rolls OUT
-      masterTl.to(titleLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 10.2);
-      masterTl.to(descLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 10.2);
-      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 0 }, 11.4);
-
-      // ChatOne expands from bottom preview up into dead center
-      masterTl.to(fg[3], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: 1.2, ease: easeInOut }, 10.2);
-      masterTl.fromTo(bg[3],
-        { scale: 1.05, opacity: 0, filter: "blur(14px)" },
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.2, ease: easeInOut },
-        10.2
-      );
-      masterTl.fromTo(amb[3],
-        { opacity: 0 },
-        { opacity: 1, duration: 1.2, ease: easeInOut },
-        10.2
-      );
-
-      // Finance enters into bottom preview slot from below
-      masterTl.fromTo(fg[4],
-        { y: "65vh", scale: 0.22, opacity: 0, zIndex: 10 },
-        { y: "38vh", scale: 0.28, opacity: 0.95, duration: 1.0, ease: easeInOut },
-        10.4
-      );
-
-      // Text 3 rolls IN from DOWN to UP
-      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 1 }, 10.4);
-      masterTl.fromTo(titleLines[3],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        10.5
-      );
-      masterTl.fromTo(descLines[3],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        10.6
-      );
-
-      /* ─────────────────────────────────────────────────────────────
-         PHASE 04: CHATONE (11.4s – 15.2s)
-         Active Center: ChatOne | Bottom Preview: Finance
-         ───────────────────────────────────────────────────────────── */
-      // 11.4s -> 14.0s: ChatOne plateau hold (2.6s hold)
-      masterTl.to(fg[3], { scale: 1.02, y: "-1vh", duration: 2.6, ease: "none" }, 11.4);
-      masterTl.to(bg[3], { scale: 1.30, duration: 2.6, ease: "none" }, 11.4);
-      masterTl.to(fg[4], { y: "38vh", scale: 0.28, opacity: 0.95, duration: 2.6, ease: "none" }, 11.4);
-
-      // 14.0s -> 15.2s: ChatOne exits UPWARD, Finance RISES FROM BOTTOM INTO CENTER
-      masterTl.to(fg[3], { y: "-75vh", opacity: 0, scale: 0.92, duration: 1.2, ease: easeInOut }, 14.0);
-      masterTl.to(bg[3], { opacity: 0, scale: 1.45, filter: "blur(50px)", duration: 1.2, ease: easeInOut }, 14.0);
-      masterTl.to(amb[3], { opacity: 0, duration: 1.2, ease: easeInOut }, 14.0);
-
-      // Text 3 rolls OUT
-      masterTl.to(titleLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 14.0);
-      masterTl.to(descLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 14.0);
-      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 0 }, 15.2);
-
-      // Finance expands from bottom preview up into dead center
-      masterTl.to(fg[4], { y: "0vh", scale: 1.0, opacity: 1, zIndex: 20, duration: 1.2, ease: easeInOut }, 14.0);
-      masterTl.fromTo(bg[4],
-        { scale: 1.05, opacity: 0, filter: "blur(14px)" },
-        { scale: 1.25, opacity: 0.48, filter: "blur(32px)", duration: 1.2, ease: easeInOut },
-        14.0
-      );
-      masterTl.fromTo(amb[4],
-        { opacity: 0 },
-        { opacity: 1, duration: 1.2, ease: easeInOut },
-        14.0
-      );
-
-      // Text 4 rolls IN from DOWN to UP
-      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 1 }, 14.2);
-      masterTl.fromTo(titleLines[4],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        14.3
-      );
-      masterTl.fromTo(descLines[4],
-        { y: "130%", opacity: 0 },
-        { y: "0%", opacity: 1, stagger: 0.08, duration: 0.9, ease: easeRevealOut },
-        14.4
-      );
-
-      /* ─────────────────────────────────────────────────────────────
-         PHASE 05: FINANCE (15.2s – 17.6s)
-         Active Center: Finance
-         ───────────────────────────────────────────────────────────── */
-      // 15.2s -> 17.6s: Finance plateau hold (2.4s hold)
-      masterTl.to(fg[4], { scale: 1.02, y: "-1vh", duration: 2.4, ease: "none" }, 15.2);
-      masterTl.to(bg[4], { scale: 1.30, duration: 2.4, ease: "none" }, 15.2);
-
-      /* ─────────────────────────────────────────────────────────────
-         PHASE 06: FINAL ENDING SECTION (17.6s – 20.0s)
-         ───────────────────────────────────────────────────────────── */
-      // 17.6s -> 18.8s: Finance slides upward smoothly to upper-middle; side text rolls out
-      masterTl.to(fg[4], { y: "-18vh", scale: 0.65, opacity: 0.55, duration: 1.0, ease: easeInOut }, 17.6);
-      masterTl.to(bg[4], { opacity: 0.08, filter: "blur(55px)", duration: 1.0, ease: easeInOut }, 17.6);
-      masterTl.to(amb[4], { opacity: 0.12, duration: 1.0, ease: easeInOut }, 17.6);
-      masterTl.to(titleLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 17.6);
-      masterTl.to(descLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.8, ease: easeInOut }, 17.6);
-      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 0 }, 18.8);
-
-      // 18.2s -> 20.0s: Red statement reveals with smooth upward ease-in-and-out stagger
+      // Red statement reveal
       if (statementSection && statementWords.length > 0) {
         masterTl.fromTo(statementSection, 
           { opacity: 0, y: 40 }, 
           { opacity: 1, y: 0, duration: 1.0, ease: "power2.out" }, 
-          18.2
+          finalStart + 0.4
         );
         masterTl.fromTo(
           statementWords,
           { opacity: 0, y: 28, filter: "blur(8px)" },
-          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.055, duration: 1.0, ease: easeInOut },
-          18.3
+          { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.045, duration: 1.0, ease: easeInOut },
+          finalStart + 0.5
         );
       }
     }, container);
@@ -452,8 +365,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       onMouseMove={handleMouseMove}
       className="relative w-full bg-[#050505] text-white selection:bg-[#FF1A00] selection:text-black z-30"
       style={{
-        // 1100vh scroll track gives relaxed, slow, weighted scroll time
-        height: "1100vh",
+        // 1600vh scroll track gives generous, slow, weighted scroll pacing for all 9 cards
+        height: "1600vh",
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
@@ -526,7 +439,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
               >
                 <div
                   onClick={() => {
-                    // Clicking on a card will navigate to it if it's currently queued as bottom preview
+                    // Clicking on a card navigates to it if it's currently queued as bottom preview
                     if (activeProjectIndex !== idx) {
                       scrollToProject(idx);
                     }
@@ -623,7 +536,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           ))}
         </div>
 
-        {/* ─── PHASE 06: FINAL ENDING SECTION (Red Statement Bottom-Center) ─── */}
+        {/* ─── PHASE 10: FINAL ENDING SECTION (Red Statement Bottom-Center) ─── */}
         <div
           className="final-statement-wrap pointer-events-none absolute bottom-24 sm:bottom-28 left-0 right-0 z-40 px-6 sm:px-12 flex flex-col items-center justify-center text-center opacity-0"
         >
