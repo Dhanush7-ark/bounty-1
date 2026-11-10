@@ -143,7 +143,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
 
 /* ─────────────────────────── COMPONENT ─────────────────────────── */
 
-export function CinematicPortfolioShowcase(): JSX.Element {
+export function CinematicShowcase(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinnedStageRef = useRef<HTMLDivElement>(null);
   
@@ -166,8 +166,8 @@ export function CinematicPortfolioShowcase(): JSX.Element {
   const scrollToProject = (index: number) => {
     if (!containerRef.current) return;
     const totalScroll = containerRef.current.offsetHeight - window.innerHeight;
-    const fraction = index < 9 ? (index * 0.91) / 9 + 0.05 : 0.96;
-    const targetY = containerRef.current.offsetTop + totalScroll * fraction;
+    const scrollFraction = index < 9 ? (index * 0.91) / 9 + 0.05 : 0.96;
+    const targetY = containerRef.current.offsetTop + totalScroll * scrollFraction;
     window.scrollTo({ top: targetY, behavior: "smooth" });
   };
 
@@ -191,16 +191,16 @@ export function CinematicPortfolioShowcase(): JSX.Element {
             setOverallProgress(p);
 
             // Phase tracking for bottom UI indicators
-            const numProjects = SHOWCASE_PROJECTS.length; // 9
-            const projectDuration = 0.91 / numProjects;
+            const totalProjects = SHOWCASE_PROJECTS.length; // 9
+            const stepRatio = 0.91 / totalProjects;
             
             if (p < 0.91) {
               setIsFinalPhase(false);
-              const idx = Math.min(numProjects - 1, Math.max(0, Math.floor(p / projectDuration)));
+              const idx = Math.min(totalProjects - 1, Math.max(0, Math.floor(p / stepRatio)));
               setActiveProjectIndex(idx);
             } else {
               setIsFinalPhase(true);
-              setActiveProjectIndex(numProjects - 1);
+              setActiveProjectIndex(totalProjects - 1);
             }
           },
         },

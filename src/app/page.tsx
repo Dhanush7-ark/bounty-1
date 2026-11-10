@@ -21,7 +21,7 @@ import { Footer } from "@/components/layout/Footer";
 import { WatchBuildModal } from "@/components/modals/WatchBuildModal";
 import { StartFreeModal } from "@/components/modals/StartFreeModal";
 import { ConsultationModal } from "@/components/modals/ConsultationModal";
-import { CinematicPortfolioShowcase } from "@/components/portfolio/CinematicPortfolioShowcase";
+import { CinematicShowcase as CinematicPortfolioShowcase } from "@/components/portfolio/CinematicShowcase";
 
 function HomeContent() {
   const { isLoading } = useLoadingState();
