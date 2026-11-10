@@ -138,7 +138,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           end: "bottom bottom",
           pin: stage,
           anticipatePin: 1,
-          scrub: 1.0, // Smooth scrubbing with momentum
+          scrub: 1.0, // Smooth scrubbing with inertia
           onUpdate: (self) => {
             const p = self.progress;
             setOverallProgress(p);
@@ -159,18 +159,22 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         },
       });
 
-      // Query animated elements
+      // Targets
       const fg = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-fg-${i}`));
       const bg = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-bg-${i}`));
       const amb = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-amb-${i}`));
-      const title = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-title-${i}`));
-      const desc = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-desc-${i}`));
+      const titleWrap = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-title-${i}`));
+      const titleLines = SHOWCASE_PROJECTS.map((_, i) => stage.querySelectorAll(`.project-title-${i} .reveal-line`));
+      const descWrap = SHOWCASE_PROJECTS.map((_, i) => stage.querySelector(`.project-desc-${i}`));
+      const descLines = SHOWCASE_PROJECTS.map((_, i) => stage.querySelectorAll(`.project-desc-${i} .reveal-line`));
+
       const orangeBeam = stage.querySelector(".amron-orange-beam");
       const statementSection = stage.querySelector(".final-statement-wrap");
       const statementWords = stage.querySelectorAll(".statement-word");
 
       // Shared smooth inOut easing curve
       const easeInOut = "power2.inOut";
+      const easeRevealOut = "power3.out";
 
       /* ─────────────────────────────────────────────────────────────
          PHASE 01: CODENARTS (0.0s – 2.5s)
@@ -179,17 +183,21 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       masterTl.to(fg[0], { scale: 1.04, y: -12, duration: 1.8, ease: "none" }, 0);
       masterTl.to(bg[0], { scale: 1.32, opacity: 0.5, filter: "blur(38px)", duration: 1.8, ease: "none" }, 0);
 
-      // 1.8s -> 2.5s: Codenarts EASES OUT (Card + Text)
+      // 1.8s -> 2.5s: Codenarts EASES OUT (Card scales out, text rolls UP & OUT through mask)
       masterTl.to(fg[0], { scale: 1.15, opacity: 0, y: -45, duration: 0.7, ease: easeInOut }, 1.8);
       masterTl.to(bg[0], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.7, ease: easeInOut }, 1.8);
       masterTl.to(amb[0], { opacity: 0, duration: 0.7, ease: easeInOut }, 1.8);
-      masterTl.to(title[0], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 1.8);
-      masterTl.to(desc[0], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 1.8);
+
+      // Text lines roll upward and out through overflow-hidden mask
+      masterTl.to(titleLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 1.8);
+      masterTl.to(descLines[0], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 1.8);
+      masterTl.set([titleWrap[0], descWrap[0]], { opacity: 0 }, 2.5);
 
       /* ─────────────────────────────────────────────────────────────
          PHASE 02: AZ-DIGITAL-VENTURES (2.5s – 4.5s)
          ───────────────────────────────────────────────────────────── */
-      // 2.0s -> 2.7s: AZ-Digital EASES IN (Card + Text)
+      // 2.0s -> 2.8s: AZ-Digital EASES IN (Card scales in, text REVEALS FROM DOWN TO UP)
+      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 1 }, 2.0);
       masterTl.fromTo(fg[1], 
         { scale: 0.8, opacity: 0, y: 45 }, 
         { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
@@ -205,32 +213,36 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         { opacity: 1, duration: 0.7, ease: easeInOut }, 
         2.0
       );
-      masterTl.fromTo(title[1], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+
+      // Left & Right text lines slide from DOWN to UP through mask
+      masterTl.fromTo(titleLines[1], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
         2.1
       );
-      masterTl.fromTo(desc[1], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+      masterTl.fromTo(descLines[1], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
         2.15
       );
 
-      // 2.7s -> 3.9s: AZ-Digital plateau + gentle float
-      masterTl.to(fg[1], { scale: 1.04, y: -12, duration: 1.2, ease: "none" }, 2.7);
-      masterTl.to(bg[1], { scale: 1.34, duration: 1.2, ease: "none" }, 2.7);
+      // 2.8s -> 3.9s: AZ-Digital plateau + gentle float
+      masterTl.to(fg[1], { scale: 1.04, y: -12, duration: 1.1, ease: "none" }, 2.8);
+      masterTl.to(bg[1], { scale: 1.34, duration: 1.1, ease: "none" }, 2.8);
 
-      // 3.9s -> 4.5s: AZ-Digital EASES OUT (Card + Text)
+      // 3.9s -> 4.5s: AZ-Digital EASES OUT (Card scales up, text rolls UP & OUT)
       masterTl.to(fg[1], { scale: 1.15, opacity: 0, y: -45, duration: 0.6, ease: easeInOut }, 3.9);
       masterTl.to(bg[1], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.6, ease: easeInOut }, 3.9);
       masterTl.to(amb[1], { opacity: 0, duration: 0.6, ease: easeInOut }, 3.9);
-      masterTl.to(title[1], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 3.9);
-      masterTl.to(desc[1], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 3.9);
+      masterTl.to(titleLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 3.9);
+      masterTl.to(descLines[1], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 3.9);
+      masterTl.set([titleWrap[1], descWrap[1]], { opacity: 0 }, 4.5);
 
       /* ─────────────────────────────────────────────────────────────
          PHASE 03: AMRON (4.5s – 6.5s)
          ───────────────────────────────────────────────────────────── */
-      // 4.0s -> 4.7s: Amron EASES IN (Card + Text + Left Orange Light Streak)
+      // 4.0s -> 4.8s: Amron EASES IN (Card scales in, text REVEALS FROM DOWN TO UP)
+      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 1 }, 4.0);
       masterTl.fromTo(fg[2], 
         { scale: 0.8, opacity: 0, y: 45 }, 
         { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
@@ -246,16 +258,6 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         { opacity: 1, duration: 0.7, ease: easeInOut }, 
         4.0
       );
-      masterTl.fromTo(title[2], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
-        4.1
-      );
-      masterTl.fromTo(desc[2], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
-        4.15
-      );
       if (orangeBeam) {
         masterTl.fromTo(orangeBeam, 
           { opacity: 0, scaleY: 0.5 }, 
@@ -264,24 +266,38 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         );
       }
 
-      // 4.7s -> 5.9s: Amron plateau + parallax
-      masterTl.to(fg[2], { scale: 1.04, y: -12, duration: 1.2, ease: "none" }, 4.7);
-      masterTl.to(bg[2], { scale: 1.34, duration: 1.2, ease: "none" }, 4.7);
+      // Text lines reveal from down to up
+      masterTl.fromTo(titleLines[2], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
+        4.1
+      );
+      masterTl.fromTo(descLines[2], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
+        4.15
+      );
 
-      // 5.9s -> 6.5s: Amron EASES OUT (Card + Text + Beam)
+      // 4.8s -> 5.9s: Amron plateau + parallax
+      masterTl.to(fg[2], { scale: 1.04, y: -12, duration: 1.1, ease: "none" }, 4.8);
+      masterTl.to(bg[2], { scale: 1.34, duration: 1.1, ease: "none" }, 4.8);
+
+      // 5.9s -> 6.5s: Amron EASES OUT
       masterTl.to(fg[2], { scale: 1.15, opacity: 0, y: -45, duration: 0.6, ease: easeInOut }, 5.9);
       masterTl.to(bg[2], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.6, ease: easeInOut }, 5.9);
       masterTl.to(amb[2], { opacity: 0, duration: 0.6, ease: easeInOut }, 5.9);
-      masterTl.to(title[2], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 5.9);
-      masterTl.to(desc[2], { opacity: 0, y: -30, duration: 0.5, ease: easeInOut }, 5.9);
+      masterTl.to(titleLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 5.9);
+      masterTl.to(descLines[2], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.55, ease: easeInOut }, 5.9);
       if (orangeBeam) {
         masterTl.to(orangeBeam, { opacity: 0, duration: 0.5, ease: easeInOut }, 5.9);
       }
+      masterTl.set([titleWrap[2], descWrap[2]], { opacity: 0 }, 6.5);
 
       /* ─────────────────────────────────────────────────────────────
          PHASE 04: CHATONE (6.5s – 8.0s)
          ───────────────────────────────────────────────────────────── */
-      // 6.0s -> 6.7s: ChatOne EASES IN (Card + Text)
+      // 6.0s -> 6.7s: ChatOne EASES IN (Card + Down-to-Up Text Reveal)
+      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 1 }, 6.0);
       masterTl.fromTo(fg[3], 
         { scale: 0.8, opacity: 0, y: 45 }, 
         { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
@@ -297,14 +313,16 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         { opacity: 1, duration: 0.7, ease: easeInOut }, 
         6.0
       );
-      masterTl.fromTo(title[3], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+
+      // Text reveal from down to up
+      masterTl.fromTo(titleLines[3], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
         6.1
       );
-      masterTl.fromTo(desc[3], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+      masterTl.fromTo(descLines[3], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
         6.15
       );
 
@@ -312,17 +330,19 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       masterTl.to(fg[3], { scale: 1.04, y: -12, duration: 0.8, ease: "none" }, 6.7);
       masterTl.to(bg[3], { scale: 1.34, duration: 0.8, ease: "none" }, 6.7);
 
-      // 7.5s -> 8.0s: ChatOne EASES OUT (Card + Text)
+      // 7.5s -> 8.0s: ChatOne EASES OUT
       masterTl.to(fg[3], { scale: 1.15, opacity: 0, y: -45, duration: 0.5, ease: easeInOut }, 7.5);
       masterTl.to(bg[3], { scale: 1.5, opacity: 0, filter: "blur(55px)", duration: 0.5, ease: easeInOut }, 7.5);
       masterTl.to(amb[3], { opacity: 0, duration: 0.5, ease: easeInOut }, 7.5);
-      masterTl.to(title[3], { opacity: 0, y: -30, duration: 0.45, ease: easeInOut }, 7.5);
-      masterTl.to(desc[3], { opacity: 0, y: -30, duration: 0.45, ease: easeInOut }, 7.5);
+      masterTl.to(titleLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.45, ease: easeInOut }, 7.5);
+      masterTl.to(descLines[3], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.45, ease: easeInOut }, 7.5);
+      masterTl.set([titleWrap[3], descWrap[3]], { opacity: 0 }, 8.0);
 
       /* ─────────────────────────────────────────────────────────────
          PHASE 05: FINANCE (8.0s – 9.5s)
          ───────────────────────────────────────────────────────────── */
-      // 7.6s -> 8.3s: Finance EASES IN (Card + Text)
+      // 7.6s -> 8.3s: Finance EASES IN (Card + Down-to-Up Text Reveal)
+      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 1 }, 7.6);
       masterTl.fromTo(fg[4], 
         { scale: 0.8, opacity: 0, y: 45 }, 
         { scale: 1.0, opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
@@ -338,14 +358,16 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         { opacity: 1, duration: 0.7, ease: easeInOut }, 
         7.6
       );
-      masterTl.fromTo(title[4], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+
+      // Text reveal from down to up
+      masterTl.fromTo(titleLines[4], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
         7.7
       );
-      masterTl.fromTo(desc[4], 
-        { opacity: 0, y: 30 }, 
-        { opacity: 1, y: 0, duration: 0.7, ease: easeInOut }, 
+      masterTl.fromTo(descLines[4], 
+        { y: "130%", opacity: 0 }, 
+        { y: "0%", opacity: 1, stagger: 0.07, duration: 0.7, ease: easeRevealOut }, 
         7.75
       );
 
@@ -356,12 +378,13 @@ export function CinematicPortfolioShowcase(): JSX.Element {
       /* ─────────────────────────────────────────────────────────────
          PHASE 06: FINAL ENDING SECTION (9.5s – 12.2s)
          ───────────────────────────────────────────────────────────── */
-      // 9.4s -> 10.3s: Finance slides upward smoothly to upper-middle; side text eases out; background turns pure black
+      // 9.4s -> 10.3s: Finance slides upward smoothly to upper-middle; side text rolls out; background turns pure black
       masterTl.to(fg[4], { y: -160, scale: 0.65, opacity: 0.55, duration: 0.9, ease: easeInOut }, 9.4);
       masterTl.to(bg[4], { opacity: 0.08, filter: "blur(55px)", duration: 0.9, ease: easeInOut }, 9.4);
       masterTl.to(amb[4], { opacity: 0.12, duration: 0.9, ease: easeInOut }, 9.4);
-      masterTl.to(title[4], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 9.4);
-      masterTl.to(desc[4], { opacity: 0, y: -30, duration: 0.6, ease: easeInOut }, 9.4);
+      masterTl.to(titleLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 9.4);
+      masterTl.to(descLines[4], { y: "-125%", opacity: 0, stagger: 0.04, duration: 0.6, ease: easeInOut }, 9.4);
+      masterTl.set([titleWrap[4], descWrap[4]], { opacity: 0 }, 10.3);
 
       // 10.0s -> 12.2s: Red statement reveals with smooth upward ease-in-and-out stagger
       if (statementSection && statementWords.length > 0) {
@@ -503,47 +526,65 @@ export function CinematicPortfolioShowcase(): JSX.Element {
           </span>
         </div>
 
-        {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Synchronized Ease In & Out) ─── */}
-        <div className="absolute left-8 sm:left-12 lg:left-20 top-1/2 -translate-y-1/2 z-40 w-[220px] sm:w-[260px] h-[160px] pointer-events-none">
+        {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Masked Down-to-Up Reveal) ─── */}
+        <div className="absolute left-8 sm:left-12 lg:left-20 top-1/2 -translate-y-1/2 z-40 w-[240px] sm:w-[280px] h-[180px] pointer-events-none">
           {SHOWCASE_PROJECTS.map((proj, idx) => (
             <div
               key={`title-${proj.id}`}
               className={`project-title-${idx} absolute inset-0 flex flex-col justify-center will-change-transform`}
               style={{ opacity: idx === 0 ? 1 : 0 }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <span
-                  className="inline-block h-[2px] w-6 rounded-full"
-                  style={{ backgroundColor: proj.accentColor }}
-                />
-                <span className="font-mono text-[9px] tracking-[0.25em] text-white/40 uppercase">
-                  0{idx + 1} // {proj.category}
-                </span>
+              {/* Category Line (Masked) */}
+              <div className="overflow-hidden py-0.5 mb-2">
+                <div className="reveal-line flex items-center gap-2 will-change-transform">
+                  <span
+                    className="inline-block h-[2px] w-6 rounded-full"
+                    style={{ backgroundColor: proj.accentColor }}
+                  />
+                  <span className="font-mono text-[9px] tracking-[0.25em] text-white/50 uppercase">
+                    0{idx + 1} // {proj.category}
+                  </span>
+                </div>
               </div>
-              <h2 className="text-base sm:text-lg lg:text-xl font-semibold tracking-[0.22em] text-white uppercase leading-snug">
-                {proj.name}
-              </h2>
-              <div className="mt-2 text-[10px] font-mono tracking-[0.2em] text-white/30 uppercase">
-                {proj.year} ARCHIVE
+
+              {/* Title Line (Masked) */}
+              <div className="overflow-hidden py-0.5">
+                <h2 className="reveal-line text-lg sm:text-xl lg:text-2xl font-bold tracking-[0.22em] text-white uppercase leading-tight will-change-transform">
+                  {proj.name}
+                </h2>
+              </div>
+
+              {/* Year Line (Masked) */}
+              <div className="overflow-hidden py-0.5 mt-2">
+                <div className="reveal-line text-[10px] font-mono tracking-[0.25em] text-white/40 uppercase will-change-transform">
+                  {proj.year} ARCHIVE
+                </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* ─── RIGHT SIDE: EDITORIAL PROJECT DESCRIPTION (Synchronized Ease In & Out) ─── */}
-        <div className="hidden md:block absolute right-8 sm:right-12 lg:right-20 top-1/2 -translate-y-1/2 z-40 w-[240px] lg:w-[280px] h-[200px] pointer-events-none">
+        {/* ─── RIGHT SIDE: EDITORIAL PROJECT DESCRIPTION (Masked Down-to-Up Reveal) ─── */}
+        <div className="hidden md:block absolute right-8 sm:right-12 lg:right-20 top-1/2 -translate-y-1/2 z-40 w-[260px] lg:w-[300px] h-[220px] pointer-events-none">
           {SHOWCASE_PROJECTS.map((proj, idx) => (
             <div
               key={`desc-${proj.id}`}
               className={`project-desc-${idx} absolute inset-0 flex flex-col justify-center will-change-transform`}
               style={{ opacity: idx === 0 ? 1 : 0 }}
             >
-              <p className="text-[11px] sm:text-[12px] font-light leading-[1.8] tracking-wide text-neutral-300">
-                {proj.description}
-              </p>
-              <div className="mt-4 pt-3 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.25em] text-white/40 border-t border-white/10">
-                <span>EXPLORE CASE</span>
-                <span style={{ color: proj.accentColor }}>—&gt;</span>
+              {/* Description Paragraph (Masked) */}
+              <div className="overflow-hidden py-1">
+                <p className="reveal-line text-[11px] sm:text-[12px] font-light leading-[1.85] tracking-wide text-neutral-300 will-change-transform">
+                  {proj.description}
+                </p>
+              </div>
+
+              {/* CTA Link (Masked) */}
+              <div className="overflow-hidden py-1 mt-3">
+                <div className="reveal-line pt-2 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.25em] text-white/50 border-t border-white/10 will-change-transform">
+                  <span>EXPLORE CASE</span>
+                  <span style={{ color: proj.accentColor }}>—&gt;</span>
+                </div>
               </div>
             </div>
           ))}
