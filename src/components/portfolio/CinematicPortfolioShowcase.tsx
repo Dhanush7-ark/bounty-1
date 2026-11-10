@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, type JSX } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -91,7 +91,7 @@ export const SHOWCASE_PROJECTS: ShowcaseProject[] = [
 
 /* ─────────────────────────── COMPONENT ─────────────────────────── */
 
-export function CinematicPortfolioShowcase() {
+export function CinematicPortfolioShowcase(): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinnedStageRef = useRef<HTMLDivElement>(null);
   
