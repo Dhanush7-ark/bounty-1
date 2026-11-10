@@ -11,7 +11,7 @@ interface ThisWillFeelDifferentSectionProps {
 
 /**
  * ThisWillFeelDifferentSection
- * Full-screen scroll-driven cinematic statement section matching reference video:
+ * Full-screen 3D scroll-driven statement section matching reference video:
  * - Pure black background (#000000)
  * - 240vh scroll-pinned container with sticky 100vh viewport
  * - 3D "Appears From Back" camera zoom animation:
