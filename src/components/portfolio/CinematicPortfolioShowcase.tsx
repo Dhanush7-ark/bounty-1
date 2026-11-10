@@ -527,7 +527,7 @@ export function CinematicPortfolioShowcase(): JSX.Element {
         </div>
 
         {/* ─── LEFT SIDE: PROJECT / CLIENT NAME (Masked Down-to-Up Reveal) ─── */}
-        <div className="absolute left-8 sm:left-12 lg:left-20 top-1/2 -translate-y-1/2 z-40 w-[240px] sm:w-[280px] h-[180px] pointer-events-none">
+        <div className="absolute left-6 sm:left-12 lg:left-20 top-20 sm:top-1/2 sm:-translate-y-1/2 z-40 w-[240px] sm:w-[280px] h-[180px] pointer-events-none">
           {SHOWCASE_PROJECTS.map((proj, idx) => (
             <div
               key={`title-${proj.id}`}
