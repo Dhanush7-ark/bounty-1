@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { simplex2D, fbm2D } from "@/lib/simplexNoise";
 import { sampleHandContour } from "./flameContourData";
 
+// fhytfuyhtf
 interface GreenFlameCanvasProps {
   className?: string;
   interactive?: boolean;
